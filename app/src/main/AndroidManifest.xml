@@ -4,6 +4,7 @@
     package="com.mostafan3ma.android.menupro10">
 
     <application
+        android:name=".MenuApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
