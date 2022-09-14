@@ -1,7 +1,7 @@
-package com.mostafan3ma.android.menupro10.data_Entities
+package com.mostafan3ma.android.menupro10.oporations.data_Entities
 
-import com.mostafan3ma.android.menupro10.data_Entities.cache_Entities.CacheCategory
-import com.mostafan3ma.android.menupro10.data_Entities.cache_Entities.CacheItem
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheCategory
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheItem
 
 
 data class Category(
@@ -32,7 +32,7 @@ fun CacheCategory.getCategory(cacheCategory: CacheCategory):Category{
 data class Item(
     var name: String="",
     var description:String="",
-    var category: Category,
+    var category: Category?=null,
     var image:String="",
     var price:String="",
     var size:String=""
@@ -42,7 +42,7 @@ fun Item.getCacheItem(item: Item):CacheItem{
     return CacheItem(
         name=item.name,
         description=item.description,
-        category=item.category,
+        category=item.category!!,
         image=item.image,
         price=item.price,
         size = item.size

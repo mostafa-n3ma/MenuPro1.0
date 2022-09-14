@@ -1,4 +1,4 @@
-package com.mostafan3ma.android.menupro10.data_Entities
+package com.mostafan3ma.android.menupro10.oporations.data_Entities
 
 data class DomainModel(
     var userId:String,

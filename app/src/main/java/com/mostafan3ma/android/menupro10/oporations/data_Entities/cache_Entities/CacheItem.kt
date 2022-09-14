@@ -1,9 +1,9 @@
-package com.mostafan3ma.android.menupro10.data_Entities.cache_Entities
+package com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mostafan3ma.android.menupro10.data_Entities.Category
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.Category
 
 @Entity(tableName = "items")
 data class CacheItem(

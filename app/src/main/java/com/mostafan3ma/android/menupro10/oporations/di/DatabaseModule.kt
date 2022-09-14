@@ -1,9 +1,9 @@
-package com.mostafan3ma.android.menupro10.di
+package com.mostafan3ma.android.menupro10.oporations.di
 
 import android.content.Context
 import androidx.room.Room
-import com.mostafan3ma.android.menupro10.localDataSource.ShopDao
-import com.mostafan3ma.android.menupro10.localDataSource.ShopDatabase
+import com.mostafan3ma.android.menupro10.oporations.localDataSource.RoomDatabase.ShopDao
+import com.mostafan3ma.android.menupro10.oporations.localDataSource.RoomDatabase.ShopDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +19,7 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideDatabase(@ApplicationContext context: Context):ShopDatabase{
+    fun provideDatabase(@ApplicationContext context: Context): ShopDatabase {
         return Room.databaseBuilder(
             context,
             ShopDatabase::class.java,
@@ -31,7 +31,7 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideShopDao(database: ShopDatabase):ShopDao{
+    fun provideShopDao(database: ShopDatabase): ShopDao {
         return database.getDao()
     }
 

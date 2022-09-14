@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mostafan3ma.android.menupro10">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:name=".MenuApp"
         android:allowBackup="true"

@@ -1,10 +1,9 @@
-package com.mostafan3ma.android.menupro10.localDataSource
+package com.mostafan3ma.android.menupro10.oporations.localDataSource.RoomDatabase
 
-import android.os.FileObserver.DELETE
 import androidx.room.*
-import com.mostafan3ma.android.menupro10.data_Entities.cache_Entities.CacheCategory
-import com.mostafan3ma.android.menupro10.data_Entities.cache_Entities.CacheItem
-import com.mostafan3ma.android.menupro10.data_Entities.cache_Entities.CacheShop
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheCategory
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheItem
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheShop
 
 @Dao
 interface ShopDao {
@@ -31,7 +30,7 @@ interface ShopDao {
 
 //Category
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCategories(cacheCategory: CacheCategory):Long
+    suspend fun insertCategory(cacheCategory: CacheCategory):Long
 
     @Query("SELECT * FROM categories")
     suspend fun getCategories():List<CacheCategory>

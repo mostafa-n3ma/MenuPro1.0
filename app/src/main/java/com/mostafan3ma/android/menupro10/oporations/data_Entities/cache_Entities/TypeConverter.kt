@@ -1,8 +1,8 @@
-package com.mostafan3ma.android.menupro10.data_Entities.cache_Entities
+package com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import com.mostafan3ma.android.menupro10.data_Entities.Category
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.Category
 
 class CategoryConverter {
     @TypeConverter

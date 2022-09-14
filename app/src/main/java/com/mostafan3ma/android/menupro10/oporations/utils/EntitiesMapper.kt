@@ -1,11 +1,10 @@
-package com.mostafan3ma.android.menupro10.utils
+package com.mostafan3ma.android.menupro10.oporations.utils
 
-import com.mostafan3ma.android.menupro10.data_Entities.*
-import com.mostafan3ma.android.menupro10.data_Entities.cache_Entities.CacheCategory
-import com.mostafan3ma.android.menupro10.data_Entities.cache_Entities.CacheItem
-import com.mostafan3ma.android.menupro10.data_Entities.cache_Entities.CacheShop
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.*
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheCategory
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheItem
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheShop
 import javax.inject.Inject
-import kotlin.math.log
 
 class EntitiesMapper
 @Inject
@@ -30,8 +29,8 @@ constructor()
             type = networkEntity.type,
             phoneNumber = networkEntity.phoneNumber,
             logo = networkEntity.logo,
-            categories_list = networkEntity.categories_list,
-            items = networkEntity.items
+            categories_list = networkEntity.categories_list!!,
+            items = networkEntity.items!!
         )
     }
 
