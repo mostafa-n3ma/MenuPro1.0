@@ -8,6 +8,7 @@ interface DefaultLocalDataSource {
 
    suspend fun insertShop(cacheShop: CacheShop):Long
    suspend fun getShop():List<CacheShop>
+   suspend fun countShopTable():Int
    suspend fun deleteShop(cacheShop: CacheShop):Int
    suspend fun clearShop()
    suspend fun updateShop(cacheShop: CacheShop)

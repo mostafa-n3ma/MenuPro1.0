@@ -19,6 +19,9 @@ constructor(private var db: FirebaseFirestore) : DefaultRemoteDataSource {
             .addOnSuccessListener {
                 downloadedEntity=it.toObject(NetworkEntity::class.java)
                 Log.d("RemoteDataSource", "downloadRemoteData: Success")
+            }
+            .addOnFailureListener{
+
             }.await()
 
 

@@ -1,10 +1,12 @@
 package com.mostafan3ma.android.menupro10.oporations.localDataSource
 
+import androidx.lifecycle.LiveData
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheCategory
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheItem
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheShop
 import com.mostafan3ma.android.menupro10.oporations.localDataSource.RoomDatabase.ShopDao
 import javax.inject.Inject
+import kotlin.Exception
 
 class LocalDataSource
 @Inject
@@ -19,6 +21,11 @@ constructor(private val shopDao: ShopDao):DefaultLocalDataSource
     override suspend fun getShop(): List<CacheShop> {
         return shopDao.getShop()
     }
+
+    override suspend fun countShopTable(): Int {
+        return shopDao.countShopTable()
+    }
+
     override suspend fun deleteShop(cacheShop: CacheShop): Int {
         return shopDao.deleteShop(cacheShop)
     }

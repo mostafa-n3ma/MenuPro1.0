@@ -8,9 +8,8 @@ import javax.inject.Inject
 
 class EntitiesMapper
 @Inject
-constructor()
-{
-    fun mapDomainToNetworkEntity(domainModel: DomainModel):NetworkEntity{
+constructor() {
+    fun mapDomainToNetworkEntity(domainModel: DomainModel): NetworkEntity {
         return NetworkEntity(
             userId = domainModel.userId,
             name = domainModel.name,
@@ -22,7 +21,7 @@ constructor()
         )
     }
 
-    fun mapNetworkToDomainModel(networkEntity: NetworkEntity):DomainModel{
+    fun mapNetworkToDomainModel(networkEntity: NetworkEntity): DomainModel {
         return DomainModel(
             userId = networkEntity.userId,
             name = networkEntity.name,
@@ -35,9 +34,7 @@ constructor()
     }
 
 
-
-
-    fun getShopFromDomainModel(domainModel: DomainModel):CacheShop{
+    fun getShopFromDomainModel(domainModel: DomainModel): CacheShop {
         return CacheShop(
             id = domainModel.userId,
             name = domainModel.name,
@@ -46,36 +43,34 @@ constructor()
             logo = domainModel.logo,
         )
     }
-    fun getCacheCategoriesFromDomainModel(domainModel: DomainModel):List<CacheCategory>{
+
+    fun getCacheCategoriesFromDomainModel(domainModel: DomainModel): List<CacheCategory> {
         return domainModel.categories_list.map {
             it.mapToCacheCategory(it)
         }
     }
 
-    fun getCacheItems(domainModel: DomainModel):List<CacheItem>{
+    fun getCacheItems(domainModel: DomainModel): List<CacheItem> {
         return domainModel.items.map {
             it.getCacheItem(it)
         }
     }
 
 
-
-    fun buildDomainFromCache(cacheShop: CacheShop
-                             ,cacheCategoryList: List<CacheCategory>
-                             ,cacheItemList: List<CacheItem>):DomainModel{
+    fun buildDomainFromCache(
+        cacheShop: CacheShop, cacheCategoryList: List<CacheCategory>, cacheItemList: List<CacheItem>
+    ): DomainModel {
         return DomainModel(
-            userId =          cacheShop.id,
-            name =            cacheShop.name,
-            type =            cacheShop.type,
-            phoneNumber =     cacheShop.phoneNumber,
-            logo =            cacheShop.logo,
+            userId = cacheShop.id,
+            name = cacheShop.name,
+            type = cacheShop.type,
+            phoneNumber = cacheShop.phoneNumber,
+            logo = cacheShop.logo,
             categories_list = cacheCategoryList.map { it.getCategory(it) },
-            items =           cacheItemList.map { it.getItem(it) }
+            items = cacheItemList.map { it.getItem(it) }
         )
 
     }
-
-
 
 
 }

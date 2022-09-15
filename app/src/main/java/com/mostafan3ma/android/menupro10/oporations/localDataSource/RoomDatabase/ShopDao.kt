@@ -15,6 +15,10 @@ interface ShopDao {
     @Query("SELECT * FROM shop")
     suspend fun getShop():List<CacheShop>
 
+    @Query("SELECT COUNT(*) FROM shop")
+    suspend fun countShopTable():Int
+
+
     @Delete
     suspend fun deleteShop(cacheShop: CacheShop):Int
 
