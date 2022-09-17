@@ -97,6 +97,10 @@
         def activityTest_version = "1.4.0"
         androidTestImplementation "androidx.test:core-ktx:$activityTest_version"
 
+
+        implementation("io.coil-kt:coil:2.1.0")
+
+
     }
 
 

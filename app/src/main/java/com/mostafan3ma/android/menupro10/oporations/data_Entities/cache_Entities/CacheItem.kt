@@ -14,8 +14,10 @@ data class CacheItem(
     var description:String="",
     @ColumnInfo(name="category")
     var category: Category,
-    @ColumnInfo(name="image")
-    var image:String="",
+    @ColumnInfo(name="imageName")
+    var imageName:String="",
+    @ColumnInfo(name= "imageUri")
+    var imageUri:String="",
     @ColumnInfo(name="price")
     var price:String="",
     @ColumnInfo(name="size")

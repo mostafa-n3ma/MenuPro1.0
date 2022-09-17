@@ -15,7 +15,8 @@ constructor() {
             name = domainModel.name,
             type = domainModel.type,
             phoneNumber = domainModel.phoneNumber,
-            logo = domainModel.logo,
+            logoImageName = domainModel.logoImageName,
+            logoImageUri = domainModel.logoImageUri,
             categories_list = domainModel.categories_list,
             items = domainModel.items
         )
@@ -27,7 +28,8 @@ constructor() {
             name = networkEntity.name,
             type = networkEntity.type,
             phoneNumber = networkEntity.phoneNumber,
-            logo = networkEntity.logo,
+            logoImageName = networkEntity.logoImageName,
+            logoImageUri = networkEntity.logoImageUri,
             categories_list = networkEntity.categories_list!!,
             items = networkEntity.items!!
         )
@@ -40,7 +42,8 @@ constructor() {
             name = domainModel.name,
             type = domainModel.type,
             phoneNumber = domainModel.phoneNumber,
-            logo = domainModel.logo,
+            logoImageName = domainModel.logoImageName,
+            logoImageUri = domainModel.logoImageUri,
         )
     }
 
@@ -65,7 +68,8 @@ constructor() {
             name = cacheShop.name,
             type = cacheShop.type,
             phoneNumber = cacheShop.phoneNumber,
-            logo = cacheShop.logo,
+            logoImageName = cacheShop.logoImageName,
+            logoImageUri = cacheShop.logoImageUri,
             categories_list = cacheCategoryList.map { it.getCategory(it) },
             items = cacheItemList.map { it.getItem(it) }
         )

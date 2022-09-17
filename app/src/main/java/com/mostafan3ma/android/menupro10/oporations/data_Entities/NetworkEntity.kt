@@ -5,7 +5,8 @@ data class NetworkEntity(
     var name: String = "",
     var type: String = "",
     var phoneNumber: String = "",
-    var logo: String = "",
+    var logoImageName:String="",
+    var logoImageUri:String="",
     var categories_list: List<Category>?=null,
     var items: List<Item>?=null
 )

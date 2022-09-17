@@ -15,6 +15,8 @@ data class CacheShop(
     var type:String="",
     @ColumnInfo(name = "phoneNumber")
     var phoneNumber:String="",
-    @ColumnInfo(name = "logo")
-    var logo:String=""
+    @ColumnInfo(name = "logoImageName")
+    var logoImageName:String="",
+    @ColumnInfo(name="logoImageUri")
+    var logoImageUri:String=""
 )

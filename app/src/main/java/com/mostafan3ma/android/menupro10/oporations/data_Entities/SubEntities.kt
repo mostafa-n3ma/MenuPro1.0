@@ -6,14 +6,16 @@ import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities
 
 data class Category(
     var name: String="",
-    var image:String="",
+    var imageName:String="",
+    var imageUri:String="",
     var description:String=""
 )
 
 fun Category.mapToCacheCategory(category: Category):CacheCategory{
     return CacheCategory(
         name=category.name,
-        image=category.image,
+        imageName=category.imageName,
+        imageUri=category.imageUri,
         description=category.description
     )
 }
@@ -21,7 +23,8 @@ fun Category.mapToCacheCategory(category: Category):CacheCategory{
 fun CacheCategory.getCategory(cacheCategory: CacheCategory):Category{
     return Category(
         name=cacheCategory.name,
-        image=cacheCategory.image,
+        imageName=cacheCategory.imageName,
+        imageUri=cacheCategory.imageUri,
         description=cacheCategory.description
     )
 }
@@ -33,7 +36,8 @@ data class Item(
     var name: String="",
     var description:String="",
     var category: Category?=null,
-    var image:String="",
+    var imageName:String="",
+    var imageUri: String="",
     var price:String="",
     var size:String=""
 )
@@ -43,7 +47,8 @@ fun Item.getCacheItem(item: Item):CacheItem{
         name=item.name,
         description=item.description,
         category=item.category!!,
-        image=item.image,
+        imageName=item.imageName,
+        imageUri=item.imageUri,
         price=item.price,
         size = item.size
     )
@@ -54,7 +59,8 @@ fun CacheItem.getItem(cacheItem: CacheItem):Item{
         name=cacheItem.name,
         description=cacheItem.description,
         category=cacheItem.category,
-        image=cacheItem.image,
+        imageName=cacheItem.imageName,
+        imageUri=cacheItem.imageUri,
         price=cacheItem.price,
         size = cacheItem.size
     )

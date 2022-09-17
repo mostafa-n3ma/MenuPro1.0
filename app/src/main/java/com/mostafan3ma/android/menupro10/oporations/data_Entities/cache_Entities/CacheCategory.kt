@@ -9,8 +9,10 @@ data class CacheCategory(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "name")
     var name: String="",
-    @ColumnInfo(name="image")
-    var image:String="",
+    @ColumnInfo(name="imageName")
+    var imageName:String="",
+    @ColumnInfo(name="ImageUri")
+    var imageUri:String="",
     @ColumnInfo(name="description")
     var description:String=""
 )
