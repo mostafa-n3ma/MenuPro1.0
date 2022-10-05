@@ -1,4 +1,4 @@
-package com.mostafan3ma.android.menupro10.oporations.localDataSource.RoomDatabase
+package com.mostafan3ma.android.menupro10.oporations.DataManagment.localDataSource.RoomDatabase
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

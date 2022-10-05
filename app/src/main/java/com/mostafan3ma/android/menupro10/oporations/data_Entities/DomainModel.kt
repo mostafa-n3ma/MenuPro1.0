@@ -1,7 +1,5 @@
 package com.mostafan3ma.android.menupro10.oporations.data_Entities
 
-import androidx.room.ColumnInfo
-
 data class DomainModel(
     var userId:String,
     var name:String="",
@@ -12,4 +10,3 @@ data class DomainModel(
     var categories_list:List<Category>,
     var items:List<Item>
 )
-

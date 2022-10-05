@@ -1,8 +1,8 @@
 package com.mostafan3ma.android.menupro10.oporations.di
 
-import com.mostafan3ma.android.menupro10.oporations.localDataSource.LocalDataSource
-import com.mostafan3ma.android.menupro10.oporations.remoteDataSource.RemoteDataSource
-import com.mostafan3ma.android.menupro10.oporations.repository.ShopRepository
+import com.mostafan3ma.android.menupro10.oporations.DataManagment.localDataSource.LocalDataSource
+import com.mostafan3ma.android.menupro10.oporations.DataManagment.remoteDataSource.RemoteDataSource
+import com.mostafan3ma.android.menupro10.oporations.DataManagment.repository.ShopRepository
 import com.mostafan3ma.android.menupro10.oporations.utils.EntitiesMapper
 import dagger.Module
 import dagger.Provides

@@ -2,8 +2,8 @@ package com.mostafan3ma.android.menupro10.oporations.di
 
 import android.content.Context
 import androidx.room.Room
-import com.mostafan3ma.android.menupro10.oporations.localDataSource.RoomDatabase.ShopDao
-import com.mostafan3ma.android.menupro10.oporations.localDataSource.RoomDatabase.ShopDatabase
+import com.mostafan3ma.android.menupro10.oporations.DataManagment.localDataSource.RoomDatabase.ShopDao
+import com.mostafan3ma.android.menupro10.oporations.DataManagment.localDataSource.RoomDatabase.ShopDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

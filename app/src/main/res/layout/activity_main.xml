@@ -6,17 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="download"
 
+    <LinearLayout
+        android:id="@+id/image_downloader_layout2"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
 
+        <ProgressBar
+            android:id="@+id/image_downloader_pb2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/img2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/image_downloader_layout"
@@ -26,7 +43,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn">
+        app:layout_constraintTop_toBottomOf="@+id/choose_from_gallery_btn">
 
         <ProgressBar
             android:id="@+id/image_downloader_pb"
@@ -47,33 +64,69 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/save_btn"
+        android:id="@+id/choose_from_gallery_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="saveToStoredg"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="4dp"
+        android:text="choose from gallery"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/extract_btn"
+        android:id="@+id/upload_img_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="get from storedg"
+        android:text="upload to firebase"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.511"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/save_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/getimagename_et1" />
 
-    <Button
-        android:id="@+id/delete_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="delete"
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="#837E7E"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/extract_btn" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/getImageName_et2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="image name to download"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/download_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/download_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="download"
+        app:layout_constraintBottom_toTopOf="@+id/image_downloader_layout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/getimagename_et1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="put image name to uplaod with"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_downloader_layout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

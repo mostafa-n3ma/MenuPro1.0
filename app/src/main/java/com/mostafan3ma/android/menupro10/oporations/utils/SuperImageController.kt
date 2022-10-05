@@ -53,14 +53,14 @@ constructor() {
                 this.registrar =
                     host.registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
                         // Handle the returned Uri
-                        returnedUri = uri!!
+                        returnedUri = uri
                     }
             }
             is Fragment -> {
                 this.registrar =
                     host.registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
                         // Handle the returned Uri
-                        returnedUri = uri!!
+                        returnedUri = uri
                     }
             }
             else -> {

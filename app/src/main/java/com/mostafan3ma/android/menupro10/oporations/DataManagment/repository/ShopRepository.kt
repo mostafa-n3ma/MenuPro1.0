@@ -1,40 +1,39 @@
-package com.mostafan3ma.android.menupro10.oporations.repository
+package com.mostafan3ma.android.menupro10.oporations.DataManagment.repository
 
+import android.net.Uri
 import android.util.Log
-import com.google.android.gms.tasks.Task
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.DomainModel
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.NetworkEntity
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheCategory
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheItem
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheShop
-import com.mostafan3ma.android.menupro10.oporations.localDataSource.LocalDataSource
-import com.mostafan3ma.android.menupro10.oporations.remoteDataSource.RemoteDataSource
+import com.mostafan3ma.android.menupro10.oporations.DataManagment.localDataSource.LocalDataSource
+import com.mostafan3ma.android.menupro10.oporations.DataManagment.remoteDataSource.RemoteDataSource
 import com.mostafan3ma.android.menupro10.oporations.utils.DataState
 import com.mostafan3ma.android.menupro10.oporations.utils.EntitiesMapper
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import kotlin.Exception
 
 class ShopRepository
 @Inject
-constructor(private val localDB: LocalDataSource,
-            private val remoteDB: RemoteDataSource,
+constructor(private val localDataSource: LocalDataSource,
+            private val remoteDataSource: RemoteDataSource,
             private val entityMapper: EntitiesMapper) :
     DefaultShopRepository {
 
     //Local 1
     //1.1 Shop
     override suspend fun insertShop(cacheShop: CacheShop): Long {
-        return localDB.insertShop(cacheShop)
+        return localDataSource.insertShop(cacheShop)
     }
 
     override suspend fun getShop(): Flow<DataState<List<CacheShop>>> = flow {
         emit(DataState.Loading)
             try {
-                if (localDB.countShopTable() !=0){
-                    val shopList: List<CacheShop> = localDB.getShop()
+                if (localDataSource.countShopTable() !=0){
+                    val shopList: List<CacheShop> = localDataSource.getShop()
                     emit(DataState.Success(shopList))
                 }else{
                     return@flow
@@ -48,28 +47,28 @@ constructor(private val localDB: LocalDataSource,
     }
 
     override suspend fun countShopTable(): Int {
-        return localDB.countShopTable()
+        return localDataSource.countShopTable()
     }
 
-    override suspend fun deleteShop(cacheShop: CacheShop): Int = localDB.deleteShop(cacheShop)
+    override suspend fun deleteShop(cacheShop: CacheShop): Int = localDataSource.deleteShop(cacheShop)
 
     override suspend fun clearShop() {
-        localDB.clearShop()
+        localDataSource.clearShop()
     }
 
     override suspend fun updateShop(cacheShop: CacheShop) {
-        localDB.updateShop(cacheShop)
+        localDataSource.updateShop(cacheShop)
     }
 
 
     //1.2 Category
     override suspend fun insertCategory(cacheCategory: CacheCategory): Long =
-        localDB.insertCategory(cacheCategory)
+        localDataSource.insertCategory(cacheCategory)
 
     override suspend fun getCategories(): Flow<DataState<List<CacheCategory>>> = flow {
         emit(DataState.Loading)
         try {
-            val categories = localDB.getCategories()
+            val categories = localDataSource.getCategories()
             emit(DataState.Success(categories))
         } catch (e: Exception) {
             emit(DataState.Error(e))
@@ -79,7 +78,7 @@ constructor(private val localDB: LocalDataSource,
     override suspend fun getCategoryByName(name: String): Flow<DataState<CacheCategory?>> = flow {
         emit(DataState.Loading)
         try {
-            val category = localDB.getCategoryByName(name)
+            val category = localDataSource.getCategoryByName(name)
             emit(DataState.Success(category))
         } catch (e: Exception) {
             emit(DataState.Error(e))
@@ -87,24 +86,24 @@ constructor(private val localDB: LocalDataSource,
     }
 
     override suspend fun deleteCategory(cacheCategory: CacheCategory): Int =
-        localDB.deleteCategory(cacheCategory)
+        localDataSource.deleteCategory(cacheCategory)
 
     override suspend fun clearCategories() {
-        localDB.clearCategories()
+        localDataSource.clearCategories()
     }
 
     override suspend fun updateCategory(cacheCategory: CacheCategory) {
-        localDB.updateCategory(cacheCategory)
+        localDataSource.updateCategory(cacheCategory)
     }
 
 
     //1.3 Item
-    override suspend fun insertItem(cacheItem: CacheItem): Long = localDB.insertItem(cacheItem)
+    override suspend fun insertItem(cacheItem: CacheItem): Long = localDataSource.insertItem(cacheItem)
 
     override suspend fun getItems(): Flow<DataState<List<CacheItem>>> = flow {
         emit(DataState.Loading)
         try {
-            val items = localDB.getItems()
+            val items = localDataSource.getItems()
             emit(DataState.Success(items))
         } catch (e: Exception) {
             emit(DataState.Error(e))
@@ -114,18 +113,18 @@ constructor(private val localDB: LocalDataSource,
     override suspend fun getItemByName(name: String): Flow<DataState<CacheItem?>> = flow {
         emit(DataState.Loading)
         try {
-            val item = localDB.getItemByName(name)
+            val item = localDataSource.getItemByName(name)
             emit(DataState.Success(item))
         } catch (e: Exception) {
             emit(DataState.Error(e))
         }
     }
 
-    override suspend fun deleteItem(cacheItem: CacheItem): Int = localDB.deleteItem(cacheItem)
+    override suspend fun deleteItem(cacheItem: CacheItem): Int = localDataSource.deleteItem(cacheItem)
 
-    override suspend fun clearItems() = localDB.clearItems()
+    override suspend fun clearItems() = localDataSource.clearItems()
 
-    override suspend fun updateItem(cacheItem: CacheItem) = localDB.updateItem(cacheItem)
+    override suspend fun updateItem(cacheItem: CacheItem) = localDataSource.updateItem(cacheItem)
 
     //Local 1
     override suspend fun emptyAllDatabase() {
@@ -141,7 +140,7 @@ constructor(private val localDB: LocalDataSource,
         emit(DataState.Loading)
         try {
             val downloadedEntity: NetworkEntity? =
-                remoteDB.downloadRemoteData(collectionName, shopName)
+                remoteDataSource.downloadRemoteData(collectionName, shopName)
             emit(DataState.Success(downloadedEntity))
         } catch (e: Exception) {
             emit(DataState.Error(e))
@@ -153,14 +152,14 @@ constructor(private val localDB: LocalDataSource,
         shopName: String,
         entity: NetworkEntity
     ) {
-        remoteDB.uploadRemoteData(collectionName, shopName, entity)
+        remoteDataSource.uploadRemoteData(collectionName, shopName, entity)
     }
 
     override suspend fun refreshCacheDatabase(scope:CoroutineScope) {
         //getting the shop name from RoomDatabase
         var shopName:String=""
         if (countShopTable() !=0){
-            shopName=localDB.getShop()[0].name
+            shopName=localDataSource.getShop()[0].name
         }else{
             Log.d("ShopRepository", "refreshCacheDatabase: Empty DB")
             return
@@ -168,7 +167,7 @@ constructor(private val localDB: LocalDataSource,
 
         // download from firebase
         val downloadedNetworkEntity: NetworkEntity? =
-            remoteDB.downloadRemoteData("shops",shopName)
+            remoteDataSource.downloadRemoteData("shops",shopName)
         //Convert downloaded data from NetworkEntity type To DomainModel type
         val domainModel: DomainModel =entityMapper.mapNetworkToDomainModel(downloadedNetworkEntity!!)
         //getting cache Entities from DomainModel
@@ -176,21 +175,21 @@ constructor(private val localDB: LocalDataSource,
         val categoriesList: List<CacheCategory> =entityMapper.getCacheCategoriesFromDomainModel(domainModel)
         val items=entityMapper.getCacheItems(domainModel)
         //save cache entities to Room
-        localDB.insertShop(shop)
+        localDataSource.insertShop(shop)
         categoriesList.map {cacheCategory->
-            localDB.insertCategory(cacheCategory)
+            localDataSource.insertCategory(cacheCategory)
         }
         items.map { cacheItem ->
-            localDB.insertItem(cacheItem)
+            localDataSource.insertItem(cacheItem)
         }
 
     }
 
     override suspend fun refreshRemoteDatabase(scope:CoroutineScope) {
         //getting cache entities from Room
-        val cacheShop: CacheShop =localDB.getShop()[0]
-        val cacheCategories: List<CacheCategory> =localDB.getCategories()
-        val cacheItems: List<CacheItem> =localDB.getItems()
+        val cacheShop: CacheShop =localDataSource.getShop()[0]
+        val cacheCategories: List<CacheCategory> =localDataSource.getCategories()
+        val cacheItems: List<CacheItem> =localDataSource.getItems()
         //build DomainModel
         val domainModel=entityMapper.buildDomainFromCache(cacheShop,cacheCategories,cacheItems)
         // convert DomainModel to NetworkEntity
@@ -211,15 +210,24 @@ constructor(private val localDB: LocalDataSource,
         emit(DataState.Loading)
         try {
             //getting cache entities from Room
-            val cacheShop: CacheShop =localDB.getShop()[0]
-            val cacheCategories: List<CacheCategory> =localDB.getCategories()
-            val cacheItems: List<CacheItem> =localDB.getItems()
+            val cacheShop: CacheShop =localDataSource.getShop()[0]
+            val cacheCategories: List<CacheCategory> =localDataSource.getCategories()
+            val cacheItems: List<CacheItem> =localDataSource.getItems()
             //build DomainModel
             val domainModel=entityMapper.buildDomainFromCache(cacheShop,cacheCategories,cacheItems)
             emit(DataState.Success(domainModel))
         }catch (e:Exception){emit(DataState.Error(e))}
     }
 
+    override suspend fun uploadImageToFirebaseStorage(
+        shopName: String,
+        imgName: String,
+        imgUri: Uri
+    ): Boolean {
+        return remoteDataSource.uploadImageToFirebaseStorage(shopName, imgName, imgUri)
+    }
 
-
+    override suspend fun getImgDownloadUri(shopName: String, imgName: String): Uri? {
+       return remoteDataSource.getImgDownloadUri(shopName, imgName)
+    }
 }
