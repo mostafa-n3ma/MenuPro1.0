@@ -1,5 +1,6 @@
 package com.mostafan3ma.android.menupro10.oporations.di
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -24,4 +25,10 @@ object FireModule {
     fun provideFireStorageReference(): StorageReference {
         return FirebaseStorage.getInstance().reference
     }
+    @Singleton
+    @Provides
+    fun provideFirebaseAuthInstance():FirebaseAuth{
+        return FirebaseAuth.getInstance()
+    }
+
 }
