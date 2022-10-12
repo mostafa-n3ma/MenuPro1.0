@@ -1,5 +1,6 @@
 package com.mostafan3ma.android.menupro10.oporations.DataManagment.repository
 
+import android.app.Activity
 import android.net.Uri
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.DomainModel
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.NetworkEntity
@@ -46,20 +47,16 @@ interface DefaultShopRepository {
 
 
     //2 Remote
-    suspend fun downloadRemoteData(
-        collectionName: String,
-        shopName: String
-    ): Flow<DataState<NetworkEntity?>>
-
+    suspend fun downloadRemoteData(collectionName: String, shopName: String): Flow<DataState<NetworkEntity?>>
     suspend fun uploadCacheData(collectionName: String, shopName: String, entity: NetworkEntity)
-
-
-    //Building Domain
     suspend fun refreshCacheDatabase(scope: CoroutineScope)
     suspend fun refreshRemoteDatabase(scope: CoroutineScope)
     suspend fun getCacheDomainShop(): Flow<DataState<DomainModel>>
     suspend fun uploadImageToFirebaseStorage(shopName: String, imgName: String, imgUri: Uri): Boolean
     suspend fun getImgDownloadUri(shopName: String, imgName: String): Uri?
-
-
+    fun getUserPhoneNumber():String
+    fun requestPhoneNumberVerificationCode(phoneNumber: String,activity: Activity)
+    fun resendCodeToVerifyPhoneNumber(phoneNumber: String,activity: Activity)
+    suspend fun signIn(code:String):String?
+    fun logOut()
 }

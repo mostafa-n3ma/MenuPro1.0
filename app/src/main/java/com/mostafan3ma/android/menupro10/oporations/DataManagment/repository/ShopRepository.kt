@@ -1,5 +1,6 @@
 package com.mostafan3ma.android.menupro10.oporations.DataManagment.repository
 
+import android.app.Activity
 import android.net.Uri
 import android.util.Log
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.DomainModel
@@ -133,6 +134,7 @@ constructor(private val localDataSource: LocalDataSource,
 
 
     //2 Remote
+    //2.1 fireStore
     override suspend fun downloadRemoteData(
         collectionName: String,
         shopName: String
@@ -219,6 +221,9 @@ constructor(private val localDataSource: LocalDataSource,
         }catch (e:Exception){emit(DataState.Error(e))}
     }
 
+
+
+    //2.2 Storage
     override suspend fun uploadImageToFirebaseStorage(
         shopName: String,
         imgName: String,
@@ -230,4 +235,24 @@ constructor(private val localDataSource: LocalDataSource,
     override suspend fun getImgDownloadUri(shopName: String, imgName: String): Uri? {
        return remoteDataSource.getImgDownloadUri(shopName, imgName)
     }
+
+
+
+    //2.3 Auth
+    override fun getUserPhoneNumber(): String {
+        return remoteDataSource.getUserPhoneNumber()
+    }
+    override fun requestPhoneNumberVerificationCode(phoneNumber: String, activity: Activity) {
+        remoteDataSource.requestPhoneNumberVerificationCode(phoneNumber, activity)
+    }
+    override fun resendCodeToVerifyPhoneNumber(phoneNumber: String, activity: Activity) {
+        remoteDataSource.resendCodeToVerifyPhoneNumber(phoneNumber, activity)
+    }
+    override suspend fun signIn(code: String): String? {
+        return remoteDataSource.signIn(code)
+    }
+    override fun logOut() {
+        remoteDataSource.logOut()
+    }
+
 }

@@ -105,27 +105,24 @@ constructor(
 
 
     //Auth
-
-     fun getUserStatus():String {
+     fun getUserPhoneNumber():String {
          Log.d(RemoteDataSourceTAG, "getUserStatus ")
          return if (firebaseAuth.currentUser != null) {
              val phoneNumber: String? = firebaseAuth.currentUser!!.phoneNumber
              Log.d(RemoteDataSourceTAG, "getUserStatus :true/phone number: $phoneNumber")
              Log.d(RemoteDataSourceTAG, "getUserStatus /id: ${firebaseAuth.currentUser!!.uid}")
-             "signed in with phone number : ${firebaseAuth.currentUser!!.phoneNumber}"
+             "${firebaseAuth.currentUser!!.phoneNumber}"
          } else {
              Log.d(RemoteDataSourceTAG, "getUserStatus: not signed in")
-             "not signed in ><"
+             "not signed in"
          }
     }
-
     private  var mForceResendingToken:PhoneAuthProvider.ForceResendingToken?=null
     private  var mVerificationId:String?=null
     private var mCallBack =object : PhoneAuthProvider.OnVerificationStateChangedCallbacks(){
         override fun onVerificationCompleted(credential: PhoneAuthCredential) {
             firebaseAuth.signInWithCredential(credential)
         }
-
         override fun onVerificationFailed(e: FirebaseException) {
             Log.d(RemoteDataSourceTAG, "onVerificationFailed: ${e.message}")
         }
@@ -137,7 +134,6 @@ constructor(
             mForceResendingToken=token
         }
     }
-
      fun requestPhoneNumberVerificationCode(phoneNumber: String,activity: Activity) {
          Log.d(RemoteDataSourceTAG, "requestPhoneNumberVerificationCode:")
         val options= PhoneAuthOptions.newBuilder(firebaseAuth)
@@ -148,7 +144,6 @@ constructor(
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
-
      fun resendCodeToVerifyPhoneNumber(phoneNumber: String,activity: Activity) {
          Log.d(RemoteDataSourceTAG, "resendCodeToVerifyPhoneNumber: ")
         val options=PhoneAuthOptions.newBuilder(firebaseAuth)
@@ -163,7 +158,6 @@ constructor(
             PhoneAuthProvider.verifyPhoneNumber(options)
         }
     }
-
     suspend fun signIn(code:String):String? {
         Log.d(RemoteDataSourceTAG, "signIn: ")
         val credential=PhoneAuthProvider.getCredential(mVerificationId!!,code)
@@ -182,7 +176,6 @@ constructor(
 
         return result
     }
-
     fun logOut(){
         Log.d(RemoteDataSourceTAG, "logOut: ")
         firebaseAuth.signOut()
