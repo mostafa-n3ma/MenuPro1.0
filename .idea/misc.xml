@@ -3,8 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/country_picker_rounded_corner_black.xml" value="0.1795" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/ic_baseline_cancel_24.xml" value="0.1795" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/rounded_corner.xml" value="0.237" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/s.xml" value="0.1795" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-land/fragment_main_menu.xml" value="0.14666666666666667" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-land/fragment_mainmenu.xml" value="0.2156084656084656" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-large/fragment_create_acount.xml" value="0.14666666666666667" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-large/fragment_main_menu.xml" value="0.13333333333333333" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-large/fragment_mainmenu.xml" value="0.1" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/fragment_main_menu.xml" value="0.3333333333333333" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-w600dp/fragment_main_menu.xml" value="0.14666666666666667" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
-        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/fragment_main_menu.xml" value="0.2546875" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/fragment_create_acount.xml" value="0.1188118811881188" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/fragment_main_menu.xml" value="0.20906370243693886" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/fragment_mainmenu.xml" value="0.16666666666666666" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/scratch.xml" value="0.14666666666666667" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/test_fragment.xml" value="0.25364583333333335" />
       </map>
     </option>

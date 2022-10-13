@@ -69,8 +69,7 @@
         implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0"
 
 
-
-
+        implementation 'com.hbb20:ccp:2.6.1'
 
         def room = "2.4.3"
         implementation "androidx.room:room-runtime:$room"

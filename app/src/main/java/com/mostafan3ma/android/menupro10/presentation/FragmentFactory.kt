@@ -3,8 +3,8 @@ package com.mostafan3ma.android.menupro10.presentation
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.mostafan3ma.android.menupro10.oporations.DataManagment.repository.DefaultShopRepository
-import com.mostafan3ma.android.menupro10.oporations.DataManagment.repository.ShopRepository
 import com.mostafan3ma.android.menupro10.oporations.di.RealRepository
+import com.mostafan3ma.android.menupro10.presentation.welcomeFragments.MainMenuFragment
 import javax.inject.Inject
 
 class FragmentFactory

@@ -13,4 +13,24 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="txt_styles">
+        <item name="fontFamily">@font/poppins_medium</item>
+        <item name="android:textColor">@color/normal_txt_color</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="tablet_txt_styles">
+        <item name="fontFamily">@font/poppins_medium</item>
+        <item name="android:textColor">@color/normal_txt_color</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+
+
+    <style name="textFieldStyle"  parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="hintTextColor">#FFA800</item>
+        <item name="boxStrokeColor">#FFA800</item>
+    </style>
+
+
 </resources>

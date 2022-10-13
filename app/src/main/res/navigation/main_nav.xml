@@ -7,7 +7,16 @@
 
     <fragment
         android:id="@+id/mainMenuFragment"
-        android:name="com.mostafan3ma.android.menupro10.presentation.MainMenuFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.welcomeFragments.MainMenuFragment"
         android:label="fragment_main_menu"
-        tools:layout="@layout/fragment_main_menu" />
+        tools:layout="@layout/fragment_main_menu" >
+        <action
+            android:id="@+id/action_mainMenuFragment_to_createAccountFragment"
+            app:destination="@id/createAccountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createAccountFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.welcomeFragments.CreateAccountFragment"
+        android:label="fragment_create_acount"
+        tools:layout="@layout/fragment_create_acount" />
 </navigation>
