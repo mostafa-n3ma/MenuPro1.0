@@ -48,7 +48,7 @@ interface DefaultShopRepository {
 
     //2 Remote
     suspend fun downloadRemoteData(collectionName: String, shopName: String): Flow<DataState<NetworkEntity?>>
-    suspend fun uploadCacheData(collectionName: String, shopName: String, entity: NetworkEntity)
+    suspend fun uploadCacheData(collectionName: String, shopName: String, entity: NetworkEntity): Boolean
     suspend fun refreshCacheDatabase(scope: CoroutineScope)
     suspend fun refreshRemoteDatabase(scope: CoroutineScope)
     suspend fun getCacheDomainShop(): Flow<DataState<DomainModel>>

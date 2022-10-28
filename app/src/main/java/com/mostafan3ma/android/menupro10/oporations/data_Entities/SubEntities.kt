@@ -21,6 +21,7 @@ fun Category.mapToCacheCategory(category: Category):CacheCategory{
 }
 
 fun CacheCategory.getCategory(cacheCategory: CacheCategory):Category{
+
     return Category(
         name=cacheCategory.name,
         imageName=cacheCategory.imageName,

@@ -16,13 +16,13 @@
     <style name="txt_styles">
         <item name="fontFamily">@font/poppins_medium</item>
         <item name="android:textColor">@color/normal_txt_color</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="tablet_txt_styles">
         <item name="fontFamily">@font/poppins_medium</item>
         <item name="android:textColor">@color/normal_txt_color</item>
-        <item name="android:textSize">36sp</item>
+        <item name="android:textSize">30sp</item>
     </style>
 
 

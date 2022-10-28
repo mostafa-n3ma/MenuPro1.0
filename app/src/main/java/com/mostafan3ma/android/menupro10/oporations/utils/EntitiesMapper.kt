@@ -48,21 +48,24 @@ constructor() {
     }
 
     fun getCacheCategoriesFromDomainModel(domainModel: DomainModel): List<CacheCategory> {
-        return domainModel.categories_list.map {
+        return domainModel.categories_list!!.map {
             it.mapToCacheCategory(it)
         }
     }
 
     fun getCacheItems(domainModel: DomainModel): List<CacheItem> {
-        return domainModel.items.map {
+        return domainModel.items!!.map {
             it.getCacheItem(it)
         }
     }
 
 
     fun buildDomainFromCache(
-        cacheShop: CacheShop, cacheCategoryList: List<CacheCategory>, cacheItemList: List<CacheItem>
+        cacheShop: CacheShop, cacheCategoryList: List<CacheCategory>?=null, cacheItemList: List<CacheItem>?=null
     ): DomainModel {
+        val categoryList:List<Category>? = cacheCategoryList?.map {
+            it.getCategory(it) }
+        val itemList:List<Item>?=cacheItemList?.map { it.getItem(it) }
         return DomainModel(
             userId = cacheShop.id,
             name = cacheShop.name,
@@ -70,8 +73,8 @@ constructor() {
             phoneNumber = cacheShop.phoneNumber,
             logoImageName = cacheShop.logoImageName,
             logoImageUri = cacheShop.logoImageUri,
-            categories_list = cacheCategoryList.map { it.getCategory(it) },
-            items = cacheItemList.map { it.getItem(it) }
+            categories_list = categoryList,
+            items = itemList
         )
 
     }

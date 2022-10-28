@@ -7,6 +7,6 @@ data class DomainModel(
     var phoneNumber:String="",
     var logoImageName:String="",
     var logoImageUri:String="",
-    var categories_list:List<Category>,
-    var items:List<Item>
+    var categories_list:List<Category>?=null,
+    var items:List<Item>?=null
 )

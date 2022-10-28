@@ -1,4 +1,4 @@
-package com.mostafan3ma.android.menupro10.presentation.welcomeFragments
+package com.mostafan3ma.android.menupro10.presentation.startingFragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,17 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mostafan3ma.android.menupro10.R
-import com.mostafan3ma.android.menupro10.databinding.FragmentCreateAcountBinding
+import com.mostafan3ma.android.menupro10.databinding.FragmentPutNumberBinding
 
-class CreateAccountFragment : Fragment() {
+class PutNumberFragment : Fragment() {
 
-private lateinit var binding: FragmentCreateAcountBinding
+
+    private lateinit var binding: FragmentPutNumberBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding=FragmentCreateAcountBinding.inflate(inflater)
-
+        binding=FragmentPutNumberBinding.inflate(inflater)
 
 
         return binding.root

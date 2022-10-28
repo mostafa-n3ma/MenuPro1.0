@@ -153,8 +153,8 @@ constructor(private val localDataSource: LocalDataSource,
         collectionName: String,
         shopName: String,
         entity: NetworkEntity
-    ) {
-        remoteDataSource.uploadRemoteData(collectionName, shopName, entity)
+    ) :Boolean{
+       return remoteDataSource.uploadRemoteData(collectionName, shopName, entity)
     }
 
     override suspend fun refreshCacheDatabase(scope:CoroutineScope) {

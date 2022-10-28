@@ -7,16 +7,61 @@
 
     <fragment
         android:id="@+id/mainMenuFragment"
-        android:name="com.mostafan3ma.android.menupro10.presentation.welcomeFragments.MainMenuFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.startingFragments.WelcomeFragment"
         android:label="fragment_main_menu"
-        tools:layout="@layout/fragment_main_menu" >
+        tools:layout="@layout/fragment_welcom" >
         <action
             android:id="@+id/action_mainMenuFragment_to_createAccountFragment"
             app:destination="@id/createAccountFragment" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_addCategoriesFragment"
+            app:destination="@id/addCategoriesFragment" />
     </fragment>
     <fragment
         android:id="@+id/createAccountFragment"
-        android:name="com.mostafan3ma.android.menupro10.presentation.welcomeFragments.CreateAccountFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.startingFragments.CreateAccountFragment"
         android:label="fragment_create_acount"
-        tools:layout="@layout/fragment_create_acount" />
+        tools:layout="@layout/fragment_create_acount" >
+        <action
+            android:id="@+id/action_createAccountFragment_to_putNumberFragment"
+            app:destination="@id/putNumberFragment" />
+        <action
+            android:id="@+id/action_createAccountFragment_to_otpFragment"
+            app:destination="@id/otpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/putNumberFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.startingFragments.PutNumberFragment"
+        android:label="fragment_put_number"
+        tools:layout="@layout/fragment_put_number" >
+        <action
+            android:id="@+id/action_putNumberFragment_to_otpFragment"
+            app:destination="@id/otpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/otpFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.startingFragments.OtpFragment"
+        android:label="fragment_otp"
+        tools:layout="@layout/fragment_otp" >
+        <action
+            android:id="@+id/action_otpFragment_to_addCategoriesFragment"
+            app:destination="@id/addCategoriesFragment" />
+        <argument
+            android:name="shop"
+            app:argType="com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheShop" />
+    </fragment>
+    <fragment
+        android:id="@+id/addCategoriesFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.startingFragments.AddCategoriesFragment"
+        android:label="fragment_add_catagories"
+        tools:layout="@layout/fragment_add_catagories" >
+        <action
+            android:id="@+id/action_addCategoriesFragment_to_addProductsFragment"
+            app:destination="@id/addProductsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addProductsFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.startingFragments.AddProductsFragment"
+        android:label="fragment_add_products"
+        tools:layout="@layout/fragment_add_products" />
 </navigation>

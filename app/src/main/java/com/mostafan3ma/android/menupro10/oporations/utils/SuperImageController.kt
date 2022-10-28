@@ -32,6 +32,7 @@ class SuperImageController
 constructor() {
     companion object{
         const val IMAGES_FILE="Images File"
+        const val TAG="SuperImageController"
     }
 
     /**
@@ -40,6 +41,7 @@ constructor() {
 
      */
     var returnedUri: Uri? = null
+
     private lateinit var registrar: ActivityResultLauncher<String>
 
 
@@ -54,6 +56,7 @@ constructor() {
                     host.registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
                         // Handle the returned Uri
                         returnedUri = uri
+                        Log.d(TAG, "register from Activity $uri ")
                     }
             }
             is Fragment -> {
@@ -61,10 +64,11 @@ constructor() {
                     host.registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
                         // Handle the returned Uri
                         returnedUri = uri
+                        Log.d(TAG, "register from Fragment $uri")
                     }
             }
             else -> {
-
+                Log.d(TAG, "register: the host in not fragment or activity")
             }
         }
     }

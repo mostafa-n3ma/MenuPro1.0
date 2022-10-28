@@ -56,11 +56,16 @@ constructor(
         collectionName: String,
         shopName: String,
         entitiy: NetworkEntity
-    ) {
+    ):Boolean {
+        var success=false
         firestore.collection(collectionName).document(shopName).set(entitiy)
             .addOnSuccessListener {
                 Log.d("RemoteDataSource", "uploadRemoteData: Success")
-            }
+                success=true
+            }.addOnFailureListener{
+                Log.d("RemoteDataSource", "uploadRemoteData:Faille ${it.message} ")
+            }.await()
+        return success
 
     }
 
@@ -165,12 +170,12 @@ constructor(
         firebaseAuth.signInWithCredential(credential)
             .addOnFailureListener {
                 Log.d(RemoteDataSourceTAG, "signIn: addOnFailureListener :${it.message.toString()}")
-                result="failed to sign in : ${it.message}"
+                result=null
             }
             .addOnSuccessListener {
                 if (firebaseAuth.currentUser !=null){
                     Log.d(RemoteDataSourceTAG, "signIn:addOnSuccessListener ")
-                    result=firebaseAuth.currentUser!!.phoneNumber
+                    result=firebaseAuth.currentUser!!.uid
                 }
             }.await()
 
@@ -179,6 +184,10 @@ constructor(
     fun logOut(){
         Log.d(RemoteDataSourceTAG, "logOut: ")
         firebaseAuth.signOut()
+
     }
 
+
+
 }
+

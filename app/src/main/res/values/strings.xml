@@ -14,5 +14,35 @@
     <string name="txt_type">Type</string>
     <string name="txt_phone_number">Phone Number</string>
     <string name="txt_your_shop_type">Your Shop Type</string>
+    <string name="txt_enter_your_phone_number_related_to_the_account">enter your phone number related to the account</string>
+    <string name="txt_please_enter_the_code_you_received_at_964xxxxxxxxxx_for_verification">Please , Enter the Code you received at +964xxxxxxxxxx for verification</string>
+    <string name="txt_didn_t_t_get_the_code_resend">didn\'t’t get the code ?</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="resend">Resend</string>
+    <string name="txt_add_your_products_categories">Add your products categories...</string>
+    <string name="txt_for_example_in_restaurant_sea_food_pizza_burger_drinks">for example in restaurant (sea food/pizza/burger/drinks...)</string>
+    <string name="txt_categories">Categories</string>
+    <string name="txt_skip">Skip</string>
+    <string name="txt_category_name">Category Name</string>
+    <string name="txt_almost_finished">Almost Finished</string>
+    <string name="txt_add_your_products">Add your products</string>
+    <string name="txt_products">products</string>
+
+    <string-array name="types">
+        <item>Restaurant</item>
+        <item>spare parts store</item>
+        <item>market store</item>
+        <item>Clothing store</item>
+        <item>shoe store</item>
+        <item>Other</item>
+    </string-array>
+
+
+<!--    <string name="facebook_app_id">2042108312846373</string>-->
+<!--    <string name="fb_login_protocol_scheme">fb2042108312846373</string>-->
+
+    <string name="facebook_application_id" translatable="false">2042108312846373</string>
+    <!-- Facebook Application ID, prefixed by 'fb'. Enables Chrome Custom tabs. -->
+    <string name="facebook_login_protocol_scheme" translatable="false">fb2042108312846373</string>
 
 </resources>
