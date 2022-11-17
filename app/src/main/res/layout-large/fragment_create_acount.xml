@@ -56,7 +56,7 @@
                     android:layout_height="300dp"
                     android:onClick="@{()-> viewModel.addLogoClicked()}"
                     android:layout_marginTop="32dp"
-                    android:src="@drawable/create_acount_img"
+                    android:src="@drawable/add_new_img"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txt_create_account2" />

@@ -84,7 +84,7 @@
         android:layout_height="400dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        tools:listitem="@layout/item_add"
+        tools:listitem="@layout/item_add_categorey"
         tools:itemCount="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

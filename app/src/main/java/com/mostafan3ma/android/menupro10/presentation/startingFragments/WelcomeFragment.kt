@@ -48,7 +48,8 @@ companion object{
                     Log.d(TAG, "WelcomeFragment/onCreateView:(AuthenticationState=UNAUTHENTICATED) ")
                     //go with the create Account processes GetStarted button
                     binding.btnGetStarted.setOnClickListener {
-                        findNavController().navigate(WelcomeFragmentDirections.actionMainMenuFragmentToCreateAccountFragment())
+//                        findNavController().navigate(WelcomeFragmentDirections.actionMainMenuFragmentToCreateAccountFragment())
+                        findNavController().navigate(WelcomeFragmentDirections.actionMainMenuFragmentToAddCategoriesFragment())
                     }
                 }
             }

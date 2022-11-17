@@ -17,7 +17,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.mostafan3ma.android.menupro10.R
 import com.mostafan3ma.android.menupro10.databinding.FragmentCreateAcountBinding
-import com.mostafan3ma.android.menupro10.oporations.DataManagment.repository.ShopRepository
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheShop
 import com.mostafan3ma.android.menupro10.oporations.utils.SuperImageController
 import com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels.CreateAccountViewModel
@@ -109,7 +108,7 @@ constructor(private val superImageController: SuperImageController) : Fragment()
             if (imgBitmap != null) {
                 binding.imgAddLogo.setImageBitmap(imgBitmap)
             } else {
-                binding.imgAddLogo.setImageResource(R.drawable.create_acount_img)
+                binding.imgAddLogo.setImageResource(R.drawable.add_new_img)
             }
         })
         viewModel.type.observe(viewLifecycleOwner, Observer {type->

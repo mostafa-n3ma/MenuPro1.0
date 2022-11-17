@@ -60,6 +60,7 @@
         kapt "androidx.hilt:hilt-compiler:$hilt_view_models"
 
         implementation "androidx.fragment:fragment-ktx:$fragment_ktx"
+        implementation 'com.google.android.material:material:1.8.0-alpha02'
 
         implementation "androidx.lifecycle:lifecycle-livedata-ktx:$liveData_ktx"
 
@@ -70,9 +71,6 @@
         //country Code Picker
         implementation 'com.hbb20:ccp:2.6.1'
 
-        //otp view
-        // https://github.com/mukeshsolanki/android-otpview-pinview
-        implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.1.2'
 
 
         implementation "androidx.room:room-runtime:$room"

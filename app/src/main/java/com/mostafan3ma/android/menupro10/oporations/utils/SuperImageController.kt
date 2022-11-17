@@ -15,6 +15,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import coil.ImageLoader
 import coil.request.ImageRequest
@@ -89,6 +90,15 @@ constructor() {
             ImageDecoder.createSource(context.contentResolver, returnedUri!!)
         return ImageDecoder.decodeBitmap(source)
     }
+
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    fun getBitmapFromUri(context: Context, uri: Uri):Bitmap{
+        val source: ImageDecoder.Source =
+            ImageDecoder.createSource(context.contentResolver, uri)
+        return ImageDecoder.decodeBitmap(source)
+    }
+
 
 
     /**
@@ -213,7 +223,7 @@ constructor() {
      * - in case the image note found pass a drawable Resource to display instead
      * - image can be saved by fun saveImageToInternalStorage()
      */
-    suspend fun getImageFromInternalStorage(context: Context, imageName: String, errorImageDrawable:Int): Bitmap?{
+     fun getImageFromInternalStorage(context: Context, imageName: String, errorImageDrawable:Int): Bitmap?{
         return try {
             val dir=context.filesDir
             val file= File(dir,IMAGES_FILE)

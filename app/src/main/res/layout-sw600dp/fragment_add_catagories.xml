@@ -1,106 +1,251 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/default_background"
-    tools:context=".presentation.startingFragments.AddCategoriesFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
 
-    <TextView
-        android:id="@+id/txt1"
-        style="@style/tablet_txt_styles"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/txt_add_your_products_categories"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <variable
+            name="adapter"
+            type="com.mostafan3ma.android.menupro10.presentation.startingFragments.adapters.AddCategoriesAdapter" />
 
+        <variable
+            name="viewModel"
+            type="com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels.AddCategoriesViewModel" />
 
-    <TextView
-        android:id="@+id/txt2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="@string/txt_for_example_in_restaurant_sea_food_pizza_burger_drinks"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt1" />
+        <variable
+            name="clickedCategory"
+            type="com.mostafan3ma.android.menupro10.oporations.data_Entities.Category" />
 
-    <TextView
-        android:id="@+id/txt3"
-        style="@style/tablet_txt_styles"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/txt_categories"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt2" />
+    </data>
 
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:background="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/txt3"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/txt3"
-        app:layout_constraintTop_toBottomOf="@+id/txt3" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rec_categories"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/txt3"
-        app:layout_constraintTop_toBottomOf="@+id/txt3"
-        app:layout_constraintVertical_bias="0.01"
-        tools:itemCount="3"
-        tools:listitem="@layout/item_add" />
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btn_next"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="187dp"
-        android:layout_height="69dp"
-        android:layout_gravity="center"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/default_yellow"
-        android:fontFamily="@font/poppins_medium"
-        android:text="@string/txt_next"
-        android:textSize="32sp"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="187dp"
-        android:layout_height="69sp"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/txt_skip"
-        android:textSize="32sp"
-        android:textColor="#99000000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/default_background"
+            tools:context=".presentation.startingFragments.AddCategoriesFragment">
 
 
+            <TextView
+                android:id="@+id/txt1"
+                style="@style/tablet_txt_styles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="40dp"
+                android:text="@string/txt_add_your_products_categories"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/txt2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/txt_for_example_in_restaurant_sea_food_pizza_burger_drinks"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt1" />
+
+            <TextView
+                android:id="@+id/txt3"
+                style="@style/tablet_txt_styles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="40dp"
+                android:text="@string/txt_categories"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt2" />
+
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="@color/black"
+                app:layout_constraintEnd_toEndOf="@+id/txt3"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/txt3"
+                app:layout_constraintTop_toBottomOf="@+id/txt3" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rec_categories"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintBottom_toTopOf="@+id/btn_skip"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/txt3"
+                app:layout_constraintTop_toBottomOf="@+id/view"
+                app:setAdapter="@{adapter}"
+                app:spanCount="5"
+                tools:itemCount="10"
+                tools:listitem="@layout/item_add_categorey" />
+
+            <Button
+                android:id="@+id/btn_next"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="187dp"
+                android:layout_height="69dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="40dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/default_yellow"
+                android:enabled="@{viewModel.clickableEnabled}"
+                android:fontFamily="@font/poppins_medium"
+                android:text="@string/txt_next"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="32sp"
+                android:onClick="@{()-> viewModel.clickNext()}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <Button
+                android:id="@+id/btn_skip"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="187dp"
+                android:layout_height="69sp"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="16dp"
+                android:enabled="@{viewModel.clickableEnabled}"
+                android:text="@string/txt_skip"
+                android:textColor="#99000000"
+                android:textSize="32sp"
+                android:onClick="@{()-> viewModel.clickSkip()}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/category_bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/add_category_bottom_sheet_shape"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:behavior_peekHeight="0dp"
+            app:layout_behavior="@string/bottom_sheet_behavior">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/bottom_sheet_img"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/add_new_img"
+                        app:displayUri="@{viewModel.clickedCategory.imageUri}"
+                        />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/category_name_field"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:hint="category name"
+                        app:boxStrokeColor="#FFA800"
+                        app:endIconMode="clear_text"
+                        app:hintTextColor="#FFA800">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/category_name_et"
+                            android:layout_width="300dp"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:text="@={clickedCategory.name}" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/category_description_field"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:hint="category Description"
+                        app:boxStrokeColor="#FFA800"
+                        app:endIconMode="clear_text"
+                        app:hintTextColor="#FFA800">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/category_description_et"
+                            android:layout_width="300dp"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:inputType="textMultiLine"
+                            android:text="@={clickedCategory.description}" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/cancel_btn"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="@{()-> viewModel.cancelBottomSheet()}"
+                            android:text="cancel"
+                            android:textAllCaps="false"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/add_category_btn"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/default_yellow"
+                            android:text="@{viewModel.addEditBtnTxt}"
+                            tools:text="Add Category"
+                            android:onClick="@{()-> viewModel.addEditCategory()}"
+                            android:textAllCaps="false"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+        </LinearLayout>
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

@@ -68,25 +68,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_phon_number">
 
-            <com.mukesh.OtpView
-                android:id="@+id/otp_view"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:cursorVisible="true"
-                android:fontFamily="@font/poppins_medium"
-                android:inputType="number"
-                android:itemBackground="@color/white"
-                android:textSize="24sp"
-                app:OtpCursorColor="@color/default_yellow"
-                app:OtpItemCount="6"
-                app:OtpItemHeight="65dp"
-                app:OtpItemRadius="10dp"
-                app:OtpItemSpacing="20sp"
-                app:OtpItemWidth="30dp"
-                app:OtpLineColor="@color/black"
-                app:OtpLineWidth="1dp"
-                app:OtpViewType="rectangle" />
 
         </LinearLayout>
 
