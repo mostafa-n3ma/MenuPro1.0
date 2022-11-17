@@ -89,7 +89,7 @@
                 app:layout_constraintStart_toStartOf="@+id/txt3"
                 app:layout_constraintTop_toBottomOf="@+id/view"
                 app:setAdapter="@{adapter}"
-                app:spanCount="3"
+                app:spanCount="1"
                 tools:itemCount="10"
                 tools:listitem="@layout/item_add_categorey" />
 

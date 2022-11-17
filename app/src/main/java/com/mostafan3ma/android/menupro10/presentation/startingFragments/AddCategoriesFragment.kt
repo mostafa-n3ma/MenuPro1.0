@@ -30,19 +30,20 @@ import javax.inject.Inject
 import com.google.protobuf.Empty as Empty1
 
 @AndroidEntryPoint
-class AddCategoriesFragment : Fragment() {
+class AddCategoriesFragment
+@Inject
+constructor(
+    private val superImageController: SuperImageController
+) : Fragment() {
 
     private lateinit var binding: FragmentAddCatagoriesBinding
 
-    lateinit var categoriesAdapter: AddCategoriesAdapter
+    private lateinit var categoriesAdapter: AddCategoriesAdapter
 
     private lateinit var categoryBottomSheet: BottomSheetBehavior<LinearLayout>
 
     val viewModel: AddCategoriesViewModel by viewModels()
     var clickableEnabled: Boolean = true
-
-    @Inject
-    lateinit var superImageController: SuperImageController
 
 
     companion object {
@@ -95,12 +96,15 @@ class AddCategoriesFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.P)
     private fun subscribeObservers() {
 
-        viewModel.savingImagesRequest.observe(viewLifecycleOwner, Observer {savingRequested->
-            if (savingRequested){
-                val readyCategoriesList: List<Category> =getPreparedCategoriesList()
-                val bitmapList= mutableListOf<Bitmap>()
-                for (category:Category in readyCategoriesList){
-                    val tempBitmap: Bitmap =superImageController.getBitmapFromUri(this.requireContext(),category.imageUri.toUri())
+        viewModel.savingImagesRequest.observe(viewLifecycleOwner, Observer { savingRequested ->
+            if (savingRequested) {
+                val readyCategoriesList: List<Category> = getPreparedCategoriesList()
+                val bitmapList = mutableListOf<Bitmap>()
+                for (category: Category in readyCategoriesList) {
+                    val tempBitmap: Bitmap = superImageController.getBitmapFromUri(
+                        this.requireContext(),
+                        category.imageUri.toUri()
+                    )
                     lifecycleScope.launch {
                         superImageController.saveImageToInternalStorage(
                             this@AddCategoriesFragment.requireContext(),
@@ -157,18 +161,16 @@ class AddCategoriesFragment : Fragment() {
         })
 
 
-
-
     }
 
     private fun getPreparedCategoriesList(): List<Category> {
-        val isolatedList= mutableListOf<Category>()
-        for (category : Category in viewModel.categoriesList.value!!){
-            when(category){
-                Category()->{
+        val isolatedList = mutableListOf<Category>()
+        for (category: Category in viewModel.categoriesList.value!!) {
+            when (category) {
+                Category() -> {
 
                 }
-                else->{
+                else -> {
                     isolatedList.add(category)
                 }
             }

@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentFactory
 import com.mostafan3ma.android.menupro10.oporations.DataManagment.repository.DefaultShopRepository
 import com.mostafan3ma.android.menupro10.oporations.di.RealRepository
 import com.mostafan3ma.android.menupro10.oporations.utils.SuperImageController
+import com.mostafan3ma.android.menupro10.presentation.startingFragments.AddCategoriesFragment
 import com.mostafan3ma.android.menupro10.presentation.startingFragments.CreateAccountFragment
 import com.mostafan3ma.android.menupro10.presentation.startingFragments.OtpFragment
 import com.mostafan3ma.android.menupro10.presentation.startingFragments.WelcomeFragment
@@ -25,6 +26,9 @@ constructor(
             }
             OtpFragment::class.java.name->{
                 OtpFragment(repository)
+            }
+            AddCategoriesFragment::class.java.name->{
+                AddCategoriesFragment(superImageController)
             }
 
 
