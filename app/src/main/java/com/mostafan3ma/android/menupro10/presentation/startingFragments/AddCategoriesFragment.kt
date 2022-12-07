@@ -27,14 +27,9 @@ import com.mostafan3ma.android.menupro10.presentation.startingFragments.viewMode
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.google.protobuf.Empty as Empty1
 
 @AndroidEntryPoint
-class AddCategoriesFragment
-@Inject
-constructor(
-    private val superImageController: SuperImageController
-) : Fragment() {
+class AddCategoriesFragment : Fragment() {
 
     private lateinit var binding: FragmentAddCatagoriesBinding
 
@@ -64,7 +59,6 @@ constructor(
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAddCatagoriesBinding.inflate(inflater)
-
         categoriesAdapter = AddCategoriesAdapter(requireContext(), lifecycleScope,
             CategoryListener { position: Int ->
                 if (clickableEnabled) {
@@ -99,18 +93,20 @@ constructor(
         viewModel.savingImagesRequest.observe(viewLifecycleOwner, Observer { savingRequested ->
             if (savingRequested) {
                 val readyCategoriesList: List<Category> = getPreparedCategoriesList()
-                val bitmapList = mutableListOf<Bitmap>()
                 for (category: Category in readyCategoriesList) {
-                    val tempBitmap: Bitmap = superImageController.getBitmapFromUri(
-                        this.requireContext(),
-                        category.imageUri.toUri()
-                    )
-                    lifecycleScope.launch {
-                        superImageController.saveImageToInternalStorage(
-                            this@AddCategoriesFragment.requireContext(),
-                            tempBitmap,
-                            category.imageName
+                    if (category.imageUri!="") {
+                        val tempBitmap: Bitmap = viewModel.superImageController.getBitmapFromUri(
+                            this.requireContext(),
+                            category.imageUri.toUri()
                         )
+                        lifecycleScope.launch {
+                            viewModel.superImageController.saveImageToInternalStorage(
+                                this@AddCategoriesFragment.requireContext(),
+                                tempBitmap,
+                                category.imageName
+                            )
+                            Log.d(TAG, "subscribeObservers: saveImg for category :${category.name}")
+                        }
                     }
                 }
             }
@@ -145,6 +141,15 @@ constructor(
 
         })
 
+
+        viewModel.requestNameFocuse.observe(viewLifecycleOwner, Observer {focuseOnNameField->
+        if (focuseOnNameField){
+            binding.categoryNameField.requestFocus()
+        }
+
+        })
+
+
         viewModel.hideKeyBord.observe(viewLifecycleOwner, Observer { hide ->
             if (hide) {
                 hideKeyboard()
@@ -164,18 +169,18 @@ constructor(
     }
 
     private fun getPreparedCategoriesList(): List<Category> {
-        val isolatedList = mutableListOf<Category>()
+        val isolatedCategoriesListList = mutableListOf<Category>()
         for (category: Category in viewModel.categoriesList.value!!) {
             when (category) {
                 Category() -> {
 
                 }
                 else -> {
-                    isolatedList.add(category)
+                    isolatedCategoriesListList.add(category)
                 }
             }
         }
-        return isolatedList as List<Category>
+        return isolatedCategoriesListList as List<Category>
     }
 
     private fun setUpCategoryBottomSheet(): BottomSheetBehavior<LinearLayout> {

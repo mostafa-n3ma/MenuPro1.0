@@ -1,17 +1,16 @@
 package com.mostafan3ma.android.menupro10.oporations.utils
 
-import android.net.Uri
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mostafan3ma.android.menupro10.R
-import com.mostafan3ma.android.menupro10.presentation.startingFragments.adapters.AddCategoriesAdapter
 
 @BindingAdapter("setAdapter")
-fun setAdapter(recyclerView: RecyclerView, adapter: AddCategoriesAdapter) {
+fun setAdapter(recyclerView: RecyclerView, adapter: ListAdapter<Any,RecyclerView.ViewHolder>) {
     recyclerView.adapter = adapter
 }
 
@@ -32,16 +31,35 @@ fun imgName(imageView: ImageView, imgName: String?) {
 }
 
 @BindingAdapter("displayUri")
-fun displayUri(imageView: ImageView, uriString: String) {
+fun displayUri(imageView: ImageView, uriString: String?="") {
     when (uriString) {
         "" -> {
             imageView.setImageResource(R.drawable.add_new_img)
         }
         else -> {
-            imageView.setImageURI(uriString.toUri())
+            imageView.setImageURI(uriString!!.toUri())
         }
 
+
     }
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

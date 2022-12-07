@@ -11,7 +11,7 @@ data class Category(
     var description:String=""
 )
 
-fun Category.mapToCacheCategory(category: Category):CacheCategory{
+fun Category.getCacheCategory(category: Category):CacheCategory{
     return CacheCategory(
         name=category.name,
         imageName=category.imageName,
@@ -47,7 +47,7 @@ fun Item.getCacheItem(item: Item):CacheItem{
     return CacheItem(
         name=item.name,
         description=item.description,
-        category=item.category!!,
+        category= item.category!!,
         imageName=item.imageName,
         imageUri=item.imageUri,
         price=item.price,

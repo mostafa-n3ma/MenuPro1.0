@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_mainMenuFragment_to_addCategoriesFragment"
             app:destination="@id/addCategoriesFragment" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_addProductsFragment"
+            app:destination="@id/addProductsFragment" />
     </fragment>
     <fragment
         android:id="@+id/createAccountFragment"

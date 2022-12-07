@@ -49,7 +49,7 @@ constructor() {
 
     fun getCacheCategoriesFromDomainModel(domainModel: DomainModel): List<CacheCategory> {
         return domainModel.categories_list!!.map {
-            it.mapToCacheCategory(it)
+            it.getCacheCategory(it)
         }
     }
 

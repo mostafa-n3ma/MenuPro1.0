@@ -188,7 +188,7 @@ constructor(private val superImageController: SuperImageController) : Fragment()
     }
 
     private fun setDropDawnTypeMenu(binding: FragmentCreateAcountBinding) {
-        val types=resources.getStringArray(R.array.types)
+        val types: Array<String> =resources.getStringArray(R.array.types)
         val typesAdapter=ArrayAdapter(requireContext(),R.layout.drop_dwon_item,types)
         binding.typeAutoTxt.setAdapter(typesAdapter)
     }

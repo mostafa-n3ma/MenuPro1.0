@@ -19,7 +19,7 @@ import javax.inject.Inject
 class AddCategoriesAdapter(private val context:Context,private val coroutineScope:CoroutineScope,private val categoryListener: CategoryListener)
     :ListAdapter<Category,AddCategoriesAdapter.CategoryViewHolder>(CategoryDiffCallBack()) {
 
-    val defaultCategoryItem=Category()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         return CategoryViewHolder.from(parent)
@@ -32,34 +32,20 @@ class AddCategoriesAdapter(private val context:Context,private val coroutineScop
             categoryListener.clickListener(position)
         }
 
-
-
     }
 
 
     class CategoryViewHolder(private val binding:ItemAddCategoreyBinding):RecyclerView.ViewHolder(binding.root){
-        val superImageController =SuperImageController()
         fun bind(item: Category, context: Context, coroutineScope: CoroutineScope){
             binding.categoryItem=item
             when(item){
                 Category()->{
                     binding.categoryCard!!.visibility=View.GONE
-                    binding.addImg!!.visibility=View.VISIBLE
+                    binding.addCategoryImg!!.visibility=View.VISIBLE
                 }
                 else->{
                     binding.categoryCard!!.visibility=View.VISIBLE
-                    binding.addImg!!.visibility=View.GONE
-
-                    coroutineScope.launch{
-//                        binding.categoryImg!!.setImageBitmap(
-//                            superImageController
-//                                .getImageFromInternalStorage(
-//                                    context,
-//                                    item.imageName,
-//                                    R.drawable.default_category
-//                                )
-//                        )
-                    }
+                    binding.addCategoryImg!!.visibility=View.GONE
                 }
             }
 
@@ -93,7 +79,7 @@ class CategoryDiffCallBack:DiffUtil.ItemCallback<Category>() {
 
 class CategoryListener(val clickListener: (position:Int)-> Unit ){
 
-    fun onClick(category: Category, position:Int)=clickListener(position)
+    fun onClick( position:Int)=clickListener(position)
 }
 
 

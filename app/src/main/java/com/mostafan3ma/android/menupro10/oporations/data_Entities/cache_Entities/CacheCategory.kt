@@ -3,6 +3,8 @@ package com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entitie
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.Category
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.getCategory
 
 @Entity(tableName = "categories")
 data class CacheCategory(
@@ -15,4 +17,16 @@ data class CacheCategory(
     var imageUri:String="",
     @ColumnInfo(name="description")
     var description:String=""
-)
+){
+
+}
+
+fun List<CacheCategory>.mapToCategoriesList():List<Category>{
+    val categoriesList= mutableListOf<Category>()
+    let { cacheCategoriesList->
+        cacheCategoriesList.map { cacheCategory ->
+            categoriesList.add(cacheCategory.getCategory(cacheCategory))
+        }
+    }
+    return categoriesList
+}

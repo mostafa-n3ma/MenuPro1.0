@@ -1,6 +1,5 @@
 package com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels
 
-import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -12,7 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mostafan3ma.android.menupro10.oporations.DataManagment.repository.DefaultShopRepository
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.Category
-import com.mostafan3ma.android.menupro10.oporations.data_Entities.mapToCacheCategory
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.getCacheCategory
 import com.mostafan3ma.android.menupro10.oporations.di.RealRepository
 import com.mostafan3ma.android.menupro10.oporations.utils.SuperImageController
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,10 +36,14 @@ constructor(
     private val _bottomSheetLaunched = MutableLiveData<Boolean>()
     val bottomSheetLaunched: LiveData<Boolean> get() = _bottomSheetLaunched
 
+    private val _requestNameFocuse=MutableLiveData<Boolean>()
+    val requestNameFocuse:LiveData<Boolean> get() = _requestNameFocuse
+
+
     private val _clickedCategory = MutableLiveData<Category>()
     val clickedCategory: LiveData<Category> get() = _clickedCategory
 
-    var position: Int = 0
+    var position: Int = 999
 
     private val _hideKeyBord = MutableLiveData<Boolean>()
     val hideKeyBord: LiveData<Boolean> get() = _hideKeyBord
@@ -61,9 +64,7 @@ constructor(
 
 
     init {
-        viewModelScope.launch {
-            repository.clearCategories()
-        }
+
         _categoriesList.value =
             mutableListOf(
                 Category(),
@@ -81,6 +82,8 @@ constructor(
         returnedImgUri.value = null
         _navigateToAddItemFragment.value = false
         _savingImagesRequest.value=false
+        _requestNameFocuse.value=false
+
     }
 
 
@@ -99,7 +102,14 @@ constructor(
                 Log.d(TAG, " _bottomSheetLaunched = ${_bottomSheetLaunched.value}")
                 setEvent(AddCategoryViewModelEvents.DisableClicks)
                 setEvent(AddCategoryViewModelEvents.ValidateAddButton)
+                setEvent(AddCategoryViewModelEvents.RequestNameFocus)
             }
+
+            is AddCategoryViewModelEvents.RequestNameFocus->{
+                _requestNameFocuse.value=true
+                _requestNameFocuse.value=false
+            }
+
             is AddCategoryViewModelEvents.ValidateAddButton -> {
                 when (_clickedCategory.value) {
                     Category() -> {
@@ -107,6 +117,7 @@ constructor(
                     }
                     else -> {
                         _addEditBtnTxt.value = "Edit Category"
+                        returnedImgUri.value=_clickedCategory.value!!.imageUri.toUri()
                     }
 
                 }
@@ -150,13 +161,18 @@ constructor(
             }
 
             is AddCategoryViewModelEvents.NextBtnClicked -> {
-                if (_categoriesList.value!!.isEmpty()){
+                val cleanedList=cleanedCategoriesList()
+                Log.d(TAG, "setEvent: cealnedList:size=${cleanedList.size}")
+                if (cleanedList.isEmpty()){
+                    Log.d(TAG, "setEvent: nextBtnClicked >> categoriesList =empty")
                     setEvent(AddCategoryViewModelEvents.NavigateToAddItemsFragment)
                 }else{
-                    for (category: Category in _categoriesList.value!!) {
+                    Log.d(TAG, "setEvent: nextBtnClicked >> categoriesList=not empty")
+                    for (category: Category in cleanedList) {
                         viewModelScope.launch {
                             setEvent(AddCategoryViewModelEvents.SaveImagesEvent)
-                            repository.insertCategory(category.mapToCacheCategory(category))
+                            repository.insertCategory(category.getCacheCategory(category))
+                            Log.d(TAG, "setEvent: nextBtnClicked >> adding category(${category.name}) to database")
                         }
                     }
                     setEvent(AddCategoryViewModelEvents.NavigateToAddItemsFragment)
@@ -185,6 +201,19 @@ constructor(
     }
 
 
+
+
+   private fun cleanedCategoriesList():List<Category>{
+       val cleanedList= mutableListOf<Category>()
+       _categoriesList.value!!.map {
+           if (it!=Category()){
+               cleanedList.add(it)
+           }
+       }
+       return cleanedList
+   }
+
+
     @RequiresApi(Build.VERSION_CODES.P)
     fun cancelBottomSheet() {
         Log.d(TAG, "cancelBottomSheet: triggered")
@@ -203,18 +232,18 @@ constructor(
 
 
     private fun arrangeCategoriesList() {
-        var emptyCategory = 0
+        var emptyCategoriesCount = 0
         for (category: Category in _categoriesList.value!!) {
             when (category) {
                 Category() -> {
-                    emptyCategory += 1
+                    emptyCategoriesCount += 1
                 }
                 else -> {
                 }
             }
         }
 
-        when (emptyCategory) {
+        when (emptyCategoriesCount) {
             0 -> {
                 val mutableCategoryList = _categoriesList.value!!.toMutableList()
                 mutableCategoryList.add(Category())
@@ -246,6 +275,7 @@ constructor(
 
 sealed class AddCategoryViewModelEvents() {
     object ItemClicked : AddCategoryViewModelEvents()
+    object RequestNameFocus:AddCategoryViewModelEvents()
     object LaunchCategoryBottomSheet : AddCategoryViewModelEvents()
     object CancelCategoryBottomSheet : AddCategoryViewModelEvents()
     object DisableClicks : AddCategoryViewModelEvents()
