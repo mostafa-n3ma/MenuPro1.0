@@ -1,7 +1,5 @@
-package com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels
+package com.mostafan3ma.android.menupro10.presentation.fragments.viewModels
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.*
@@ -266,7 +264,7 @@ constructor(
                 Log.d(TAG, "setEvent: cleanedProductsList:size=${cleanedList.size}")
                 if (cleanedList.isEmpty()) {
                     Log.d(TAG, "setEvent: cleanedProductsList : is Empty")
-                    setEvent(AddProductsViewModelEvent.NavigateToDefaultMenuFragment)
+                    setEvent(AddProductsViewModelEvent.NavigateToDefaultLastMenuFragment)
                 } else {
                     Log.d(TAG, "setEvent: cleanedProductsList: Not Empty and size is : ${cleanedList.size}")
                     cleanedList.map { product ->
@@ -280,18 +278,18 @@ constructor(
                         }
 
                     }
-                    setEvent(AddProductsViewModelEvent.NavigateToDefaultMenuFragment)
+                    setEvent(AddProductsViewModelEvent.NavigateToDefaultLastMenuFragment)
                 }
             }
             ///////////////////////////
             ///////////////////////////
             is AddProductsViewModelEvent.SkipBtnClicked -> {
                 Log.d(TAG, "setEvent: SkipBtnClicked")
-                setEvent(AddProductsViewModelEvent.NavigateToDefaultMenuFragment)
+                setEvent(AddProductsViewModelEvent.NavigateToDefaultLastMenuFragment)
             }
             ///////////////////////////
             ///////////////////////////
-            is AddProductsViewModelEvent.NavigateToDefaultMenuFragment -> {
+            is AddProductsViewModelEvent.NavigateToDefaultLastMenuFragment -> {
                 _navigateToDefaultMenuFragment.value = true
                 Log.d(TAG, "setEvent: NavigateToDefaultMenuFragment")
                 _navigateToDefaultMenuFragment.value = false
@@ -400,6 +398,6 @@ sealed class AddProductsViewModelEvent() {
     object HideKeyBordEvent : AddProductsViewModelEvent()
     object NextBtnClicked : AddProductsViewModelEvent()
     object SkipBtnClicked : AddProductsViewModelEvent()
-    object NavigateToDefaultMenuFragment : AddProductsViewModelEvent()
+    object NavigateToDefaultLastMenuFragment : AddProductsViewModelEvent()
     object SaveImagesEvent : AddProductsViewModelEvent()
 }

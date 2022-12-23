@@ -1,4 +1,4 @@
-package com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels
+package com.mostafan3ma.android.menupro10.presentation.fragments.viewModels
 
 import android.util.Log
 import androidx.lifecycle.LiveData

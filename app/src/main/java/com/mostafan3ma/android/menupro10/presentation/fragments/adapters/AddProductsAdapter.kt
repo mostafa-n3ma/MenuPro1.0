@@ -1,4 +1,4 @@
-package com.mostafan3ma.android.menupro10.presentation.startingFragments.adapters
+package com.mostafan3ma.android.menupro10.presentation.fragments.adapters
 
 import android.content.Context
 import android.view.LayoutInflater

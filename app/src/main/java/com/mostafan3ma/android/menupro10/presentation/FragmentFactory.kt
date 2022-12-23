@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentFactory
 import com.mostafan3ma.android.menupro10.oporations.DataManagment.repository.DefaultShopRepository
 import com.mostafan3ma.android.menupro10.oporations.di.RealRepository
 import com.mostafan3ma.android.menupro10.oporations.utils.SuperImageController
-import com.mostafan3ma.android.menupro10.presentation.startingFragments.*
+import com.mostafan3ma.android.menupro10.presentation.fragments.startingFragments.*
 import javax.inject.Inject
 
 class FragmentFactory

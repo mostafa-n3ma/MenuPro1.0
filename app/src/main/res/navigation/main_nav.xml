@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainMenuFragment"
-        android:name="com.mostafan3ma.android.menupro10.presentation.startingFragments.WelcomeFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.fragments.startingFragments.WelcomeFragment"
         android:label="fragment_main_menu"
         tools:layout="@layout/fragment_welcom" >
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/createAccountFragment"
-        android:name="com.mostafan3ma.android.menupro10.presentation.startingFragments.CreateAccountFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.fragments.startingFragments.CreateAccountFragment"
         android:label="fragment_create_acount"
         tools:layout="@layout/fragment_create_acount" >
         <action
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/putNumberFragment"
-        android:name="com.mostafan3ma.android.menupro10.presentation.startingFragments.PutNumberFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.fragments.startingFragments.PutNumberFragment"
         android:label="fragment_put_number"
         tools:layout="@layout/fragment_put_number" >
         <action
@@ -43,7 +43,7 @@
     </fragment>
     <fragment
         android:id="@+id/otpFragment"
-        android:name="com.mostafan3ma.android.menupro10.presentation.startingFragments.OtpFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.fragments.startingFragments.OtpFragment"
         android:label="fragment_otp"
         tools:layout="@layout/fragment_otp" >
         <action
@@ -55,7 +55,7 @@
     </fragment>
     <fragment
         android:id="@+id/addCategoriesFragment"
-        android:name="com.mostafan3ma.android.menupro10.presentation.startingFragments.AddCategoriesFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.fragments.startingFragments.AddCategoriesFragment"
         android:label="fragment_add_catagories"
         tools:layout="@layout/fragment_add_catagories" >
         <action
@@ -64,7 +64,24 @@
     </fragment>
     <fragment
         android:id="@+id/addProductsFragment"
-        android:name="com.mostafan3ma.android.menupro10.presentation.startingFragments.AddProductsFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.fragments.startingFragments.AddProductsFragment"
         android:label="fragment_add_products"
-        tools:layout="@layout/fragment_add_products" />
+        tools:layout="@layout/fragment_add_products" >
+        <action
+            android:id="@+id/action_addProductsFragment_to_defaultLastMenuFragment"
+            app:destination="@id/defaultLastMenuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/defaultLastMenuFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.fragments.DefaultLastMenuFragment"
+        android:label="DefaultLastMenuFragment" >
+        <action
+            android:id="@+id/action_defaultLastMenuFragment_to_myAccountFragment"
+            app:destination="@id/myAccountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myAccountFragment"
+        android:name="com.mostafan3ma.android.menupro10.presentation.fragments.MyAccountFragment"
+        android:label="fragment_my_account"
+        tools:layout="@layout/fragment_my_account" />
 </navigation>

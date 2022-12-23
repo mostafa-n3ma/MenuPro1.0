@@ -1,4 +1,4 @@
-package com.mostafan3ma.android.menupro10.presentation.startingFragments
+package com.mostafan3ma.android.menupro10.presentation.fragments.startingFragments
 
 import android.graphics.Bitmap
 import android.os.Build
@@ -19,7 +19,7 @@ import com.mostafan3ma.android.menupro10.R
 import com.mostafan3ma.android.menupro10.databinding.FragmentCreateAcountBinding
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheShop
 import com.mostafan3ma.android.menupro10.oporations.utils.SuperImageController
-import com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels.CreateAccountViewModel
+import com.mostafan3ma.android.menupro10.presentation.fragments.viewModels.CreateAccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject

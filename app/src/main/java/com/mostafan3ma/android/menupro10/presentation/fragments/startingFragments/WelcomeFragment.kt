@@ -1,19 +1,18 @@
-package com.mostafan3ma.android.menupro10.presentation.startingFragments
+package com.mostafan3ma.android.menupro10.presentation.fragments.startingFragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.mostafan3ma.android.menupro10.databinding.FragmentWelcomBinding
 import com.mostafan3ma.android.menupro10.presentation.MainAuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Observer
+
 
 @AndroidEntryPoint
 class WelcomeFragment
@@ -34,7 +33,6 @@ companion object{
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentWelcomBinding.inflate(inflater)
-
 
 
         authViewModel.authenticationState.observe(viewLifecycleOwner,androidx.lifecycle.Observer{Authentication->

@@ -1,4 +1,4 @@
-package com.mostafan3ma.android.menupro10.presentation.startingFragments
+package com.mostafan3ma.android.menupro10.presentation.fragments.startingFragments
 
 import android.graphics.Bitmap
 import android.os.Build
@@ -17,14 +17,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mostafan3ma.android.menupro10.databinding.FragmentAddCatagoriesBinding
+import com.mostafan3ma.android.menupro10.oporations.DataManagment.repository.ShopRepository
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.Category
-import com.mostafan3ma.android.menupro10.oporations.utils.SuperImageController
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheCategory
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.mapToCategoriesList
+import com.mostafan3ma.android.menupro10.oporations.utils.DataState
 import com.mostafan3ma.android.menupro10.oporations.utils.hideKeyboard
-import com.mostafan3ma.android.menupro10.presentation.startingFragments.adapters.AddCategoriesAdapter
-import com.mostafan3ma.android.menupro10.presentation.startingFragments.adapters.CategoryListener
-import com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels.AddCategoriesViewModel
-import com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels.AddCategoryViewModelEvents
+import com.mostafan3ma.android.menupro10.presentation.fragments.adapters.AddCategoriesAdapter
+import com.mostafan3ma.android.menupro10.presentation.fragments.adapters.CategoryListener
+import com.mostafan3ma.android.menupro10.presentation.fragments.viewModels.AddCategoriesViewModel
+import com.mostafan3ma.android.menupro10.presentation.fragments.viewModels.AddCategoryViewModelEvents
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,6 +41,9 @@ class AddCategoriesFragment : Fragment() {
     private lateinit var categoriesAdapter: AddCategoriesAdapter
 
     private lateinit var categoryBottomSheet: BottomSheetBehavior<LinearLayout>
+
+
+
 
     val viewModel: AddCategoriesViewModel by viewModels()
     var clickableEnabled: Boolean = true

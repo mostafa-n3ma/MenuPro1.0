@@ -1,4 +1,4 @@
-package com.mostafan3ma.android.menupro10.presentation.startingFragments
+package com.mostafan3ma.android.menupro10.presentation.fragments.startingFragments
 
 
 import android.os.Bundle
@@ -20,8 +20,8 @@ import com.mostafan3ma.android.menupro10.databinding.FragmentOtpBinding
 import com.mostafan3ma.android.menupro10.oporations.DataManagment.repository.DefaultShopRepository
 import com.mostafan3ma.android.menupro10.oporations.di.RealRepository
 import com.mostafan3ma.android.menupro10.presentation.MainAuthViewModel
-import com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels.OtpEvent
-import com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels.OtpViewModel
+import com.mostafan3ma.android.menupro10.presentation.fragments.viewModels.OtpEvent
+import com.mostafan3ma.android.menupro10.presentation.fragments.viewModels.OtpViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject

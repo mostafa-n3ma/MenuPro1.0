@@ -37,15 +37,25 @@ fun displayUri(imageView: ImageView, uriString: String?="") {
             imageView.setImageResource(R.drawable.add_new_img)
         }
         else -> {
-            imageView.setImageURI(uriString!!.toUri())
-        }
+            imageView.setImageURI(uriString!!.toUri())}}}
 
 
+
+@BindingAdapter("getInternalImg")
+fun getInternalImg(imageView: ImageView,imgName:String?){
+    val superImageController=SuperImageController()
+    if (imgName!=null) {
+        val tempBitMap = superImageController.getImageFromInternalStorage(
+            imageView.context,
+            imgName,
+            R.drawable.add_new_img
+        )
+        imageView.setImageBitmap(tempBitMap)
     }
+
+
+
 }
-
-
-
 
 
 

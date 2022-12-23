@@ -6,14 +6,14 @@
     <data>
         <variable
             name="viewModel"
-            type="com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels.CreateAccountViewModel" />
+            type="com.mostafan3ma.android.menupro10.presentation.fragments.viewModels.CreateAccountViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/default_background"
-        tools:context=".presentation.startingFragments.CreateAccountFragment">
+        tools:context=".presentation.fragments.startingFragments.CreateAccountFragment">
 
         <ScrollView
             android:layout_width="match_parent"

@@ -6,13 +6,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels.OtpViewModel" />
+            type="com.mostafan3ma.android.menupro10.presentation.fragments.viewModels.OtpViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:backgroundTint="#EFEFEF"
-        tools:context=".presentation.startingFragments.OtpFragment">
+        tools:context=".presentation.fragments.startingFragments.OtpFragment">
 
         <ScrollView
             android:layout_width="match_parent"

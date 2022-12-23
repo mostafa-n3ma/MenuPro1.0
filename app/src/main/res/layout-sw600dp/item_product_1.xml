@@ -7,6 +7,7 @@
         <variable
             name="item"
             type="com.mostafan3ma.android.menupro10.oporations.data_Entities.Item" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,8 +17,8 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/item_card"
-            android:layout_width="250dp"
-            android:layout_height="150dp"
+            android:layout_width="350dp"
+            android:layout_height="250dp"
             android:layout_margin="8dp"
             android:elevation="20dp"
             android:visibility="visible"
@@ -39,22 +40,22 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:scaleType="centerCrop"
-                    app:displayUri="@{item.imageUri}"
+                    getInternalImg="@{item.imageName}"
                     tools:src="@drawable/default_category" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/item_name"
                         style="@style/txt_styles"
+                        android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="bottom|center"
+                        android:gravity="center"
                         android:maxLength="16"
                         android:maxLines="2"
                         android:text="@{item.name}"
@@ -67,11 +68,13 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_medium"
                         android:gravity="center"
-                        android:layout_margin="2dp"
                         android:maxLines="3"
+                        android:layout_weight="1"
                         android:text="@{item.description}"
                         android:textSize="12sp"
                         tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit." />
+
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -87,8 +90,8 @@
                             tools:text="Large"
                             android:layout_marginStart="8dp"
                             android:layout_gravity="start|bottom"
-                            android:textSize="16sp"
-                            style="@style/txt_styles"
+                            android:textSize="18sp"
+                            style="@style/tablet_txt_styles"
                             android:text="@={item.size}"
                             />
                         <TextView
@@ -100,7 +103,7 @@
                             android:layout_marginEnd="8dp"
                             android:maxLines="3"
                             android:layout_gravity="bottom"
-                            style="@style/txt_styles"
+                            style="@style/tablet_txt_styles"
                             android:text="@{item.price}"
                             android:textSize="16sp"
                             android:textStyle="bold"
@@ -110,15 +113,14 @@
                     </LinearLayout>
 
 
-
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <ImageView
             android:id="@+id/add_item_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="350dp"
+            android:layout_height="250dp"
             android:src="@drawable/add_item"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -128,4 +130,5 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

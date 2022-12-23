@@ -7,11 +7,11 @@
 
         <variable
             name="adapter"
-            type="com.mostafan3ma.android.menupro10.presentation.startingFragments.adapters.AddCategoriesAdapter" />
+            type="com.mostafan3ma.android.menupro10.presentation.fragments.adapters.AddCategoriesAdapter" />
 
         <variable
             name="viewModel"
-            type="com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels.AddCategoriesViewModel" />
+            type="com.mostafan3ma.android.menupro10.presentation.fragments.viewModels.AddCategoriesViewModel" />
         <variable
             name="clickedCategory"
             type="com.mostafan3ma.android.menupro10.oporations.data_Entities.Category" />
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/default_background"
-            tools:context=".presentation.startingFragments.AddCategoriesFragment">
+            tools:context=".presentation.fragments.startingFragments.AddCategoriesFragment">
 
 
             <TextView

@@ -1,4 +1,4 @@
-package com.mostafan3ma.android.menupro10.presentation.startingFragments.adapters
+package com.mostafan3ma.android.menupro10.presentation.fragments.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,14 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mostafan3ma.android.menupro10.R
 import com.mostafan3ma.android.menupro10.databinding.ItemAddCategoreyBinding
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.Category
-import com.mostafan3ma.android.menupro10.oporations.utils.SuperImageController
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class AddCategoriesAdapter(private val context:Context,private val coroutineScope:CoroutineScope,private val categoryListener: CategoryListener)
     :ListAdapter<Category,AddCategoriesAdapter.CategoryViewHolder>(CategoryDiffCallBack()) {

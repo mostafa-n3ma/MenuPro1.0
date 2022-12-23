@@ -7,20 +7,19 @@
         <variable
             name="item"
             type="com.mostafan3ma.android.menupro10.oporations.data_Entities.Item" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/default_background">
-
         <androidx.cardview.widget.CardView
             android:id="@+id/item_card"
             android:layout_width="250dp"
             android:layout_height="150dp"
             android:layout_margin="8dp"
             android:elevation="20dp"
-            android:visibility="visible"
             app:cardCornerRadius="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +38,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:scaleType="centerCrop"
-                    app:displayUri="@{item.imageUri}"
+                    getInternalImg="@{item.imageName}"
                     tools:src="@drawable/default_category" />
 
                 <LinearLayout
@@ -114,18 +113,6 @@
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
-        <ImageView
-            android:id="@+id/add_item_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/add_item"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

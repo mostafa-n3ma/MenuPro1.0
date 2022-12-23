@@ -1,4 +1,4 @@
-package com.mostafan3ma.android.menupro10.presentation.startingFragments
+package com.mostafan3ma.android.menupro10.presentation.fragments.startingFragments
 
 import android.graphics.Bitmap
 import android.os.Build
@@ -10,33 +10,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mostafan3ma.android.menupro10.R
 import com.mostafan3ma.android.menupro10.databinding.FragmentAddProductsBinding
-import com.mostafan3ma.android.menupro10.oporations.DataManagment.repository.ShopRepository
-import com.mostafan3ma.android.menupro10.oporations.data_Entities.Category
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.Item
-import com.mostafan3ma.android.menupro10.oporations.utils.DataState
-import com.mostafan3ma.android.menupro10.oporations.utils.SuperImageController
-import com.mostafan3ma.android.menupro10.oporations.utils.SuperImageController.Companion.IMAGES_FILE
 import com.mostafan3ma.android.menupro10.oporations.utils.hideKeyboard
-import com.mostafan3ma.android.menupro10.presentation.startingFragments.adapters.AddProductsAdapter
-import com.mostafan3ma.android.menupro10.presentation.startingFragments.adapters.ProductsListener
-import com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels.AddProductsViewModel
-import com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels.AddProductsViewModelEvent
+import com.mostafan3ma.android.menupro10.presentation.fragments.adapters.AddProductsAdapter
+import com.mostafan3ma.android.menupro10.presentation.fragments.adapters.ProductsListener
+import com.mostafan3ma.android.menupro10.presentation.fragments.viewModels.AddProductsViewModel
+import com.mostafan3ma.android.menupro10.presentation.fragments.viewModels.AddProductsViewModelEvent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -182,6 +172,13 @@ class AddProductsFragment : Fragment() {
                         Log.d(TAG, "subscribeObservers: save Img for product:${product.name}")
                     }
                 }
+            }
+        })
+
+
+        viewModel.navigateToDefaultMenuFragment.observe(viewLifecycleOwner, Observer {navigate->
+            if (navigate){
+                findNavController().navigate(AddProductsFragmentDirections.actionAddProductsFragmentToDefaultLastMenuFragment())
             }
         })
     }

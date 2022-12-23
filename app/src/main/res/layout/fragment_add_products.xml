@@ -6,10 +6,10 @@
     <data>
         <variable
             name="adapter"
-            type="com.mostafan3ma.android.menupro10.presentation.startingFragments.adapters.AddProductsAdapter" />
+            type="com.mostafan3ma.android.menupro10.presentation.fragments.adapters.AddProductsAdapter" />
         <variable
             name="viewModel"
-            type="com.mostafan3ma.android.menupro10.presentation.startingFragments.viewModels.AddProductsViewModel" />
+            type="com.mostafan3ma.android.menupro10.presentation.fragments.viewModels.AddProductsViewModel" />
         <variable
             name="clickedProduct"
             type="com.mostafan3ma.android.menupro10.oporations.data_Entities.Item" />
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/default_background"
-        tools:context=".presentation.startingFragments.AddProductsFragment">
+        tools:context=".presentation.fragments.startingFragments.AddProductsFragment">
 
 
         <Button
