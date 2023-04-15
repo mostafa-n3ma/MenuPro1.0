@@ -80,6 +80,8 @@
 
 
 
+        implementation 'com.google.code.gson:gson:2.9.0'
+
 
 
         implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
@@ -101,6 +103,10 @@
 
 
         implementation("io.coil-kt:coil:2.1.0")
+
+
+        implementation 'com.github.yukuku:ambilwarna:2.0.1'
+
 
 
 

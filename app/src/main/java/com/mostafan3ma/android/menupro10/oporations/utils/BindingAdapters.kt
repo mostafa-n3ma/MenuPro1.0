@@ -1,13 +1,17 @@
 package com.mostafan3ma.android.menupro10.oporations.utils
 
+import android.content.res.XmlResourceParser
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mostafan3ma.android.menupro10.R
+import java.time.OffsetTime
 
 @BindingAdapter("setAdapter")
 fun setAdapter(recyclerView: RecyclerView, adapter: ListAdapter<Any,RecyclerView.ViewHolder>) {
@@ -52,12 +56,7 @@ fun getInternalImg(imageView: ImageView,imgName:String?){
         )
         imageView.setImageBitmap(tempBitMap)
     }
-
-
-
 }
-
-
 
 
 

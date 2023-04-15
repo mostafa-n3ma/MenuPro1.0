@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import com.mostafan3ma.android.menupro10.oporations.DataManagment.repository.DefaultShopRepository
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.Category
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.Item
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheShop
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.mapToCategoriesList
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.getCacheItem
 import com.mostafan3ma.android.menupro10.oporations.di.RealRepository
@@ -81,6 +82,8 @@ constructor(
     val categories_list: LiveData<List<Category>> get() = _categories_list
 
     init {
+
+
         returnedImgUri.value = null
         _productsList.value = mutableListOf(
             Item(),

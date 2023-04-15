@@ -1,5 +1,6 @@
 package com.mostafan3ma.android.menupro10.oporations.DataManagment.localDataSource
 
+import android.util.Log
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheCategory
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheItem
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheShop
@@ -11,9 +12,13 @@ class LocalDataSource
 constructor(private val shopDao: ShopDao):DefaultLocalDataSource
 {
 
+    companion object{
+        const val TAG="LocalDataSource"
+    }
 
     //shop
     override suspend fun insertShop(cacheShop: CacheShop): Long {
+        Log.d(TAG, "insertShop: long=${shopDao.insertShop(cacheShop)}")
         return shopDao.insertShop(cacheShop)
     }
     override suspend fun getShop(): List<CacheShop> {
@@ -39,7 +44,9 @@ constructor(private val shopDao: ShopDao):DefaultLocalDataSource
 
     //category
     override suspend fun insertCategory(cacheCategory: CacheCategory): Long {
+        Log.d(TAG, "insertCategory: $shopDao.insertCategory(cacheCategory)")
         return shopDao.insertCategory(cacheCategory)
+
     }
     override suspend fun getCategories(): List<CacheCategory> {
         return shopDao.getCategories()
@@ -62,6 +69,7 @@ constructor(private val shopDao: ShopDao):DefaultLocalDataSource
 
     //item
     override suspend fun insertItem(cacheItem: CacheItem): Long {
+        Log.d(TAG, "insertItem: $shopDao.insertItem(cacheItem)")
         return shopDao.insertItem(cacheItem)
     }
 

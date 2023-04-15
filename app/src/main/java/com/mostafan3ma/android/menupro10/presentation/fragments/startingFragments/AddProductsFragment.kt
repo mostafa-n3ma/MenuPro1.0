@@ -1,5 +1,6 @@
 package com.mostafan3ma.android.menupro10.presentation.fragments.startingFragments
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -59,6 +60,10 @@ class AddProductsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val sharedPreferences=requireContext().getSharedPreferences("mypreferences",
+            Context.MODE_PRIVATE
+        )
+
         binding = FragmentAddProductsBinding.inflate(inflater)
         adapter = AddProductsAdapter(this.requireContext(), ProductsListener { position ->
             if (clickableEnabled) {

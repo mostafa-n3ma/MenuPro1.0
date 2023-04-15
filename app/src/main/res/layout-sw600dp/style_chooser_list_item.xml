@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.mostafan3ma.android.menupro10.presentation.fragments.adapters.StyleChooserItem" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="500dp"
+        android:layout_height="750dp"
+        android:layout_margin="4dp">
+
+        <ImageView
+            android:id="@+id/bottom_style_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@{item.styleImage}"
+            tools:src="@drawable/blure_pro" />
+
+        <TextView
+            android:id="@+id/bottom_style_name"
+            style="@style/tablet_txt_styles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/style_name_label"
+            android:text="@{item.styleName}"
+            tools:text="blur_pro" />
+
+        <ImageView
+            android:id="@+id/bottom_style_check_marker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            markerChecked="@{item.isChecked}"
+            android:visibility="invisible"
+            android:src="@drawable/check_marker" />
+
+    </RelativeLayout>
+</layout>

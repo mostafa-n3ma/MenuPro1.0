@@ -35,6 +35,7 @@ companion object{
         binding = FragmentWelcomBinding.inflate(inflater)
 
 
+
         authViewModel.authenticationState.observe(viewLifecycleOwner,androidx.lifecycle.Observer{Authentication->
             when(Authentication){
                 MainAuthViewModel.AuthenticationState.AUTHENTICATED->{

@@ -73,7 +73,6 @@ class CategoryDiffCallBack:DiffUtil.ItemCallback<Category>() {
 }
 
 class CategoryListener(val clickListener: (position:Int)-> Unit ){
-
     fun onClick( position:Int)=clickListener(position)
 }
 

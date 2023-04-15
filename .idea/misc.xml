@@ -5,20 +5,24 @@
       <map>
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/add_category_bottom_sheet.xml" value="0.2475" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/add_category_bottom_sheet_shape.xml" value="0.1545" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/attr_card.xml" value="0.1855" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/btn_round_yellow_shap.xml" value="0.216" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/card_shap.xml" value="0.2855" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/country_picker_rounded_corner_black.xml" value="0.1795" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/country_picker_rounded_corner_yellow.xml" value="0.1985" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/default_style.xml" value="0.2155" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/ic_baseline_cancel_24.xml" value="0.1795" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/rounded_corner.xml" value="0.237" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/s.xml" value="0.1795" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/drawable/style_name_label.xml" value="0.1775" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-land/fragment_main_menu.xml" value="0.14666666666666667" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-land/fragment_mainmenu.xml" value="0.2156084656084656" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-large/fragment_create_acount.xml" value="0.16666666666666666" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-large/fragment_main_menu.xml" value="0.13333333333333333" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-large/fragment_mainmenu.xml" value="0.1" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-large/fragment_welcom.xml" value="0.20906370243693886" />
-        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/chip_category_item.xml" value="0.1" />
-        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/fragment_add_catagories.xml" value="0.22" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/chip_category_item.xml" value="0.22" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/fragment_add_catagories.xml" value="0.20910973084886128" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/fragment_add_products.xml" value="0.13333333333333333" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/fragment_last__default_menu.xml" value="0.1" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/fragment_main_menu.xml" value="0.3333333333333333" />
@@ -29,11 +33,15 @@
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/item_add_categorey.xml" value="0.10666666666666667" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/item_add_products.xml" value="0.5" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/item_product_1.xml" value="0.1890625" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/material_item.xml" value="0.18333333333333332" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/style_chooser_list_item.xml" value="0.10208333333333333" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-sw600dp/tes_menu_item.xml" value="0.22" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout-w600dp/fragment_main_menu.xml" value="0.14666666666666667" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/add_category_bottom_sheet.xml" value="0.1" />
-        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/chip_category_item.xml" value="0.2877297990594271" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/chip_category_item.xml" value="0.22" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/dialog_choose_style.xml" value="0.3009833262077811" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/dialoge_choose_style_item.xml" value="0.30012825994014536" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/drawer_header.xml" value="0.30055579307396324" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/drawer_layout_main.xml" value="0.2877297990594271" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/drop_dwon_item.xml" value="0.121493399339934" />
@@ -41,7 +49,7 @@
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/fragment_add_products.xml" value="0.16666666666666666" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/fragment_create_acount.xml" value="0.16666666666666666" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/fragment_default_last_menu.xml" value="0.14666666666666667" />
-        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/fragment_last__default_menu.xml" value="0.25" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/fragment_last__default_menu.xml" value="0.2" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/fragment_login.xml" value="0.1" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/fragment_main_menu.xml" value="0.20906370243693886" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/fragment_mainmenu.xml" value="0.16666666666666666" />
@@ -55,9 +63,11 @@
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/item_add_cotegory.xml" value="0.20820863616930313" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/item_add_products.xml" value="0.4466666666666667" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/item_product_1.xml" value="0.30055579307396324" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/material_item.xml" value="0.30012825994014536" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/scratch.xml" value="0.14666666666666667" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/style_chooser_list_item.xml" value="0.2" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/tes_menu_item.xml" value="0.1" />
-        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/test.xml" value="0.18359375" />
+        <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/test.xml" value="0.2" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/test_fragment.xml" value="0.25364583333333335" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/layout/testbottomsheet.xml" value="0.1" />
         <entry key="..\:/android_test_app/MenuPro10/app/src/main/res/menu/drawer_menu.xml" value="0.30055579307396324" />

@@ -83,6 +83,14 @@ constructor(drawerLayout: DrawerLayout,navController: NavController) {
 
 
     /**
+     * open the left drawer for attributes
+     */
+    fun openAttributesDrawer(){
+        drawerLayout.openDrawer(GravityCompat.END)
+        Log.d(TAG, "openAttributesDrawer: opened")
+    }
+
+    /**
      * close the drawer
      */
      fun closeDrawer() {
@@ -93,6 +101,16 @@ constructor(drawerLayout: DrawerLayout,navController: NavController) {
         }
     }
 
+    /**
+     * close the left drawer for attributes
+     */
+    fun closeAttrDrawer(){
+        if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+            drawerLayout.closeDrawer(GravityCompat.END)
+        } else {
+            drawerLayout.openDrawer(GravityCompat.END)
+        }
+    }
 
 }
 

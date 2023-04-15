@@ -15,7 +15,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.core.net.toUri
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import coil.ImageLoader
 import coil.request.ImageRequest
@@ -23,9 +23,7 @@ import coil.request.SuccessResult
 import com.mostafan3ma.android.menupro10.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
+import java.io.*
 import javax.inject.Inject
 
 class SuperImageController
@@ -42,7 +40,6 @@ constructor() {
 
      */
     var returnedUri: Uri? = null
-
     private lateinit var registrar: ActivityResultLauncher<String>
 
 
@@ -259,6 +256,16 @@ constructor() {
         return deletedSuccessfully
 
     }
+
+    fun getDrawableFromUri(context: Context,uri: Uri):Drawable?{
+        return try {
+            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+            Drawable.createFromStream(inputStream, uri.toString())
+        }catch (e:FileNotFoundException){
+            ContextCompat.getDrawable(context, R.drawable.image_not_found)
+        }
+    }
+
 
 }
 

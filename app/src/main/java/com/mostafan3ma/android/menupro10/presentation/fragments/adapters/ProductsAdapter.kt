@@ -9,7 +9,7 @@ import com.mostafan3ma.android.menupro10.databinding.ItemProduct1Binding
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.Item
 
 class ProductsAdapter (private val productListener1: ProductListener1)
-    :ListAdapter<Item,ProductsAdapter.Product1ViewHolder>(product1DiffCallBack()){
+    :ListAdapter<Item,ProductsAdapter.Product1ViewHolder>(Product1DiffCallBack()){
 
 
 
@@ -48,7 +48,7 @@ class ProductsAdapter (private val productListener1: ProductListener1)
 
 
 
-class product1DiffCallBack:DiffUtil.ItemCallback<Item>(){
+class Product1DiffCallBack:DiffUtil.ItemCallback<Item>(){
     override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
         return oldItem.name==newItem.name
     }
@@ -60,6 +60,36 @@ class product1DiffCallBack:DiffUtil.ItemCallback<Item>(){
 
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class ProductListener1(val listener:(position:Int)->Unit){
     fun onClick(position: Int)=listener(position)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

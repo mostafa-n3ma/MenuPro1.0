@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mostafan3ma.android.menupro10.oporations.DataManagment.repository.DefaultShopRepository
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.Category
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheShop
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.getCacheCategory
 import com.mostafan3ma.android.menupro10.oporations.di.RealRepository
 import com.mostafan3ma.android.menupro10.oporations.utils.SuperImageController
@@ -64,6 +65,7 @@ constructor(
 
 
     init {
+
 
         _categoriesList.value =
             mutableListOf(
