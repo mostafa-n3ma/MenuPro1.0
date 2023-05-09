@@ -2,6 +2,7 @@ package com.mostafan3ma.android.menupro10.oporations.utils
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.graphics.Color
 import android.graphics.Color.parseColor
 import android.net.Uri
 import com.google.gson.Gson
@@ -20,27 +21,28 @@ enum class ChosenStyle(val styleCode: Int) {
 }
 
 enum class ProductListItemStyle(val itemStyleCode: Int) {
-    DEFAULT_ITEM(1),
-    MATERIAL_ITEM(2),
-    BAKERY_ITEM(3),
-    SWEET_ITEM(4),
-    BLUR_ITEM(5),
-    DEFAULT_CATEGORY_ITEM(6),
-    COLORIZES_CATEGORY_ITEM(7)
+    DEFAULT_ITEM(0),
+    MATERIAL_ITEM(1),
+    BAKERY_ITEM(2),
+    BLUR_ITEM(3),
+    DEFAULT_CATEGORY_ITEM(4),
+    COLORIZES_CATEGORY_ITEM(5)
 
 }
 
 
 data class ProductListItem(
     var style: ProductListItemStyle = ProductListItemStyle.DEFAULT_ITEM,
-    var concurrency: String = DEFAULT_CONCURRENCY,
-    var concurrencyColor: Int = DEFAULT_COLOR_VALUE,
-    var background: String = DEFAULT_VALUE,
-    var textColor: Int = DEFAULT_COLOR_VALUE,
-    var textSizeName: String = DEFAULT_SIZE,
-    var textColorName: Int = DEFAULT_COLOR_VALUE,
-    var textSizeDescription: String = DEFAULT_SIZE,
-    var textColorDescription: Int = DEFAULT_COLOR_VALUE
+    var background_color: Int = DEFAULT_COLOR_VALUE,
+    var name_text_size: String = DEFAULT_SIZE,
+    var name_text_color: Int = DEFAULT_COLOR_VALUE,
+    var description_text_color: Int = DEFAULT_COLOR_VALUE,
+    var description_text_size: String = DEFAULT_SIZE,
+    var concurrency_type_text:String= DEFAULT_CONCURRENCY,
+    var concurrency_text_size: String = DEFAULT_SIZE,
+    var concurrency_text_Color: Int = DEFAULT_COLOR_VALUE,
+    var size_text_color:Int= DEFAULT_COLOR_VALUE,
+    var size_text_size:String= DEFAULT_SIZE
 ) {
     companion object {
         const val DEFAULT_CONCURRENCY = "$"
@@ -62,7 +64,9 @@ data class Style(
     var welcomeTextSize: String = DEFAULT_TEXT_SIZE,
     var welcomeTextColor: Int = DEFAULT_TEXT_COLOR,
     var chipsCheckedColor: Int = parseColor(DEFAULT_CHIPS_CHECKED_COLOR),
+    var chipsCheckedTextColor:Int= parseColor(DEFAULT_BLACK_COLOR),
     var chipsUnCheckedColor: Int = parseColor(DEFAULT_CHIPS_UNCHECKED_COLOR),
+    var chipsUnCheckedTextColor:Int= parseColor(DEFAULT_BLACK_COLOR),
     var product_list_item: ProductListItem = ProductListItem()
 ) {
     companion object {
@@ -72,6 +76,7 @@ data class Style(
         const val ALIGN_RIGHT = "right"
         const val DEFAULT_TEXT_SIZE = "20dp"
         const val DEFAULT_TEXT_COLOR = 0
+        const val DEFAULT_BLACK_COLOR="#FF000000"
         const val DEFAULT_CHIPS_CHECKED_COLOR = "#FFA800"
         const val DEFAULT_CHIPS_UNCHECKED_COLOR = "#EFEFEF"
 

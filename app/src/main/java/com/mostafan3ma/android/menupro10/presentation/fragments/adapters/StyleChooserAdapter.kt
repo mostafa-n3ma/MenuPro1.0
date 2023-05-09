@@ -8,47 +8,93 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.mostafan3ma.android.menupro10.databinding.StyleChooserListItemBinding
 import androidx.recyclerview.widget.ListAdapter
+import com.mostafan3ma.android.menupro10.databinding.ListItemItemChooserBinding
+import com.mostafan3ma.android.menupro10.databinding.ListItemStyleChooserBinding
 
-class StyleChooserAdapter(private val styleChooserListener: StyleChooserListener)
-    :ListAdapter<StyleChooserItem, StyleChooserAdapter.StyleChooserViewHolder>(
+
+
+
+abstract class StyleChooserDefaultViewHolder(itemView:View):RecyclerView.ViewHolder(itemView)
+
+
+
+
+class MainStyleChooserViewHolder(private val binding: ListItemStyleChooserBinding) :
+    StyleChooserDefaultViewHolder(binding.root) {
+    fun bind(item:StyleChooserItem){
+        binding.item=item
+    }
+    companion object{
+        fun from(parent: ViewGroup):MainStyleChooserViewHolder{
+            val layoutInflater=LayoutInflater.from(parent.context)
+            val binding=ListItemStyleChooserBinding.inflate(layoutInflater,parent,false)
+            return MainStyleChooserViewHolder(binding)
+        }
+    }
+}
+
+class ItemStyleChooserViewHolder(private val binding: ListItemItemChooserBinding):StyleChooserDefaultViewHolder(binding.root){
+
+    fun bind(item:StyleChooserItem){
+        binding.item=item
+    }
+
+    companion object{
+        fun from(parent: ViewGroup):ItemStyleChooserViewHolder{
+            val layoutInflater=LayoutInflater.from(parent.context)
+            val binding=ListItemItemChooserBinding.inflate(layoutInflater,parent,false)
+            return ItemStyleChooserViewHolder(binding)
+        }
+    }
+
+
+
+}
+
+
+
+
+
+class StyleChooserAdapter(private val styleChooserListener: StyleChooserListener,private val viewHolder:Int)
+    :ListAdapter<StyleChooserItem, StyleChooserDefaultViewHolder>(
     StyleChooserDiffCallBack()
 ) {
 
-
-    class StyleChooserViewHolder(private val binding: StyleChooserListItemBinding) :
-        RecyclerView.ViewHolder(binding.root){
-            fun bind(item:StyleChooserItem){
-                binding.item=item
-            }
-        companion object{
-            fun from(parent: ViewGroup):StyleChooserViewHolder{
-                val layoutInflater=LayoutInflater.from(parent.context)
-                val binding=StyleChooserListItemBinding.inflate(layoutInflater,parent,false)
-                return StyleChooserViewHolder(binding)
-            }
-        }
-        }
-
-
-
-
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StyleChooserViewHolder {
-       return StyleChooserViewHolder.from(parent)
+    companion object{
+        const val MAIN_STYLE_VIEW_HOLDER=1
+        const val ITEM_STYLE_VIEW_HOLDER=2
     }
 
-    override fun onBindViewHolder(holder: StyleChooserViewHolder, position: Int) {
-        val styleChooserItem=getItem(position)
-        holder.bind(styleChooserItem)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StyleChooserDefaultViewHolder {
+        return when(viewHolder){
+            MAIN_STYLE_VIEW_HOLDER->{
+                MainStyleChooserViewHolder.from(parent)
+            }
+            ITEM_STYLE_VIEW_HOLDER->{
+                ItemStyleChooserViewHolder.from(parent)
+            }
+            else->{
+                MainStyleChooserViewHolder.from(parent)
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: StyleChooserDefaultViewHolder, position: Int) {
+        val styleChooserItem: StyleChooserItem =getItem(position)
+       when(holder){
+          is MainStyleChooserViewHolder->{
+              holder.bind(styleChooserItem)
+          }
+           is ItemStyleChooserViewHolder->{
+               holder.bind(styleChooserItem)
+           }
+       }
     //implement the clickListener
         holder.itemView.setOnClickListener {
             styleChooserListener.listener(styleChooserItem.styleCode)
         }
-
-
     }
 
 

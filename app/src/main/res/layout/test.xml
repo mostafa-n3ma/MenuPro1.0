@@ -1,87 +1,63 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<LinearLayout android:id="@+id/bottom_buttons_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginEnd="16dp"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-
-        <variable
-            name="category_item"
-            type="com.mostafan3ma.android.menupro10.oporations.data_Entities.Category" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <Button
+        android:id="@+id/reset_style_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text=" reset"
+        android:textStyle="bold"
+        android:textColor="@color/default_yellow"
+        android:drawableLeft="@drawable/reset_btn"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_gravity="center"
+        android:layout_marginBottom="6dp"
+        android:elevation="1dp"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
         >
-        <androidx.cardview.widget.CardView
-            android:id="@+id/category_card"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:cardCornerRadius="10dp"
-            android:layout_margin="8dp"
-            android:elevation="20dp"
-            android:visibility="visible"
-            android:backgroundTint="@color/default_background"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            >
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+        <Button
+            android:id="@+id/bottom_cancel_btn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:onClick="@{()-> viewModel.closeAttrBottomSheet()}"
+            android:text="cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/category_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="75dp"
-                    android:scaleType="centerCrop"
-                    tools:src="@drawable/default_category"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                     app:displayUri="@{category_item.imageUri}"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/category_name"
-                    style="@style/txt_styles"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:gravity="center"
-                    android:text="@{category_item.name}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/category_img"
-                    tools:text="food" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/bottom_done_btn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/default_yellow"
+            android:onClick="@{()-> viewModel.bottomDoneClicked()}"
+            android:text="Done"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 
 
-        </androidx.cardview.widget.CardView>
-
-        <ImageView
-            android:id="@+id/add_category_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/add_item"
-            android:visibility="gone"
-            android:layout_margin="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-
-</layout>
+</LinearLayout>

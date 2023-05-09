@@ -11,6 +11,7 @@ import com.mostafan3ma.android.menupro10.oporations.DataManagment.repository.Def
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.Category
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.DomainModel
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.Item
+import com.mostafan3ma.android.menupro10.oporations.data_Entities.cache_Entities.CacheShop
 import com.mostafan3ma.android.menupro10.oporations.di.RealRepository
 import com.mostafan3ma.android.menupro10.oporations.utils.*
 import com.mostafan3ma.android.menupro10.presentation.fragments.adapters.StyleChooserItem
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
 class DefaultLastMenuViewModel
@@ -30,12 +32,91 @@ constructor(
 
     companion object {
         const val TAG = "LastMenuViewModel"
+        const val STYLE_CHOOSER_CODE=1
+        const val ITEM_STYLE_CHOOSER_CODE=2
     }
 
 
+    private val _resetStyleRequired=MutableLiveData<Boolean>()
+    val resetStyleRequired:LiveData<Boolean>get() = _resetStyleRequired
+
+
+
+
+
+    var chosenListItemStyle:Int?=null
+
+    val previewItemBackground=MutableLiveData<Int>()
+    val previewItemNameSize=MutableLiveData<String>()
+    val previewItemNameColor=MutableLiveData<Int>()
+    val previewItemDescriptionSize=MutableLiveData<String>()
+    val previewItemDescriptionColor=MutableLiveData<Int>()
+    val previewItemSizeTextSize=MutableLiveData<String>()
+    val previewItemSizeTextColor=MutableLiveData<Int>()
+    val previewItemConcurrencyType=MutableLiveData<String>()
+    val previewItemConcurrencySize=MutableLiveData<String>()
+    val previewItemConcurrencyColor=MutableLiveData<Int>()
+
+
+
+    fun emptyItemPreviewValues(){
+        previewItemBackground.value=0
+        previewItemNameSize.value=""
+        previewItemNameColor.value=0
+        previewItemDescriptionSize.value=""
+        previewItemDescriptionColor.value=0
+        previewItemSizeTextSize.value=""
+        previewItemSizeTextColor.value=0
+        previewItemConcurrencyType.value=""
+        previewItemConcurrencySize.value=""
+        previewItemConcurrencyColor.value=0
+    }
+
+    fun calculateAndApplyItemPreviewValues(){
+        val productListItem: ProductListItem =_style.value!!.product_list_item
+        if (previewItemBackground.value!=0){
+            productListItem.background_color=previewItemBackground.value!!
+        }
+        if (previewItemNameSize.value!=""){
+            productListItem.name_text_size=previewItemNameSize.value!!
+        }
+        if (previewItemNameColor.value!=0){
+            productListItem.name_text_color=previewItemNameColor.value!!
+        }
+        if (previewItemDescriptionSize.value!=""){
+            productListItem.description_text_size=previewItemDescriptionSize.value!!
+        }
+        if (previewItemDescriptionColor.value!=0){
+            productListItem.description_text_color=previewItemDescriptionColor.value!!
+        }
+
+        if (previewItemConcurrencySize.value!=""){
+            productListItem.concurrency_text_size=previewItemConcurrencySize.value!!
+        }
+        if(previewItemConcurrencyColor.value!=0){
+            productListItem.concurrency_text_Color=previewItemConcurrencyColor.value!!
+        }
+        if (previewItemConcurrencyType.value!=""){
+            productListItem.concurrency_type_text=previewItemConcurrencyType.value!!
+        }
+
+        if (previewItemSizeTextSize.value!=""){
+            productListItem.size_text_size=previewItemSizeTextSize.value!!
+        }
+        if (previewItemSizeTextColor.value!=0){
+            productListItem.size_text_color=previewItemSizeTextColor.value!!
+        }
+
+
+        _style.value!!.product_list_item=productListItem
+        _style.postValue(_style.value)
+        emptyItemPreviewValues()
+
+    }
+
+
+
     var backgroundChooserResult:Any?=null
-
-
 
 
     private val _launchColorPicker=MutableLiveData<String>()
@@ -57,64 +138,106 @@ constructor(
         _styleChooserList.value = stylesList
     }
 
-    fun adjustStyleChooserList(styleCode: Int) {
-        Log.d(TAG, "adjustStyleChooserList: styleChooser")
+    fun adjustStyleChooserList(styleCode: Int,chooserCode:Int) {
+        when(chooserCode){
+            STYLE_CHOOSER_CODE->{
+                for (styleItem in _styleChooserList.value!!) {
+                    styleItem.isChecked = false
+                    Log.d(TAG, "adjustStyleChooserList: styleChooser::styleItem.isChecked=false")
+                }
+                when (styleCode) {
+                    ChosenStyle.DEFAULT.styleCode -> {
+                        _styleChooserList.value!![styleCode].isChecked = true
+                        _styleChooserList.postValue(_styleChooserList.value)
+                        Log.d(
+                            TAG,
+                            "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
+                        )
+                    }
+                    ChosenStyle.BLUR_PRO.styleCode -> {
+                        _styleChooserList.value!![styleCode].isChecked = true
+                        _styleChooserList.postValue(_styleChooserList.value)
+                        Log.d(
+                            TAG,
+                            "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
+                        )
+                    }
+                    ChosenStyle.BAKERY_BLACK.styleCode -> {
+                        _styleChooserList.value!![styleCode].isChecked = true
+                        _styleChooserList.postValue(_styleChooserList.value)
+                        Log.d(
+                            TAG,
+                            "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
+                        )
+                    }
+                    ChosenStyle.STANDARD_MATERIAL_DETAILS_ITEMS.styleCode -> {
+                        _styleChooserList.value!![styleCode].isChecked = true
+                        _styleChooserList.postValue(_styleChooserList.value)
+                        Log.d(
+                            TAG,
+                            "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
+                        )
+                    }
+                    ChosenStyle.COLORIZES_CATEGORIES_DETAILS_ITEMS.styleCode -> {
+                        _styleChooserList.value!![styleCode].isChecked = true
+                        _styleChooserList.postValue(_styleChooserList.value)
+                        Log.d(
+                            TAG,
+                            "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
+                        )
+                    }
+                    ChosenStyle.CATEGORIES_LIST_SWEETS_DETAILS_ITEMS.styleCode -> {
+                        _styleChooserList.value!![styleCode].isChecked = true
+                        _styleChooserList.postValue(_styleChooserList.value)
+                        Log.d(
+                            TAG,
+                            "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
+                        )
+                    }
 
-        for (styleItem in _styleChooserList.value!!) {
-            styleItem.isChecked = false
-            Log.d(TAG, "adjustStyleChooserList: styleChooser::styleItem.isChecked=false")
+                }
+            }
+            ITEM_STYLE_CHOOSER_CODE->{
+                for (styleItem in _styleChooserList.value!!) {
+                    styleItem.isChecked = false
+                }
+                when (styleCode) {
+                    ProductListItemStyle.DEFAULT_ITEM.itemStyleCode -> {
+                        _styleChooserList.value!![styleCode].isChecked = true
+                        _styleChooserList.postValue(_styleChooserList.value)
+                        Log.d(
+                            TAG,
+                            "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
+                        )
+                    }
+                    ProductListItemStyle.MATERIAL_ITEM.itemStyleCode -> {
+                        _styleChooserList.value!![styleCode].isChecked = true
+                        _styleChooserList.postValue(_styleChooserList.value)
+                        Log.d(
+                            TAG,
+                            "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
+                        )
+                    }
+                    ProductListItemStyle.BAKERY_ITEM.itemStyleCode -> {
+                        _styleChooserList.value!![styleCode].isChecked = true
+                        _styleChooserList.postValue(_styleChooserList.value)
+                        Log.d(
+                            TAG,
+                            "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
+                        )
+                    }
+                    ProductListItemStyle.BLUR_ITEM.itemStyleCode -> {
+                        _styleChooserList.value!![styleCode].isChecked = true
+                        _styleChooserList.postValue(_styleChooserList.value)
+                        Log.d(
+                            TAG,
+                            "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
+                        )
+                    }
+                }
+            }
         }
-        when (styleCode) {
-            ChosenStyle.DEFAULT.styleCode -> {
-                _styleChooserList.value!![styleCode].isChecked = true
-                _styleChooserList.postValue(_styleChooserList.value)
-                Log.d(
-                    TAG,
-                    "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
-                )
-            }
-            ChosenStyle.BLUR_PRO.styleCode -> {
-                _styleChooserList.value!![styleCode].isChecked = true
-                _styleChooserList.postValue(_styleChooserList.value)
-                Log.d(
-                    TAG,
-                    "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
-                )
-            }
-            ChosenStyle.BAKERY_BLACK.styleCode -> {
-                _styleChooserList.value!![styleCode].isChecked = true
-                _styleChooserList.postValue(_styleChooserList.value)
-                Log.d(
-                    TAG,
-                    "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
-                )
-            }
-            ChosenStyle.STANDARD_MATERIAL_DETAILS_ITEMS.styleCode -> {
-                _styleChooserList.value!![styleCode].isChecked = true
-                _styleChooserList.postValue(_styleChooserList.value)
-                Log.d(
-                    TAG,
-                    "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
-                )
-            }
-            ChosenStyle.COLORIZES_CATEGORIES_DETAILS_ITEMS.styleCode -> {
-                _styleChooserList.value!![styleCode].isChecked = true
-                _styleChooserList.postValue(_styleChooserList.value)
-                Log.d(
-                    TAG,
-                    "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
-                )
-            }
-            ChosenStyle.CATEGORIES_LIST_SWEETS_DETAILS_ITEMS.styleCode -> {
-                _styleChooserList.value!![styleCode].isChecked = true
-                _styleChooserList.postValue(_styleChooserList.value)
-                Log.d(
-                    TAG,
-                    "testingChooserAdapter: list adjusted after clicking($styleCode)::>> ${styleChooserList.value}"
-                )
-            }
 
-        }
     }
 
     private val _hideKeyBoardRequired = MutableLiveData<Boolean>()
@@ -138,6 +261,7 @@ constructor(
 
     fun passPrefStyle(prefStyle: Style) {
         _style.value = prefStyle
+        chosenListItemStyle=_style.value!!.product_list_item.style.itemStyleCode
     }
 
     fun addAttrChanges(givenStyle: Style) {
@@ -178,6 +302,8 @@ constructor(
     private val _filteredProductsList = MutableLiveData<List<Item>>()
     val filteredProductsList: LiveData<List<Item>> get() = _filteredProductsList
 
+    private val _itemForPreview=MutableLiveData<Item?>()
+    val itemForPreview:LiveData<Item?> get()=_itemForPreview
 
     private fun filterProductsList(chosenCategory: String) {
         val allProductsList: List<Item>? = _domainModel.value!!.items
@@ -197,6 +323,25 @@ constructor(
 
 
     init {
+
+
+        _resetStyleRequired.value=false
+
+        previewItemBackground.value=0
+        previewItemNameSize.value=""
+        previewItemNameColor.value=0
+        previewItemDescriptionSize.value=""
+        previewItemDescriptionColor.value=0
+        previewItemSizeTextSize.value=""
+        previewItemSizeTextColor.value=0
+        previewItemConcurrencyType.value=""
+        previewItemConcurrencySize.value=""
+        previewItemConcurrencyColor.value=0
+
+
+
+
+
         _launchColorPicker.value=""
         _launchSuperImageController.value = false
         _hideKeyBoardRequired.value = false
@@ -204,15 +349,27 @@ constructor(
         _visibleBottomSheetLayout.value = AttrVisibleViews.NOTHING
         _clicksEnabled.value = true
         _refreshFragment.value = false
+        _itemForPreview.value=null
+
 
 
         viewModelScope.launch {
+
             repository.getCacheDomainShop().onEach { dataState: DataState<DomainModel> ->
+                repository.insertShop(CacheShop(
+                    name = "my shop"
+                , logoImageName = "logo"
+                ))
                 when (dataState) {
                     is DataState.Success -> {
                         _domainModel.value = dataState.data!!
                         Log.d(TAG, "DomainModel:::${dataState.data.toString()}: ")
                         initChipList(_domainModel.value!!)
+                        val productsListSize: Int =domainModel.value!!.items!!.size
+                        if (productsListSize!=0){
+                            val randomNum=(0..productsListSize).random()
+                            _itemForPreview.value= domainModel.value!!.items!![randomNum]
+                        }
                         _filteredProductsList.value = _domainModel.value!!.items!!
                     }
                     is DataState.Error -> {
@@ -223,7 +380,7 @@ constructor(
                     }
                 }
             }.launchIn(viewModelScope)
-
+            
         }
 
 
@@ -284,6 +441,7 @@ constructor(
                         setEvent(DefaultViewModelEvent.OpenAttributesDrawerEvent)
                         setEvent(DefaultViewModelEvent.EnableClicks)
                         setEvent(DefaultViewModelEvent.HideKeyBoardRequired)
+                        emptyItemPreviewValues()
 
                     }
                     else -> {
@@ -318,8 +476,17 @@ constructor(
                     }
                 }
             }
+            is DefaultViewModelEvent.ResetStyleAttributes->{
+                _resetStyleRequired.value=true
+                _resetStyleRequired.value=false
+            }
         }
     }
+
+    fun requestStyleReset(){
+        setEvent(DefaultViewModelEvent.ResetStyleAttributes)
+    }
+
 
 
     fun bottomDoneClicked() {
@@ -337,21 +504,43 @@ constructor(
     }
 
 
-    fun getTheNewChosenStyle(choseStyleCode: Int) {
-        _style.value!!.styleCode = when (choseStyleCode) {
-            0 -> ChosenStyle.DEFAULT
-            1 -> ChosenStyle.BLUR_PRO
-            2 -> ChosenStyle.BAKERY_BLACK
-            3 -> ChosenStyle.STANDARD_MATERIAL_DETAILS_ITEMS
-            4 -> ChosenStyle.COLORIZES_CATEGORIES_DETAILS_ITEMS
-            5 -> ChosenStyle.CATEGORIES_LIST_SWEETS_DETAILS_ITEMS
-            else -> ChosenStyle.DEFAULT
+    fun getTheNewChosenStyle(chosenStyleCode: Int, chooserCode: Int) {
+        when(chooserCode){
+            STYLE_CHOOSER_CODE->{
+                _style.value!!.styleCode = when (chosenStyleCode) {
+                    0 -> ChosenStyle.DEFAULT
+                    1 -> ChosenStyle.BLUR_PRO
+                    2 -> ChosenStyle.BAKERY_BLACK
+                    3 -> ChosenStyle.STANDARD_MATERIAL_DETAILS_ITEMS
+                    4 -> ChosenStyle.COLORIZES_CATEGORIES_DETAILS_ITEMS
+                    5 -> ChosenStyle.CATEGORIES_LIST_SWEETS_DETAILS_ITEMS
+                    else -> ChosenStyle.DEFAULT
+                }
+                _style.postValue(_style.value)
+            }
+            ITEM_STYLE_CHOOSER_CODE->{
+                _style.value!!.product_list_item.style=when(chosenStyleCode){
+                    0-> ProductListItemStyle.DEFAULT_ITEM
+                    1->ProductListItemStyle.MATERIAL_ITEM
+                    2->ProductListItemStyle.BAKERY_ITEM
+                    3->ProductListItemStyle.BLUR_ITEM
+                    else->ProductListItemStyle.DEFAULT_ITEM
+                }
+                _style.postValue(_style.value)
+            }
         }
-        _style.postValue(_style.value)
+
     }
 
 
+
+
+    fun openItemEditorBottom(){
+        setEvent(DefaultViewModelEvent.OpenAttrBottomSheetEventWithView(AttrVisibleViews.ITEM_EDITOR_LAYOUT))
+    }
 }
+
+
 
 sealed class DefaultViewModelEvent<out R> {
     object OpenDrawerEvent : DefaultViewModelEvent<Nothing>()
@@ -369,7 +558,7 @@ sealed class DefaultViewModelEvent<out R> {
     object BottomDoneClickedEvent : DefaultViewModelEvent<Nothing>()
     object HideKeyBoardRequired : DefaultViewModelEvent<Nothing>()
     object LaunchSuperImageControllerRegistrarEvent : DefaultViewModelEvent<Nothing>()
-
+    object ResetStyleAttributes:DefaultViewModelEvent<Nothing>()
 
 }
 
@@ -378,5 +567,5 @@ enum class AttrVisibleViews() {
     STYLE_CHOOSER,
     BACKGROUND_CHOOSER,
     WELCOME_EDIT_TXT_LAYOUT,
-    ITEM_STYLE_CHOOSER,
+    ITEM_EDITOR_LAYOUT
 }

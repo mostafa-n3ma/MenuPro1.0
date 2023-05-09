@@ -1,84 +1,79 @@
 package com.mostafan3ma.android.menupro10.presentation.fragments.adapters
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.mostafan3ma.android.menupro10.databinding.ItemProduct1Binding
 import com.mostafan3ma.android.menupro10.oporations.data_Entities.Item
+import com.mostafan3ma.android.menupro10.oporations.utils.ProductListItem
+import com.mostafan3ma.android.menupro10.oporations.utils.ProductListItemStyle.*
 
-class ProductsAdapter (private val productListener1: ProductListener1)
-    :ListAdapter<Item,ProductsAdapter.Product1ViewHolder>(Product1DiffCallBack()){
+class ProductsAdapter(
+    private val productListener: ProductListener,
+    private val productListItem: ProductListItem
+) : ListAdapter<Item, ProductsViewHolders>(Product1DiffCallBack()) {
 
+    companion object{
+        const val TAG="ProductsAdapter"
+    }
 
-
-
-    class Product1ViewHolder(private val binding:ItemProduct1Binding):RecyclerView.ViewHolder(binding.root){
-        fun bind(item: Item){
-            binding.item=item
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsViewHolders {
+        return when(productListItem.style){
+            DEFAULT_ITEM -> {
+                DefaultProductViewHolder.from(parent,productListItem)
+            }
+            MATERIAL_ITEM -> {
+                MaterialProductViewHolder.from(parent,productListItem)
+            }
+            BAKERY_ITEM -> {
+                BakeryProductViewHolder.from(parent,productListItem)
+            }
+            BLUR_ITEM -> {
+                BlurProductViewHolder.from(parent,productListItem)
+            }
+            DEFAULT_CATEGORY_ITEM -> TODO()
+            COLORIZES_CATEGORY_ITEM -> TODO()
         }
+    }
 
-        companion object{
-            fun from(parent:ViewGroup):Product1ViewHolder{
-                val layoutInflater=LayoutInflater.from(parent.context)
-                val binding=ItemProduct1Binding.inflate(layoutInflater,parent,false)
-                return Product1ViewHolder(binding)
+    override fun onBindViewHolder(holder: ProductsViewHolders, position: Int) {
+        val productItem: Item = getItem(position)
+        when(holder){
+            is DefaultProductViewHolder->{
+                holder.bind(productItem,productListItem)
+            }
+            is MaterialProductViewHolder->{
+                holder.bind(productItem,productListItem)
+            }
+            is BakeryProductViewHolder->{
+                holder.bind(productItem,productListItem)
+            }
+            is BlurProductViewHolder->{
+                holder.bind(productItem,productListItem)
             }
         }
-
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Product1ViewHolder {
-        return Product1ViewHolder.from(parent)
-    }
-
-    override fun onBindViewHolder(holder: Product1ViewHolder, position: Int) {
-        val productItem=getItem(position)
-        holder.bind(productItem)
         holder.itemView.setOnClickListener {
-            productListener1.listener(position)
+            productListener.listener(productItem)
         }
     }
 
 }
 
 
-
-
-
-
-class Product1DiffCallBack:DiffUtil.ItemCallback<Item>(){
+class Product1DiffCallBack : DiffUtil.ItemCallback<Item>() {
     override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-        return oldItem.name==newItem.name
+        return oldItem.name == newItem.name
     }
 
     override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
-        return oldItem==newItem
+        return oldItem == newItem
     }
 
 
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class ProductListener1(val listener:(position:Int)->Unit){
-    fun onClick(position: Int)=listener(position)
+class ProductListener(val listener: (item: Item) -> Unit) {
+    fun onClick(item: Item) = listener(item)
 }
 
 

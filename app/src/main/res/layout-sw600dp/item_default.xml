@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="item"
             type="com.mostafan3ma.android.menupro10.oporations.data_Entities.Item" />
@@ -12,14 +13,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/item_card"
             android:layout_width="350dp"
             android:layout_height="250dp"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:elevation="20dp"
             android:visibility="visible"
             app:cardCornerRadius="15dp"
@@ -36,11 +36,11 @@
 
                 <ImageView
                     android:id="@+id/item_img"
+                    getInternalImg="@{item.imageName}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:scaleType="centerCrop"
-                    getInternalImg="@{item.imageName}"
                     tools:src="@drawable/default_category" />
 
                 <LinearLayout
@@ -52,9 +52,9 @@
                     <TextView
                         android:id="@+id/item_name"
                         style="@style/txt_styles"
-                        android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:gravity="center"
                         android:maxLength="16"
                         android:maxLines="2"
@@ -66,48 +66,47 @@
                         android:id="@+id/item_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:fontFamily="@font/poppins_medium"
                         android:gravity="center"
                         android:maxLines="3"
-                        android:layout_weight="1"
                         android:text="@{item.description}"
                         android:textSize="12sp"
                         tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit." />
 
 
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:layout_weight="1"
-                        >
+                        android:orientation="horizontal">
+
                         <TextView
-                            android:layout_weight="1"
                             android:id="@+id/item_Size"
+                            style="@style/tablet_txt_styles"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            tools:text="Large"
-                            android:layout_marginStart="8dp"
                             android:layout_gravity="start|bottom"
-                            android:textSize="18sp"
-                            style="@style/tablet_txt_styles"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
                             android:text="@={item.size}"
-                            />
+                            android:textSize="18sp"
+                            tools:text="Large" />
+
                         <TextView
                             android:id="@+id/item_price"
-                            android:layout_weight="1"
+                            style="@style/tablet_txt_styles"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_medium"
-                            android:layout_marginEnd="8dp"
-                            android:maxLines="3"
                             android:layout_gravity="bottom"
-                            style="@style/tablet_txt_styles"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/poppins_medium"
+                            android:gravity="end"
+                            android:maxLines="3"
                             android:text="@{item.price}"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:gravity="end"
                             tools:text="$15" />
 
                     </LinearLayout>
