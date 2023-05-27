@@ -18,12 +18,14 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.constraintlayout.widget.Constraints
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
@@ -48,6 +50,7 @@ class DefaultLastMenuFragment
 @Inject
 constructor(
 ) : Fragment() {
+
     private lateinit var binding: FragmentLastDefaultMenuBinding
     private lateinit var binding2: FragmentMyAccountBinding
     private lateinit var productsAdapter: ProductsAdapter
@@ -72,24 +75,6 @@ constructor(
             viewModel.passPrefStyle(getPrefStyle(requireContext()))
         }
 
-        productsAdapter = ProductsAdapter(ProductListener { item: Item ->
-            when (clicksEnabled) {
-                true -> {
-                    Toast.makeText(
-                        this.requireContext(),
-                        "item ${item.name}  clicked>>>",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                    Log.d(TAG, "onCreate: ProductsAdapter init")
-                }
-                false -> {
-                    // don't do clicks on Adapter items
-                }
-            }
-
-        }, viewModel.style.value!!.product_list_item)
-
 
     }
 
@@ -103,30 +88,31 @@ constructor(
         return when (viewModel.style.value!!.styleCode) {
             ChosenStyle.DEFAULT -> {
                 Log.d(TAG, "onCreateView: inflated Screen DefaultStyle")
-                inflateDefaultMenuScreen(inflater, getPrefStyle(requireContext()))
+                inflateDefaultMenuScreen(inflater, viewModel.style.value!!)
             }
             ChosenStyle.BLUR_PRO -> {
                 Log.d(TAG, "onCreateView: inflated Screen BLUR_PRO")
-                inflateDefaultMenuScreen(inflater, getPrefStyle(requireContext()))
+                inflateDefaultMenuScreen(inflater, viewModel.style.value!!)
+//                inflateDefaultMenuStyleScreen(inflater,viewModel.style.value!!)
 //                inflateMyAccount(inflater)
             }
             ChosenStyle.BAKERY_BLACK -> {
                 Log.d(TAG, "onCreateView: inflated Screen BAKERY_BLACK")
-                inflateDefaultMenuScreen(inflater, getPrefStyle(requireContext()))
+                inflateDefaultMenuScreen(inflater, viewModel.style.value!!)
             }
             ChosenStyle.STANDARD_MATERIAL_DETAILS_ITEMS -> {
                 Log.d(TAG, "onCreateView: inflated Screen STANDARD_MATERIAL_DETAILS_ITEMS")
-                inflateDefaultMenuScreen(inflater, getPrefStyle(requireContext()))
+                inflateDefaultMenuScreen(inflater, viewModel.style.value!!)
 
             }
             ChosenStyle.COLORIZES_CATEGORIES_DETAILS_ITEMS -> {
                 Log.d(TAG, "onCreateView: inflated Screen COLORIZES_CATEGORIES_DETAILS_ITEMS")
-                inflateDefaultMenuScreen(inflater, getPrefStyle(requireContext()))
+                inflateDefaultMenuScreen(inflater, viewModel.style.value!!)
 
             }
             ChosenStyle.CATEGORIES_LIST_SWEETS_DETAILS_ITEMS -> {
                 Log.d(TAG, "onCreateView: inflated Screen CATEGORIES_LIST_SWEETS_DETAILS_ITEMS")
-                inflateDefaultMenuScreen(inflater, getPrefStyle(requireContext()))
+                inflateDefaultMenuScreen(inflater, viewModel.style.value!!)
             }
             else -> {
                 Log.d(TAG, "onCreateView: inflated Screen else(default) ")
@@ -137,13 +123,14 @@ constructor(
 
     }
 
+//    private fun inflateDefaultMenuStyleScreen(inflater: LayoutInflater, value: Style): View {
+//
+//    }
+
     private fun inflateMyAccount(inflater: LayoutInflater): View {
         Log.d(TAG, "inflateMyAccount: init")
         binding2 = FragmentMyAccountBinding.inflate(inflater)
-        binding2.menuBbttnn.setOnClickListener {
-            putPrefStyle(requireContext(), Style(styleCode = ChosenStyle.DEFAULT))
-            viewModel.setEvent(DefaultViewModelEvent.RefreshFragmentEvent)
-        }
+
         return binding2.root
     }
 
@@ -153,29 +140,27 @@ constructor(
         findNavController().navigate(id)
     }
 
-    @Inject
-    lateinit var superImageController: SuperImageController
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onResume() {
         super.onResume()
-        if (superImageController.returnedUri != null) {
+        if (viewModel.superImageController.returnedUri != null) {
             binding.bottomBackgroundImage.background =
-                superImageController.getDrawableFromUri(
+                viewModel.superImageController.getDrawableFromUri(
                     requireContext(),
-                    superImageController.returnedUri!!
+                    viewModel.superImageController.returnedUri!!
                 )
 
             lifecycleScope.launch {
                 val returnedBitmap: Bitmap =
-                    superImageController.getBitmapFromRegister(requireContext())
-                superImageController.saveImageToInternalStorage(
+                    viewModel.superImageController.getBitmapFromRegister(requireContext())
+                viewModel.superImageController.saveImageToInternalStorage(
                     requireContext(), returnedBitmap, Style.TEMP_BACKGROUND_IMAGE_NAME
                 )
                 viewModel.backgroundChooserResult = Style.TEMP_BACKGROUND_IMAGE_NAME
             }
 
-            superImageController.returnedUri = null
+            viewModel.superImageController.returnedUri = null
         }
     }
 
@@ -184,29 +169,30 @@ constructor(
         Log.d(TAG, "inflateDefaultMenuScreen: init")
 
         observeStyleAttributes()
-
         binding = FragmentLastDefaultMenuBinding.inflate(inflater)
-        binding.adapter = productsAdapter
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         attrBottomSheetBehavior = setUpAttrBottomSheet()
-
-        superImageController.register(this)
-
-
-        viewModel.setSimpleDrawerController(binding.drawerLayout, findNavController())
-
-        subscribeObservers()
-
-
-        addDrawerClickableViews()
-
-        //later for adjusting the span count
-        //binding.recyclerView.layoutManager=GridLayoutManager(requireContext(),3)
-
-
+        activateControllers()
         return binding.root
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    private fun activateControllers() {
+        viewModel.superImageController.register(this)
+        viewModel.setSimpleDrawerController(binding.drawerLayout, findNavController())
+        addDrawerClickableViews()
+        setUpItemRawCountDropDownMenu()
+        subscribeObservers()
+
+    }
+
+    private fun setUpItemRawCountDropDownMenu() {
+        val rawCountList = resources.getStringArray(R.array.raws)
+        val adapter =
+            ArrayAdapter(requireContext(), R.layout.drop_dwon_item, rawCountList)
+        binding.drawerRawCount.setAdapter(adapter)
     }
 
     private fun setUpAttrBottomSheet(): BottomSheetBehavior<LinearLayout> {
@@ -216,76 +202,267 @@ constructor(
         return attrBottomSheet
     }
 
+
     private fun observeStyleAttributes() {
         viewModel.style.observe(viewLifecycleOwner, Observer { style ->
-            Log.d(TAG, "observeStyleAttributes: style observed >>>> $style")
+            Log.d(TAG, "styleTest/observeStyleAttributes: style observed >>>> $style")
+            productsAdapter = ProductsAdapter(ProductListener { item: Item ->
+                when (clicksEnabled) {
+                    true -> {
+                        Toast.makeText(
+                            this.requireContext(),
+                            "item ${item.name}  clicked>>>",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                        Log.d(TAG, "onCreate: ProductsAdapter init")
+                    }
+                    false -> {
+                        // don't do clicks on Adapter items
+                    }
+                }
 
-            when (style.styleCode) {
-                ChosenStyle.DEFAULT -> {
-                    binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.default_style)
-                    binding.styleName.text = "Default Style"
-                    binding.drawerItemCardImg.setImageResource(R.drawable.default_item_card)
-                    binding.itemCardStyleName.text = "Default item"
+            }, style.product_list_item)
+            binding.adapter = productsAdapter
+            viewModel.filteredProductsList.observe(viewLifecycleOwner, Observer {
+                productsAdapter.submitList(it)
+            })
+            viewModel.chipList.observe(viewLifecycleOwner, Observer { chipsNamesList ->
+                val chipGroup = binding.categoriesChips
+                val inflater = LayoutInflater.from(chipGroup.context)
+                val childrenChips = chipsNamesList.map { chipName ->
+                    val chip = inflater.inflate(
+                        com.mostafan3ma.android.menupro10.R.layout.chip_category_item,
+                        chipGroup,
+                        false
+                    ) as Chip
+                    chip.text = chipName
+                    chip.tag = chipName
+                    val states = arrayOf(
+                        intArrayOf(android.R.attr.state_selected),
+                        intArrayOf(-android.R.attr.state_checked)
+                    )
+                    val colors = intArrayOf(style!!.chipsCheckedColor, style.chipsUnCheckedColor)
+                    val colorsStateList = ColorStateList(states, colors)
+                    chip.chipBackgroundColor = colorsStateList
+                    chip.setBackgroundColor(style.chipsUnCheckedColor)
+                    chip.setTextColor(style.chipsUnCheckedTextColor)
+                    chip.setOnCheckedChangeListener { compoundButton, checked ->
+                        when (clicksEnabled) {
+                            true -> {
+                                if (checked) {
+                                    viewModel.setEvent(
+                                        DefaultViewModelEvent.ChangeFilterEvent(
+                                            filter = compoundButton.tag.toString()
+                                        )
+                                    )
+                                    chip.chipBackgroundColor = colorsStateList
+                                    chip.setTextColor(style.chipsCheckedTextColor)
+                                } else {
+                                    chip.chipBackgroundColor = colorsStateList
+                                    chip.setTextColor(style.chipsUnCheckedTextColor)
+                                }
+                            }
+                            false -> {
+//                            the bottomSheet is opened don't filter when chips is checked
+//
+                            }
+                        }
+                    }
+
+                    chip
                 }
-                ChosenStyle.BLUR_PRO -> {
-                    binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.blure_pro)
-                    binding.styleName.text = "Blur pro"
-                    binding.drawerItemCardImg.setImageResource(R.drawable.blure_item_card)
-                    binding.itemCardStyleName.text = "Blur item"
+                chipGroup.removeAllViews()
+                for (chip in childrenChips) {
+                    chipGroup.addView(chip)
                 }
-                ChosenStyle.BAKERY_BLACK -> {
-                    binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.bakery_black)
-                    binding.styleName.text = "Bakery Black"
-                    binding.drawerItemCardImg.setImageResource(R.drawable.bakery_item_card)
-                    binding.itemCardStyleName.text = "Bakery item"
+                chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+                    if (checkedIds.isEmpty()) {
+                        viewModel.setEvent(DefaultViewModelEvent.ChangeFilterEvent(filter = "all"))
+                    }
                 }
-                ChosenStyle.STANDARD_MATERIAL_DETAILS_ITEMS -> {
-                    binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.standerd3_material)
-                    binding.styleName.text = "Standard Style"
-                    binding.drawerItemCardImg.setImageResource(R.drawable.material_item_card)
-                    binding.itemCardStyleName.text = "Material item"
+
+            })
+
+            when (style.attributes) {
+                Style.DEFAULT_VALUE -> {
+                    Log.d(TAG, "styleTest/observeStyleAttributes: style.attributes= default")
+                    when (style.styleCode) {
+                        ChosenStyle.DEFAULT -> {
+                            binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.default_style)
+                            binding.styleName.text = "Default Style"
+                            binding.drawerItemCardImg.setImageResource(R.drawable.default_item_card)
+                            binding.itemCardStyleName.text = "Default item"
+                            Log.d(
+                                TAG,
+                                "observeStyleAttributes: chosenStyle is Default//applying ::" +
+                                        "\n  binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.default_style)\n" +
+                                        "binding.styleName.text = \"Default Style\" \n" +
+                                        "binding.drawerItemCardImg.setImageResource(R.drawable.default_item_card)\n" +
+                                        "binding.itemCardStyleName.text = \"Default item\"\n"
+                            )
+                        }
+                        ChosenStyle.BLUR_PRO -> {
+                            binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.blure_pro)
+                            binding.styleName.text = "Blur pro"
+                            binding.drawerItemCardImg.setImageResource(R.drawable.blure_item_card)
+                            binding.itemCardStyleName.text = "Blur item"
+                            Log.d(
+                                TAG,
+                                "observeStyleAttributes: chosenStyle is Blur pro//applying ::" +
+                                        "\n  binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.blure_pro)\n" +
+                                        "binding.styleName.text = \"Blur pro\" \n" +
+                                        "binding.drawerItemCardImg.setImageResource(R.drawable.blure_item_card)\n" +
+                                        "binding.itemCardStyleName.text = \"Blur item\" \n"
+                            )
+                        }
+                        ChosenStyle.BAKERY_BLACK -> {
+                            binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.bakery_black)
+                            binding.styleName.text = "Bakery Black"
+                            binding.drawerItemCardImg.setImageResource(R.drawable.bakery_item_card)
+                            binding.itemCardStyleName.text = "Bakery item"
+                            Log.d(
+                                TAG,
+                                "observeStyleAttributes: chosenStyle is bakery black//applying ::" +
+                                        "\n  binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.bakery_black)\n" +
+                                        "binding.styleName.text = \"Bakery Black\" \n" +
+                                        " binding.drawerItemCardImg.setImageResource(R.drawable.bakery_item_card)\n" +
+                                        "binding.itemCardStyleName.text = \"Bakery item\" \n"
+                            )
+                        }
+                        ChosenStyle.STANDARD_MATERIAL_DETAILS_ITEMS -> {
+                            binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.standerd3_material)
+                            binding.styleName.text = "Standard Style"
+                            binding.drawerItemCardImg.setImageResource(R.drawable.material_item_card)
+                            binding.itemCardStyleName.text = "Material item"
+                            Log.d(
+                                TAG,
+                                "observeStyleAttributes: chosenStyle is STANDARD_MATERIAL_DETAILS_ITEMS //applying ::" +
+                                        "\n  binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.standerd3_material)\n" +
+                                        "binding.styleName.text = \"Standard Style\"\n" +
+                                        " binding.drawerItemCardImg.setImageResource(R.drawable.material_item_card)\n" +
+                                        "binding.itemCardStyleName.text = \"Material item\" \n"
+                            )
+                        }
+                        ChosenStyle.COLORIZES_CATEGORIES_DETAILS_ITEMS -> {
+                            binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.colories_categories)
+                            binding.styleName.text = "colorizes categories"
+                            Log.d(
+                                TAG,
+                                "observeStyleAttributes: chosenStyle is COLORIZES_CATEGORIES_DETAILS_ITEMS"
+                            )
+                        }
+                        ChosenStyle.CATEGORIES_LIST_SWEETS_DETAILS_ITEMS -> {
+                            binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.categories_sweets)
+                            binding.styleName.text = "Sweet categories"
+                            Log.d(
+                                TAG,
+                                "observeStyleAttributes: chosenStyle is CATEGORIES_LIST_SWEETS_DETAILS_ITEMS"
+                            )
+                        }
+                        else -> {
+                            binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.default_style)
+                            binding.styleName.text = "Default Style"
+                            Log.d(
+                                TAG,
+                                "observeStyleAttributes: chosenStyle is els case Applying Default Style"
+                            )
+                        }
+                    }
                 }
-                ChosenStyle.COLORIZES_CATEGORIES_DETAILS_ITEMS -> {
-                    binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.colories_categories)
-                    binding.styleName.text = "colorizes categories"
-                }
-                ChosenStyle.CATEGORIES_LIST_SWEETS_DETAILS_ITEMS -> {
-                    binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.categories_sweets)
-                    binding.styleName.text = "Sweet categories"
-                }
-                else -> {
-                    binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.default_style)
-                    binding.styleName.text = "Default Style"
+                Style.CUSTOM_ATTRIBUTES -> {
+                    Log.d(TAG, "styleTest/observeStyleAttributes: style.attributes= Custom")
+                    applyAttributes(style)
                 }
             }
-
-
-            if (style.attributes != Style.DEFAULT_VALUE) {
-                Log.d(TAG, "observeStyleAttributes: style welcome changed and observed >>> ")
-                applyAttributes(style)
-            }
-
         })
 
 
     }
 
-    private fun applyAttributes(style: Style?) {
+    private fun applyAttributes(style: Style) {
+        when (style.styleCode) {
+            ChosenStyle.DEFAULT -> {
+                binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.default_style)
+                binding.styleName.text = "Default Style"
 
-        when (style!!.backgroundChoice) {
-            Style.BACKGROUND_IMAGE_CHOICE -> {
-                if (style.mainBackgroundImage == Style.DEFAULT_VALUE) {
-                    return
-                }
-                val backgroundBitmap: Bitmap? = superImageController.getImageFromInternalStorage(
-                    requireContext(), style.mainBackgroundImage,
-                    R.drawable.domy_background
+            }
+            ChosenStyle.BLUR_PRO -> {
+                binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.blure_pro)
+                binding.styleName.text = "Blur pro"
+
+            }
+            ChosenStyle.BAKERY_BLACK -> {
+                binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.bakery_black)
+                binding.styleName.text = "Bakery Black"
+
+            }
+            ChosenStyle.STANDARD_MATERIAL_DETAILS_ITEMS -> {
+                binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.standerd3_material)
+                binding.styleName.text = "Standard Style"
+
+            }
+            ChosenStyle.COLORIZES_CATEGORIES_DETAILS_ITEMS -> {
+                binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.colories_categories)
+                binding.styleName.text = "colorizes categories"
+
+            }
+            ChosenStyle.CATEGORIES_LIST_SWEETS_DETAILS_ITEMS -> {
+                binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.categories_sweets)
+                binding.styleName.text = "Sweet categories"
+
+            }
+            else -> {
+                binding.styleImg.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.default_style)
+                binding.styleName.text = "Default Style"
+                Log.d(
+                    TAG,
+                    "observeStyleAttributes: chosenStyle is els case Applying Default Style"
                 )
-                val backgroundDrawable =
-                    BitmapDrawable(requireContext().resources, backgroundBitmap)
-                binding.mainBackground.background = backgroundDrawable
-                binding.backgroundImg.background = backgroundDrawable
-                binding.bottomBackgroundImage.background = backgroundDrawable
+            }
+        }
+
+        when (style.recyclerRawCount) {
+            1 -> {
+                binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
+            }
+            2 -> {
+                binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+            }
+            3 -> {
+                binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
+            }
+            4 -> {
+                binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
+            }
+            else -> {
+
+            }
+        }
+
+
+
+
+
+        when (style.backgroundChoice) {
+            Style.BACKGROUND_IMAGE_CHOICE -> {
+                when(style.mainBackgroundImage){
+                    Style.DEFAULT_VALUE->{
+
+                    }
+                    else->{
+                        val backgroundBitmap: Bitmap? =
+                            viewModel.superImageController.getImageFromInternalStorage(
+                                requireContext(), style.mainBackgroundImage,
+                                R.drawable.domy_background
+                            )
+                        val backgroundDrawable =
+                            BitmapDrawable(requireContext().resources, backgroundBitmap)
+                        binding.mainBackground.background = backgroundDrawable
+                        binding.backgroundImg.background = backgroundDrawable
+                        binding.bottomBackgroundImage.background = backgroundDrawable
+                    }
+                }
 
 
             }
@@ -296,60 +473,74 @@ constructor(
             }
         }
 
-        when (style?.welcomeText) {
-            Style.DEFAULT_VALUE -> {}
+
+
+
+        when (style.welcomeText) {
+            Style.DEFAULT_VALUE -> {
+                Log.d(TAG, "styleTest/applyAttributes: style.welcomeText=DefaultValue")
+            }
             else -> {
+                Log.d(TAG, "styleTest/applyAttributes: style.welcomeText=Not default")
+
                 //main view
-                binding.chooseMealTxt.text = style?.welcomeText
+                binding.chooseMealTxt.text = style.welcomeText
                 //drawer view
-                binding.drawerWelcomeTxt.text = style?.welcomeText
+                binding.drawerWelcomeTxt.text = style.welcomeText
 
                 //bottom View
-                binding.bottomWelcomeTxtLayout.hint = style?.welcomeText
+                binding.bottomWelcomeTxtLayout.hint = style.welcomeText
             }
         }
-
-
-        when (style?.welcomeTextSize) {
+        when (style.welcomeTextSize) {
             Style.DEFAULT_VALUE -> {
+                Log.d(TAG, "styleTest/applyAttributes: style.welcomeTextSize= default")
                 //stay on the default Size
             }
             "Small" -> {
+                Log.d(TAG, "styleTest/applyAttributes: style.welcomeTextSize= small 18")
                 //18
                 binding.chooseMealTxt.textSize = 18F
             }
             "Medium" -> {
+                Log.d(TAG, "styleTest/applyAttributes: style.welcomeTextSize= medium 20")
                 //20
                 binding.chooseMealTxt.textSize = 20F
             }
             "Large" -> {
+                Log.d(TAG, "styleTest/applyAttributes: style.welcomeTextSize= Large 30")
                 //30sp
                 binding.chooseMealTxt.textSize = 30F
             }
             "X-Large" -> {
+                Log.d(TAG, "styleTest/applyAttributes: style.welcomeTextSize= X-Large 35")
                 binding.chooseMealTxt.textSize = 35F
             }
             else -> {
                 //also stay on the default textSize
             }
         }
-
-
-        when (style?.welcomeTextColor) {
+        when (style.welcomeTextColor) {
             Style.DEFAULT_TEXT_COLOR -> {
+                Log.d(
+                    TAG,
+                    "styleTest/applyAttributes: style.DEFAULT_TEXT_COLOR= DEFAULT_TEXT_COLOR"
+                )
                 //don't do anyThing
             }
             else -> {
-                binding.chooseMealTxt.setTextColor(style!!.welcomeTextColor)
+                Log.d(
+                    TAG,
+                    "styleTest/applyAttributes: style.DEFAULT_TEXT_COLOR= NOT DEFAULT"
+                )
+                binding.chooseMealTxt.setTextColor(style.welcomeTextColor)
             }
 
         }
-
-
-        when (style?.welcomeTextAlign) {
+        when (style.welcomeTextAlign) {
             Style.ALIGN_LEFT -> {
                 //stay on default and don't do anything
-                Log.d(TAG, "applyAttributes: welcomeTxtAlignment=left")
+                Log.d(TAG, "styleTest/applyAttributes: style.welcomeTxtAlignment=left")
                 val constraintLayout: MotionLayout = binding.mainBackground
                 val constraintSet = ConstraintSet()
                 constraintSet.clone(constraintLayout)
@@ -372,7 +563,7 @@ constructor(
                 binding.bottomWelcomeTxtRightAlignBtn.setImageResource(com.mostafan3ma.android.menupro10.R.drawable.right_align_black)
             }
             Style.ALIGN_RIGHT -> {
-                Log.d(TAG, "applyAttributes: welcomeTxtAlignment=right")
+                Log.d(TAG, "styleTest/applyAttributes: style.welcomeTxtAlignment=RIGHT")
                 val constraintLayout: MotionLayout = binding.mainBackground
                 val constraintSet = ConstraintSet()
                 constraintSet.clone(constraintLayout)
@@ -396,7 +587,9 @@ constructor(
             }
         }
 
-        when (style?.chipsCheckedColor) {
+
+
+        when (style.chipsCheckedColor) {
             Color.parseColor(
                 Style.DEFAULT_CHIPS_CHECKED_COLOR
             ) -> {
@@ -411,18 +604,18 @@ constructor(
                 }
             }
         }
-        when(style.chipsCheckedTextColor){
-            Color.parseColor(Style.DEFAULT_BLACK_COLOR)->{
+        when (style.chipsCheckedTextColor) {
+            Color.parseColor(Style.DEFAULT_BLACK_COLOR) -> {
 
             }
-            else->{
+            else -> {
                 binding.drawerCheckedChipsTxt.setTextColor(style.chipsCheckedTextColor)
                 binding.drawerCheckedChipsTxtColorBtn.setBackgroundColor(style.chipsCheckedTextColor)
             }
         }
 
 
-        when (style?.chipsUnCheckedColor) {
+        when (style.chipsUnCheckedColor) {
             Color.parseColor(
                 Style.DEFAULT_CHIPS_CHECKED_COLOR
             ) -> {
@@ -437,11 +630,11 @@ constructor(
                 }
             }
         }
-        when(style.chipsUnCheckedTextColor){
-            Color.parseColor(Style.DEFAULT_BLACK_COLOR)->{
+        when (style.chipsUnCheckedTextColor) {
+            Color.parseColor(Style.DEFAULT_BLACK_COLOR) -> {
 
             }
-            else->{
+            else -> {
                 binding.drawerUncheckedChipsTxt.setTextColor(style.chipsUnCheckedTextColor)
                 binding.drawerUncheckedChipsTxtColorBtn.setBackgroundColor(style.chipsUnCheckedTextColor)
             }
@@ -470,24 +663,28 @@ constructor(
             }
         }
 
+
     }
 
 
     private var welcomeTxtColorRegistry: Int? = null
     private var mainSnapHelper: LinearSnapHelper? = null
-    private var itemSnapHelper: LinearSnapHelper? = null
 
 
-    @RequiresApi(Build.VERSION_CODES.P)
     private fun subscribeObservers() {
-        viewModel.domainModel.observe(viewLifecycleOwner, Observer { domainModel->
-            when(domainModel.logoImageName){
-                ""->{}
-                else->{
+        viewModel.domainModel.observe(viewLifecycleOwner, Observer { domainModel ->
+            when (domainModel.logoImageName) {
+                "" -> {}
+                else -> {
                     try {
-                        val bitmap: Bitmap? =superImageController.getImageFromInternalStorage(requireContext(),domainModel.logoImageName,R.drawable.logo)
+                        val bitmap: Bitmap? =
+                            viewModel.superImageController.getImageFromInternalStorage(
+                                requireContext(),
+                                domainModel.logoImageName,
+                                R.drawable.logo
+                            )
                         binding.shopLogo.setImageBitmap(bitmap)
-                    }catch (e:Exception){
+                    } catch (e: Exception) {
                         Log.d(
                             TAG,
                             "subscribeObservers: error fetching the image because ${e.message}"
@@ -495,8 +692,6 @@ constructor(
                     }
                 }
             }
-
-
         })
 
         viewModel.launchColorPicker.observe(viewLifecycleOwner, Observer { requestCode ->
@@ -510,13 +705,11 @@ constructor(
 
         })
 
-
-
-
         viewModel.launchSuperImageController.observe(viewLifecycleOwner, Observer { launche ->
             if (launche) {
-                superImageController.launchRegistrar()
+                viewModel.superImageController.launchRegistrar()
             }
+
         })
 
 
@@ -526,19 +719,18 @@ constructor(
                 "initStyleChooserMainLayout: observing stylesList>> ${stylesList.toString()}"
             )
 
-
             try {
                 styleChooserAdapter.submitList(stylesList)
                 Log.d(TAG, "testingChooserAdapter: listObserved: $stylesList")
                 styleChooserAdapter.notifyDataSetChanged()
-            }catch (e:Exception){
+            } catch (e: Exception) {
 
             }
 
             try {
                 itemStyleChooserAdapter.submitList(stylesList)
                 itemStyleChooserAdapter.notifyDataSetChanged()
-            }catch (e:Exception){
+            } catch (e: Exception) {
 
             }
 
@@ -584,6 +776,7 @@ constructor(
                             setTextColor(tempStyle.chipsUnCheckedColor)
                         }
                         viewModel.addAttrChanges(tempStyle)
+                        viewModel.applyCustomAttr()
                     }
                     "change_Unchecked_chips_color" -> {
                         val tempStyle = viewModel.style.value
@@ -593,6 +786,7 @@ constructor(
                             setTextColor(tempStyle.chipsCheckedColor)
                         }
                         viewModel.addAttrChanges(tempStyle)
+                        viewModel.applyCustomAttr()
                     }
 
                     "chose_item_Background_Color" -> {
@@ -611,15 +805,15 @@ constructor(
                         viewModel.previewItemConcurrencyColor.postValue(selectedColor)
                     }
 
-                    "drawerCheckedChipsTxtColorBtn"->{
-                        val tempStyle=viewModel.style.value
-                        tempStyle!!.chipsCheckedTextColor=selectedColor
+                    "drawerCheckedChipsTxtColorBtn" -> {
+                        val tempStyle = viewModel.style.value
+                        tempStyle!!.chipsCheckedTextColor = selectedColor
                         viewModel.addAttrChanges(tempStyle)
                     }
 
-                    "drawerUncheckedChipsTxtColorBtn"->{
-                        val tempStyle=viewModel.style.value
-                        tempStyle!!.chipsUnCheckedTextColor=selectedColor
+                    "drawerUncheckedChipsTxtColorBtn" -> {
+                        val tempStyle = viewModel.style.value
+                        tempStyle!!.chipsUnCheckedTextColor = selectedColor
                         viewModel.addAttrChanges(tempStyle)
                     }
 
@@ -637,51 +831,50 @@ constructor(
 
 
 
-        viewModel.resetStyleRequired.observe(viewLifecycleOwner, Observer {required->
-            if (required){
+        viewModel.resetStyleRequired.observe(viewLifecycleOwner, Observer { required ->
+            if (required) {
                 when (viewModel.visibleBottomSheetLayout.value) {
                     AttrVisibleViews.NOTHING -> {
                         Log.d(TAG, "subscribeObservers:reset btn Nothing//reset main style ")
-                        val tempStyle=Style()
-                        tempStyle.styleCode=viewModel.style.value!!.styleCode
+                        val tempStyle = Style()
+                        tempStyle.styleCode = viewModel.style.value!!.styleCode
                         viewModel.addAttrChanges(tempStyle)
                     }
                     AttrVisibleViews.STYLE_CHOOSER -> {
-                        Log.d(TAG, "subscribeObservers:reset btn styleChooser//return to default style")
-                        val tempStyle=Style()
+                        Log.d(
+                            TAG,
+                            "subscribeObservers:reset btn styleChooser//return to default style"
+                        )
+                        val tempStyle = Style()
                         viewModel.addAttrChanges(tempStyle)
                     }
                     AttrVisibleViews.BACKGROUND_CHOOSER -> {
-                        Log.d(TAG, "subscribeObservers:reset btn BACKGROUND_CHOOSER//reset  background ")
-                        val tempStyle=viewModel.style.value
+                        val tempStyle = viewModel.style.value
                         tempStyle!!.apply {
-                            backgroundChoice=Style.BACKGROUND_IMAGE_CHOICE
-                            mainBackgroundImage=Style.DEFAULT_VALUE
+                            backgroundChoice = Style.BACKGROUND_IMAGE_CHOICE
+                            mainBackgroundImage = Style.DEFAULT_VALUE
                         }
                         viewModel.addAttrChanges(tempStyle)
                     }
                     AttrVisibleViews.WELCOME_EDIT_TXT_LAYOUT -> {
-                        Log.d(TAG, "subscribeObservers:reset btn WELCOME_EDIT_TXT_LAYOUT//reset  welcome text attributes ")
-                        val tempStyle=viewModel.style.value
+                        val tempStyle = viewModel.style.value
                         tempStyle!!.apply {
-                            welcomeText=Style.DEFAULT_VALUE
-                            welcomeTextAlign=Style.ALIGN_LEFT
-                            welcomeTextSize=Style.DEFAULT_TEXT_SIZE
-                            welcomeTextColor=Style.DEFAULT_TEXT_COLOR
+                            welcomeText = Style.DEFAULT_VALUE
+                            welcomeTextAlign = Style.ALIGN_LEFT
+                            welcomeTextSize = Style.DEFAULT_TEXT_SIZE
+                            welcomeTextColor = Style.DEFAULT_TEXT_COLOR
                         }
                         viewModel.addAttrChanges(tempStyle)
                     }
                     AttrVisibleViews.ITEM_EDITOR_LAYOUT -> {
-                        Log.d(TAG, "subscribeObservers:reset btn ITEM_EDITOR_LAYOUT//reset  list item attributes ")
-                        val tempItemList=ProductListItem()
-                        tempItemList.style=viewModel.style.value!!.product_list_item.style
-                        val tempStyle=viewModel.style.value
-                        tempStyle!!.product_list_item=tempItemList
+                        val tempItemList = ProductListItem()
+                        tempItemList.style = viewModel.style.value!!.product_list_item.style
+                        val tempStyle = viewModel.style.value
+                        tempStyle!!.product_list_item = tempItemList
                         viewModel.addAttrChanges(tempStyle)
+                        viewModel.setEvent(DefaultViewModelEvent.OpenAttrBottomSheetEventWithView(AttrVisibleViews.NOTHING))
                     }
-                    else -> {
-
-                    }
+                    else -> {}
                 }
             }
         })
@@ -754,75 +947,8 @@ constructor(
                 AttrVisibleViews.ITEM_EDITOR_LAYOUT -> {
                     binding.bottomListItemEditorMainLayout.visibility = View.VISIBLE
                     setUpDropDawnMenus()
-                    var previewItem: Item? = null
-                    viewModel.itemForPreview.observe(
-                        viewLifecycleOwner,
-                        Observer { itemForPreview ->
-                            previewItem = when (itemForPreview) {
-                                null -> {
-                                    Item(
-                                        name = "item title",
-                                        description = "item description",
-                                        price = "99$",
-                                        size = "Large"
-                                    )
-                                }
-                                else -> {
-                                    itemForPreview
-                                }
-                            }
-                        })
-                    viewModel.style.observe(viewLifecycleOwner, Observer { style ->
-                        addStyleAttrValues(style)
-                        when (style.product_list_item.style) {
-                            DEFAULT_ITEM -> {
-                                var itemBinding = ItemDefaultBinding.inflate(layoutInflater)
-                                itemBinding.item = previewItem
-                                itemBinding.itemCard.setOnClickListener {
-                                initItemStyleChooserCardAnimation()
-                                }
-                                addCustomAttributes(itemBinding, style)
-                                subscribeItemAttrValues(itemBinding)
-                                binding.itemPreviewLayout.addView(itemBinding.root)
-                            }
-                            MATERIAL_ITEM -> {
-                                var itemBinding = ItemMaterialBinding.inflate(layoutInflater)
-                                itemBinding.item = previewItem
-                                itemBinding.itemCard.setOnClickListener {
-                                    initItemStyleChooserCardAnimation()
-                                }
-                                addCustomAttributes(itemBinding, style)
-                                subscribeItemAttrValues(itemBinding)
-                                binding.itemPreviewLayout.addView(itemBinding.root)
-                            }
-                            BAKERY_ITEM -> {
-                                var itemBinding = ItemBakeryBinding.inflate(layoutInflater)
-                                itemBinding.item = previewItem
-                                itemBinding.itemCard.setOnClickListener {
-                                    initItemStyleChooserCardAnimation()
-
-                                }
-                                addCustomAttributes(itemBinding, style)
-                                subscribeItemAttrValues(itemBinding)
-                                binding.itemPreviewLayout.addView(itemBinding.root)
-                            }
-                            BLUR_ITEM -> {
-                                var itemBinding = ItemBlureProBinding.inflate(layoutInflater)
-                                itemBinding.item = previewItem
-                                itemBinding.itemCard.setOnClickListener {
-                                    initItemStyleChooserCardAnimation()
-
-                                }
-                                addCustomAttributes(itemBinding, style)
-                                subscribeItemAttrValues(itemBinding)
-                                binding.itemPreviewLayout.addView(itemBinding.root)
-
-                            }
-                            else -> {}
-                        }
-                    })
-
-
+                    val previewItem = viewModel.style.value!!.product_list_item
+                    initPreviewBindingItem(previewItem)
                     attrBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
                 }
@@ -917,13 +1043,13 @@ constructor(
                     "click_chips_checked_btn" -> {
                         viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("change_checked_chips_color"))
                     }
-                    "drawerCheckedChipsTxtColorBtn"->{
+                    "drawerCheckedChipsTxtColorBtn" -> {
                         viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("drawerCheckedChipsTxtColorBtn"))
                     }
                     "click_chips_unchecked_btn" -> {
                         viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("change_Unchecked_chips_color"))
                     }
-                    "drawerUncheckedChipsTxtColorBtn"->{
+                    "drawerUncheckedChipsTxtColorBtn" -> {
                         viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("drawerUncheckedChipsTxtColorBtn"))
 
                     }
@@ -989,20 +1115,21 @@ constructor(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+
                     "click_save_and_apply_style_btn" -> {
                         val tempStyle = viewModel.style.value
                         if (tempStyle!!.backgroundChoice == Style.BACKGROUND_IMAGE_CHOICE) {
                             if (tempStyle!!.mainBackgroundImage == Style.TEMP_BACKGROUND_IMAGE_NAME) {
                                 // fetching tempBackgroundImage from internal storage
                                 val tempBackgroundImage: Bitmap? =
-                                    superImageController.getImageFromInternalStorage(
+                                    viewModel.superImageController.getImageFromInternalStorage(
                                         requireContext(),
                                         Style.TEMP_BACKGROUND_IMAGE_NAME,
                                         R.drawable.domy_background
                                     )
                                 lifecycleScope.launch {
                                     // applying tempBackgroundImage to DefaultBackgroundImage
-                                    superImageController.saveImageToInternalStorage(
+                                    viewModel.superImageController.saveImageToInternalStorage(
                                         requireContext(),
                                         tempBackgroundImage!!,
                                         Style.DEFAULT_BACKGROUND_IMAGE_NAME
@@ -1017,73 +1144,13 @@ constructor(
 
                         }
 
-
+                        checkItemSizeAndRawCount()
                         viewModel.addAttrChanges(tempStyle)
                         putPrefStyle(requireContext(), viewModel.style.value!!)
                         viewModel.setEvent(DefaultViewModelEvent.RefreshFragmentEvent)
                     }
                 }
             })
-
-        viewModel.chipList.observe(viewLifecycleOwner, Observer { chipsNamesList ->
-            val chipGroup = binding.categoriesChips
-            val inflater = LayoutInflater.from(chipGroup.context)
-            val childrenChips = chipsNamesList.map { chipName ->
-                val chip = inflater.inflate(
-                    com.mostafan3ma.android.menupro10.R.layout.chip_category_item,
-                    chipGroup,
-                    false
-                ) as Chip
-                chip.text = chipName
-                chip.tag = chipName
-                val states = arrayOf(
-                    intArrayOf(android.R.attr.state_selected),
-                    intArrayOf(-android.R.attr.state_checked)
-                )
-                val style = viewModel.style.value
-                val colors = intArrayOf(style!!.chipsCheckedColor, style.chipsUnCheckedColor)
-                val colorsStateList = ColorStateList(states, colors)
-                chip.chipBackgroundColor = colorsStateList
-                chip.setBackgroundColor(style.chipsUnCheckedColor)
-                chip.setTextColor(style.chipsCheckedTextColor)
-                chip.setOnCheckedChangeListener { compoundButton, checked ->
-                    when (clicksEnabled) {
-                        true -> {
-                            if (checked) {
-                                viewModel.setEvent(DefaultViewModelEvent.ChangeFilterEvent(filter = compoundButton.tag.toString()))
-                            } else {
-                                chip.setTextColor(style.chipsUnCheckedTextColor)
-                            }
-                        }
-                        false -> {
-//                            the bottomSheet is opened don't filter when chips is checked
-//
-                        }
-                    }
-                }
-
-                chip
-            }
-            chipGroup.removeAllViews()
-            for (chip in childrenChips) {
-                chipGroup.addView(chip)
-            }
-            chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
-                if (checkedIds.isEmpty()) {
-                    viewModel.setEvent(DefaultViewModelEvent.ChangeFilterEvent(filter = "all"))
-                }
-            }
-
-        })
-
-        viewModel.filteredProductsList.observe(
-            viewLifecycleOwner,
-            Observer { filteredProductsList ->
-                productsAdapter.submitList(filteredProductsList)
-                productsAdapter.notifyDataSetChanged()
-            })
-
-
 
         viewModel.refreshFragment.observe(
             viewLifecycleOwner,
@@ -1097,29 +1164,155 @@ constructor(
 
     }
 
+    private fun initPreviewBindingItem(previewItem: ProductListItem) {
+        when (previewItem.style) {
+            DEFAULT_ITEM -> {
+                binding.itemPreviewLayout.removeAllViews()
+                var itemBinding = ItemDefaultBinding.inflate(layoutInflater)
+                itemBinding.item = viewModel.getRandomItemData()
+                applyItemStyleTOBinding(itemBinding, previewItem)
+                applyItemStyleToBottomSheetControllers(previewItem)
+                subscribeControllersPreviewValues(itemBinding)
+                itemBinding.itemCard.setOnClickListener {
+                    initItemStyleChooserCardAnimation()
+                }
+                binding.itemPreviewLayout.addView(itemBinding.root)
+            }
+            MATERIAL_ITEM -> {
+                binding.itemPreviewLayout.removeAllViews()
+                var itemBinding = ItemMaterialBinding.inflate(layoutInflater)
+                itemBinding.item = viewModel.getRandomItemData()
+                applyItemStyleTOBinding(itemBinding, previewItem)
+                applyItemStyleToBottomSheetControllers(previewItem)
+                subscribeControllersPreviewValues(itemBinding)
+                itemBinding.itemCard.setOnClickListener {
+                    initItemStyleChooserCardAnimation()
+                }
+                binding.itemPreviewLayout.addView(itemBinding.root)
+            }
+            BAKERY_ITEM -> {
+                binding.itemPreviewLayout.removeAllViews()
+                var itemBinding = ItemBakeryBinding.inflate(layoutInflater)
+                itemBinding.item = viewModel.getRandomItemData()
+                applyItemStyleTOBinding(itemBinding, previewItem)
+                applyItemStyleToBottomSheetControllers(previewItem)
+                subscribeControllersPreviewValues(itemBinding)
+                itemBinding.itemCard.setOnClickListener {
+                    initItemStyleChooserCardAnimation()
+                }
+                binding.itemPreviewLayout.addView(itemBinding.root)
+            }
+            BLUR_ITEM -> {
+                binding.itemPreviewLayout.removeAllViews()
+                var itemBinding = ItemBlureProBinding.inflate(layoutInflater)
+                itemBinding.item = viewModel.getRandomItemData()
+                applyItemStyleTOBinding(itemBinding, previewItem)
+                applyItemStyleToBottomSheetControllers(previewItem)
+                subscribeControllersPreviewValues(itemBinding)
+                itemBinding.itemCard.setOnClickListener {
+                    initItemStyleChooserCardAnimation()
+                }
+                binding.itemPreviewLayout.addView(itemBinding.root)
+            }
+            else -> {}
+        }
+
+    }
+
+    private fun checkItemSizeAndRawCount() {
+        val tempStyle = viewModel.style.value
+//        when (viewModel.drawerItemSizeAutoValue.value) {
+//            "Small" -> {
+//                tempStyle!!.product_list_item.item_width = "150dp"
+//                tempStyle!!.product_list_item.item_height = "50dp"
+//                viewModel.addAttrChanges(tempStyle)
+//            }
+//            "Medium" -> {
+//                tempStyle!!.product_list_item.item_width = "250dp"
+//                tempStyle!!.product_list_item.item_height = "150dp"
+//                viewModel.addAttrChanges(tempStyle)
+//            }
+//            "Large" -> {
+//                tempStyle!!.product_list_item.item_width = "350dp"
+//                tempStyle!!.product_list_item.item_height = "250dp"
+//                viewModel.addAttrChanges(tempStyle)
+//            }
+//            "X-Large" -> {
+//                tempStyle!!.product_list_item.item_width = "450dp"
+//                tempStyle!!.product_list_item.item_height = "350dp"
+//                viewModel.addAttrChanges(tempStyle)
+//            }
+//            else -> {
+//
+//            }
+//        }
+        when (viewModel.drawerRawCountValue.value) {
+            "1" -> {
+                tempStyle!!.recyclerRawCount = 1
+                viewModel.addAttrChanges(tempStyle)
+            }
+            "2" -> {
+                tempStyle!!.recyclerRawCount = 2
+                viewModel.addAttrChanges(tempStyle)
+            }
+            "3" -> {
+                tempStyle!!.recyclerRawCount = 3
+                viewModel.addAttrChanges(tempStyle)
+            }
+            "4" -> {
+                tempStyle!!.recyclerRawCount = 4
+                viewModel.addAttrChanges(tempStyle)
+            }
+        }
+    }
+
     private fun initItemStyleChooserCardAnimation() {
+        TransitionManager.beginDelayedTransition(
+            binding.bottomItemStyleChooserCard,
+            AutoTransition()
+        )
 
+        binding.bottomItemStyleChooserCard.visibility = View.VISIBLE
 
-        TransitionManager.beginDelayedTransition(binding.bottomItemStyleChooserCard,AutoTransition())
-        binding.bottomItemStyleChooserCard.visibility=View.VISIBLE
+        itemStyleChooserAdapter = StyleChooserAdapter(StyleChooserListener { chosenItemStyle ->
 
-
-        itemStyleChooserAdapter= StyleChooserAdapter(StyleChooserListener { chosenItemStyle->
-            viewModel.adjustStyleChooserList(chosenItemStyle,
-                ITEM_STYLE_CHOOSER_CODE)
-            Log.d(TAG, "subscribeObservers: tesitng item chooser adapter")
-            viewModel.getTheNewChosenStyle(chosenItemStyle,
-                ITEM_STYLE_CHOOSER_CODE)
-            binding.itemPreviewLayout.removeAllViews()
+            val preViewItemWithChosenStyle = ProductListItem()
+            preViewItemWithChosenStyle.style = when (chosenItemStyle) {
+                0 -> {
+                    DEFAULT_ITEM
+                }
+                1 -> {
+                    MATERIAL_ITEM
+                }
+                2 -> {
+                    BAKERY_ITEM
+                }
+                3 -> {
+                    BLUR_ITEM
+                }
+                4 -> {
+                    DEFAULT_CATEGORY_ITEM
+                }
+                5 -> {
+                    COLORIZES_CATEGORY_ITEM
+                }
+                else -> {
+                    DEFAULT_ITEM
+                }
+            }
+            viewModel.emptyItemPreviewValues()
+            viewModel.secondPreviewItem = preViewItemWithChosenStyle
+            viewModel.onSecondPreviewItemChoice = true
+            initPreviewBindingItem(preViewItemWithChosenStyle)
             deInitItemStyleChooserCard()
         }, StyleChooserAdapter.ITEM_STYLE_VIEW_HOLDER)
-        binding.bottomItemStyleChooserRec.adapter=itemStyleChooserAdapter
-        binding.bottomItemStyleChooserRec.scrollToPosition(viewModel.style.value!!.product_list_item.style.itemStyleCode)
+        binding.bottomItemStyleChooserRec.adapter = itemStyleChooserAdapter
 
 
 
-        TransitionManager.beginDelayedTransition(binding.bottomItemPreviewCard,AutoTransition())
-        binding.bottomItemPreviewCard.visibility=View.GONE
+
+        TransitionManager.beginDelayedTransition(binding.bottomItemPreviewCard, AutoTransition())
+        binding.bottomItemPreviewCard.visibility = View.GONE
 
         viewModel.populateStyleChooserList(initialStylesChooserList(ITEM_STYLE_CHOOSER_CODE))
 
@@ -1127,151 +1320,63 @@ constructor(
     }
 
     private fun deInitItemStyleChooserCard() {
-        TransitionManager.beginDelayedTransition(binding.bottomItemPreviewCard,AutoTransition())
-        binding.bottomItemPreviewCard.visibility=View.VISIBLE
+        TransitionManager.beginDelayedTransition(binding.bottomItemPreviewCard, AutoTransition())
+        binding.bottomItemPreviewCard.visibility = View.VISIBLE
 
-        TransitionManager.beginDelayedTransition(binding.bottomItemStyleChooserCard,AutoTransition())
-        binding.bottomItemStyleChooserCard.visibility=View.GONE
+        TransitionManager.beginDelayedTransition(
+            binding.bottomItemStyleChooserCard,
+            AutoTransition()
+        )
+        binding.bottomItemStyleChooserCard.visibility = View.GONE
     }
 
-    private fun subscribeItemAttrValues(itemBinding: Any) {
+    private fun subscribeControllersPreviewValues(bindingItem: Any) {
+        when (bindingItem) {
+            is ItemDefaultBinding -> {
 
-        when(itemBinding){
-           is ItemDefaultBinding->{
-               viewModel.previewItemBackground.observe(viewLifecycleOwner, Observer {
-                   if (it != 0) {
-                       itemBinding.itemCard.setBackgroundColor(it)
-                       binding.bottomItemEditorBackgroundBtn.setBackgroundColor(it)
-                   }
-               })
+                viewModel.previewItemSize.observe(viewLifecycleOwner, Observer { itemSize->
+                    when (itemSize) {
+                        ProductListItem.DEFAULT_ITEM_SIZE -> {
+                            // stay on the default Size
+                        }
+                        "Small" -> {
+                            /**
+                             * Custom small size
+                            (width,height)(250, 150)
+                             */
+                            bindingItem.itemCard.layoutParams = Constraints.LayoutParams(250, 150)
+                        }
+                        "Medium" -> {
+                            /**
+                             * mobile size
+                            (width,height)(450, 271)
+                             */
+                            bindingItem.itemCard.layoutParams = Constraints.LayoutParams(450, 271)
+                        }
+                        "Large" -> {
+                            /**
+                             * tablet size (sw600dp)
+                             * (width,height)(650, 391)
+                             */
+                            bindingItem.itemCard.layoutParams = Constraints.LayoutParams(650, 391)
+                        }
+                        "X-Large" -> {
+                            /**
+                             * Custom X-Large size
+                             *
+                             * (width,height) (850, 512)
+                             */
+                            bindingItem.itemCard.layoutParams = Constraints.LayoutParams(850, 512)
 
-               viewModel.previewItemNameSize.observe(viewLifecycleOwner, Observer {
-                   when (it) {
-                       "Small" -> {
-                           itemBinding.itemName.textSize = 14F
-                       }
-                       "Medium" -> {
-                           itemBinding.itemName.textSize = 20F
-                       }
-                       "Large" -> {
-                           itemBinding.itemName.textSize = 24F
-                       }
-                       "X-Large" -> {
-                           itemBinding.itemName.textSize = 30F
-                       }
-                       else -> {
+                        }
 
-                       }
-                   }
-               })
-               viewModel.previewItemNameColor.observe(viewLifecycleOwner, Observer {
-                   if (it != 0) {
-                       itemBinding.itemName.setTextColor(it)
-                       binding.bottomItemEditorNameColorBtn.setBackgroundColor(it)
-                   }
-               })
+                    }
 
-               viewModel.previewItemDescriptionSize.observe(viewLifecycleOwner, Observer {
-                   when (it) {
-                       "Small" -> {
-                           itemBinding.itemDescription.textSize = 14F
-                       }
-                       "Medium" -> {
-                           itemBinding.itemDescription.textSize = 20F
-                       }
-                       "Large" -> {
-                           itemBinding.itemDescription.textSize = 24F
-                       }
-                       "X-Large" -> {
-                           itemBinding.itemDescription.textSize = 30F
-                       }
-                       else -> {
+                })
 
-                       }
-                   }
-               })
-               viewModel.previewItemDescriptionColor.observe(viewLifecycleOwner, Observer {
-                   if (it != 0) {
-                       itemBinding.itemDescription.setTextColor(it)
-                       binding.bottomItemEditorDescriptionColorBtn.setBackgroundColor(it)
-                   }
-               })
-
-               viewModel.previewItemSizeTextSize.observe(viewLifecycleOwner, Observer {
-                   when (it) {
-                       "Small" -> {
-                           itemBinding.itemSize.textSize = 14F
-                       }
-                       "Medium" -> {
-                           itemBinding.itemSize.textSize = 20F
-                       }
-                       "Large" -> {
-                           itemBinding.itemSize.textSize = 24F
-                       }
-                       "X-Large" -> {
-                           itemBinding.itemSize.textSize = 30F
-                       }
-                       else -> {
-
-                       }
-                   }
-               })
-               viewModel.previewItemSizeTextColor.observe(viewLifecycleOwner, Observer {
-                   if (it != 0) {
-                       itemBinding.itemSize.setTextColor(it)
-                       binding.bottomItemEditorSizeTxtColorBtn.setBackgroundColor(it)
-                   }
-               })
-
-               viewModel.previewItemConcurrencySize.observe(viewLifecycleOwner, Observer {
-                   when (it) {
-                       "Small" -> {
-                           itemBinding.itemPrice.textSize = 14F
-                       }
-                       "Medium" -> {
-                           itemBinding.itemPrice.textSize = 20F
-                       }
-                       "Large" -> {
-                           itemBinding.itemPrice.textSize = 24F
-                       }
-                       "X-Large" -> {
-                           itemBinding.itemPrice.textSize = 30F
-                       }
-                       else -> {
-
-                       }
-                   }
-               })
-               viewModel.previewItemConcurrencyColor.observe(viewLifecycleOwner, Observer {
-                   if (it != 0) {
-                       itemBinding.itemPrice.setTextColor(it)
-                       binding.bottomItemEditorConcurrencyColorBtn.setBackgroundColor(it)
-                   }
-               })
-
-
-               // setting the listeners for the color buttons
-               binding.bottomItemEditorBackgroundBtn.setOnClickListener {
-                   viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Background_Color"))
-               }
-               binding.bottomItemEditorNameColorBtn.setOnClickListener {
-                   viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Name_color"))
-               }
-               binding.bottomItemEditorDescriptionColorBtn.setOnClickListener {
-                   viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Description_color"))
-               }
-               binding.bottomItemEditorSizeTxtColorBtn.setOnClickListener {
-                   viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Size_Text_color"))
-               }
-               binding.bottomItemEditorConcurrencyColorBtn.setOnClickListener {
-                   viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Concurrency_color"))
-               }
-
-           }
-            is ItemMaterialBinding->{
                 viewModel.previewItemBackground.observe(viewLifecycleOwner, Observer {
                     if (it != 0) {
-                        itemBinding.itemCard.setBackgroundColor(it)
+                        bindingItem.itemCard.setBackgroundColor(it)
                         binding.bottomItemEditorBackgroundBtn.setBackgroundColor(it)
                     }
                 })
@@ -1279,16 +1384,16 @@ constructor(
                 viewModel.previewItemNameSize.observe(viewLifecycleOwner, Observer {
                     when (it) {
                         "Small" -> {
-                            itemBinding.itemName.textSize = 14F
+                            bindingItem.itemName.textSize = 14F
                         }
                         "Medium" -> {
-                            itemBinding.itemName.textSize = 20F
+                            bindingItem.itemName.textSize = 20F
                         }
                         "Large" -> {
-                            itemBinding.itemName.textSize = 24F
+                            bindingItem.itemName.textSize = 24F
                         }
                         "X-Large" -> {
-                            itemBinding.itemName.textSize = 30F
+                            bindingItem.itemName.textSize = 30F
                         }
                         else -> {
 
@@ -1297,219 +1402,7 @@ constructor(
                 })
                 viewModel.previewItemNameColor.observe(viewLifecycleOwner, Observer {
                     if (it != 0) {
-                        itemBinding.itemName.setTextColor(it)
-                        binding.bottomItemEditorNameColorBtn.setBackgroundColor(it)
-                    }
-                })
-
-
-                viewModel.previewItemSizeTextSize.observe(viewLifecycleOwner, Observer {
-                    when (it) {
-                        "Small" -> {
-                            itemBinding.itemSize.textSize = 14F
-                        }
-                        "Medium" -> {
-                            itemBinding.itemSize.textSize = 20F
-                        }
-                        "Large" -> {
-                            itemBinding.itemSize.textSize = 24F
-                        }
-                        "X-Large" -> {
-                            itemBinding.itemSize.textSize = 30F
-                        }
-                        else -> {
-
-                        }
-                    }
-                })
-                viewModel.previewItemSizeTextColor.observe(viewLifecycleOwner, Observer {
-                    if (it != 0) {
-                        itemBinding.itemSize.setTextColor(it)
-                        binding.bottomItemEditorSizeTxtColorBtn.setBackgroundColor(it)
-                    }
-                })
-
-                viewModel.previewItemConcurrencySize.observe(viewLifecycleOwner, Observer {
-                    when (it) {
-                        "Small" -> {
-                            itemBinding.itemPrice.textSize = 14F
-                        }
-                        "Medium" -> {
-                            itemBinding.itemPrice.textSize = 20F
-                        }
-                        "Large" -> {
-                            itemBinding.itemPrice.textSize = 24F
-                        }
-                        "X-Large" -> {
-                            itemBinding.itemPrice.textSize = 30F
-                        }
-                        else -> {
-
-                        }
-                    }
-                })
-                viewModel.previewItemConcurrencyColor.observe(viewLifecycleOwner, Observer {
-                    if (it != 0) {
-                        itemBinding.itemPrice.setTextColor(it)
-                        binding.bottomItemEditorConcurrencyColorBtn.setBackgroundColor(it)
-                    }
-                })
-
-
-                // setting the listeners for the color buttons
-                binding.bottomItemEditorBackgroundBtn.setOnClickListener {
-                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Background_Color"))
-                }
-                binding.bottomItemEditorNameColorBtn.setOnClickListener {
-                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Name_color"))
-                }
-                binding.bottomItemEditorDescriptionColorBtn.setOnClickListener {
-                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Description_color"))
-                }
-                binding.bottomItemEditorSizeTxtColorBtn.setOnClickListener {
-                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Size_Text_color"))
-                }
-                binding.bottomItemEditorConcurrencyColorBtn.setOnClickListener {
-                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Concurrency_color"))
-                }
-
-            }
-            is ItemBakeryBinding->{
-                viewModel.previewItemBackground.observe(viewLifecycleOwner, Observer {
-                    if (it != 0) {
-                        itemBinding.itemCard.setBackgroundColor(it)
-                        binding.bottomItemEditorBackgroundBtn.setBackgroundColor(it)
-                    }
-                })
-
-                viewModel.previewItemNameSize.observe(viewLifecycleOwner, Observer {
-                    when (it) {
-                        "Small" -> {
-                            itemBinding.itemName.textSize = 14F
-                        }
-                        "Medium" -> {
-                            itemBinding.itemName.textSize = 20F
-                        }
-                        "Large" -> {
-                            itemBinding.itemName.textSize = 24F
-                        }
-                        "X-Large" -> {
-                            itemBinding.itemName.textSize = 30F
-                        }
-                        else -> {
-
-                        }
-                    }
-                })
-                viewModel.previewItemNameColor.observe(viewLifecycleOwner, Observer {
-                    if (it != 0) {
-                        itemBinding.itemName.setTextColor(it)
-                        binding.bottomItemEditorNameColorBtn.setBackgroundColor(it)
-                    }
-                })
-
-
-                viewModel.previewItemSizeTextSize.observe(viewLifecycleOwner, Observer {
-                    when (it) {
-                        "Small" -> {
-                            itemBinding.itemSize.textSize = 14F
-                        }
-                        "Medium" -> {
-                            itemBinding.itemSize.textSize = 20F
-                        }
-                        "Large" -> {
-                            itemBinding.itemSize.textSize = 24F
-                        }
-                        "X-Large" -> {
-                            itemBinding.itemSize.textSize = 30F
-                        }
-                        else -> {
-
-                        }
-                    }
-                })
-                viewModel.previewItemSizeTextColor.observe(viewLifecycleOwner, Observer {
-                    if (it != 0) {
-                        itemBinding.itemSize.setTextColor(it)
-                        binding.bottomItemEditorSizeTxtColorBtn.setBackgroundColor(it)
-                    }
-                })
-
-                viewModel.previewItemConcurrencySize.observe(viewLifecycleOwner, Observer {
-                    when (it) {
-                        "Small" -> {
-                            itemBinding.itemPrice.textSize = 14F
-                        }
-                        "Medium" -> {
-                            itemBinding.itemPrice.textSize = 20F
-                        }
-                        "Large" -> {
-                            itemBinding.itemPrice.textSize = 24F
-                        }
-                        "X-Large" -> {
-                            itemBinding.itemPrice.textSize = 30F
-                        }
-                        else -> {
-
-                        }
-                    }
-                })
-                viewModel.previewItemConcurrencyColor.observe(viewLifecycleOwner, Observer {
-                    if (it != 0) {
-                        itemBinding.itemPrice.setTextColor(it)
-                        binding.bottomItemEditorConcurrencyColorBtn.setBackgroundColor(it)
-                    }
-                })
-
-
-                // setting the listeners for the color buttons
-                binding.bottomItemEditorBackgroundBtn.setOnClickListener {
-                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Background_Color"))
-                }
-                binding.bottomItemEditorNameColorBtn.setOnClickListener {
-                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Name_color"))
-                }
-                binding.bottomItemEditorDescriptionColorBtn.setOnClickListener {
-                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Description_color"))
-                }
-                binding.bottomItemEditorSizeTxtColorBtn.setOnClickListener {
-                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Size_Text_color"))
-                }
-                binding.bottomItemEditorConcurrencyColorBtn.setOnClickListener {
-                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Concurrency_color"))
-                }
-
-            }
-            is ItemBlureProBinding->{
-                viewModel.previewItemBackground.observe(viewLifecycleOwner, Observer {
-                    if (it != 0) {
-                        itemBinding.itemCard.setBackgroundColor(it)
-                        binding.bottomItemEditorBackgroundBtn.setBackgroundColor(it)
-                    }
-                })
-
-                viewModel.previewItemNameSize.observe(viewLifecycleOwner, Observer {
-                    when (it) {
-                        "Small" -> {
-                            itemBinding.itemName.textSize = 14F
-                        }
-                        "Medium" -> {
-                            itemBinding.itemName.textSize = 20F
-                        }
-                        "Large" -> {
-                            itemBinding.itemName.textSize = 24F
-                        }
-                        "X-Large" -> {
-                            itemBinding.itemName.textSize = 30F
-                        }
-                        else -> {
-
-                        }
-                    }
-                })
-                viewModel.previewItemNameColor.observe(viewLifecycleOwner, Observer {
-                    if (it != 0) {
-                        itemBinding.itemName.setTextColor(it)
+                        bindingItem.itemName.setTextColor(it)
                         binding.bottomItemEditorNameColorBtn.setBackgroundColor(it)
                     }
                 })
@@ -1517,16 +1410,16 @@ constructor(
                 viewModel.previewItemDescriptionSize.observe(viewLifecycleOwner, Observer {
                     when (it) {
                         "Small" -> {
-                            itemBinding.itemDescription.textSize = 14F
+                            bindingItem.itemDescription.textSize = 14F
                         }
                         "Medium" -> {
-                            itemBinding.itemDescription.textSize = 20F
+                            bindingItem.itemDescription.textSize = 20F
                         }
                         "Large" -> {
-                            itemBinding.itemDescription.textSize = 24F
+                            bindingItem.itemDescription.textSize = 24F
                         }
                         "X-Large" -> {
-                            itemBinding.itemDescription.textSize = 30F
+                            bindingItem.itemDescription.textSize = 30F
                         }
                         else -> {
 
@@ -1535,7 +1428,7 @@ constructor(
                 })
                 viewModel.previewItemDescriptionColor.observe(viewLifecycleOwner, Observer {
                     if (it != 0) {
-                        itemBinding.itemDescription.setTextColor(it)
+                        bindingItem.itemDescription.setTextColor(it)
                         binding.bottomItemEditorDescriptionColorBtn.setBackgroundColor(it)
                     }
                 })
@@ -1543,16 +1436,16 @@ constructor(
                 viewModel.previewItemSizeTextSize.observe(viewLifecycleOwner, Observer {
                     when (it) {
                         "Small" -> {
-                            itemBinding.itemSize.textSize = 14F
+                            bindingItem.itemSize.textSize = 14F
                         }
                         "Medium" -> {
-                            itemBinding.itemSize.textSize = 20F
+                            bindingItem.itemSize.textSize = 20F
                         }
                         "Large" -> {
-                            itemBinding.itemSize.textSize = 24F
+                            bindingItem.itemSize.textSize = 24F
                         }
                         "X-Large" -> {
-                            itemBinding.itemSize.textSize = 30F
+                            bindingItem.itemSize.textSize = 30F
                         }
                         else -> {
 
@@ -1561,7 +1454,7 @@ constructor(
                 })
                 viewModel.previewItemSizeTextColor.observe(viewLifecycleOwner, Observer {
                     if (it != 0) {
-                        itemBinding.itemSize.setTextColor(it)
+                        bindingItem.itemSize.setTextColor(it)
                         binding.bottomItemEditorSizeTxtColorBtn.setBackgroundColor(it)
                     }
                 })
@@ -1569,16 +1462,16 @@ constructor(
                 viewModel.previewItemConcurrencySize.observe(viewLifecycleOwner, Observer {
                     when (it) {
                         "Small" -> {
-                            itemBinding.itemPrice.textSize = 14F
+                            bindingItem.itemPrice.textSize = 14F
                         }
                         "Medium" -> {
-                            itemBinding.itemPrice.textSize = 20F
+                            bindingItem.itemPrice.textSize = 20F
                         }
                         "Large" -> {
-                            itemBinding.itemPrice.textSize = 24F
+                            bindingItem.itemPrice.textSize = 24F
                         }
                         "X-Large" -> {
-                            itemBinding.itemPrice.textSize = 30F
+                            bindingItem.itemPrice.textSize = 30F
                         }
                         else -> {
 
@@ -1587,7 +1480,478 @@ constructor(
                 })
                 viewModel.previewItemConcurrencyColor.observe(viewLifecycleOwner, Observer {
                     if (it != 0) {
-                        itemBinding.itemPrice.setTextColor(it)
+                        bindingItem.itemPrice.setTextColor(it)
+                        binding.bottomItemEditorConcurrencyColorBtn.setBackgroundColor(it)
+                    }
+                })
+
+
+                // setting the listeners for the color buttons
+                binding.bottomItemEditorBackgroundBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Background_Color"))
+                }
+                binding.bottomItemEditorNameColorBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Name_color"))
+                }
+                binding.bottomItemEditorDescriptionColorBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Description_color"))
+                }
+                binding.bottomItemEditorSizeTxtColorBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Size_Text_color"))
+                }
+                binding.bottomItemEditorConcurrencyColorBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Concurrency_color"))
+                }
+
+            }
+            is ItemMaterialBinding -> {
+
+                viewModel.previewItemSize.observe(viewLifecycleOwner, Observer { itemSize->
+                    when (itemSize) {
+                        ProductListItem.DEFAULT_ITEM_SIZE -> {
+                            // stay on the default Size
+                        }
+                        "Small" -> {
+                            /**
+                             * Custom small size
+                            (width,height)(250, 238)
+                             */
+                            bindingItem.itemCard.layoutParams = Constraints.LayoutParams(250, 238)
+                        }
+                        "Medium" -> {
+                            /**
+                             * mobile size
+                            (width,height)(450, 333)
+                             */
+                            bindingItem.itemCard.layoutParams = Constraints.LayoutParams(450, 333)
+                        }
+                        "Large" -> {
+                            /**
+                             * tablet size (sw600dp)
+                             * (width,height)(650, 619)
+                             */
+                            bindingItem.itemCard.layoutParams = Constraints.LayoutParams(650, 619)
+                        }
+                        "X-Large" -> {
+                            /**
+                             * Custom X-Large size
+                             *
+                             * (width,height)(850, 809)
+                             */
+                            bindingItem.itemCard.layoutParams = Constraints.LayoutParams(850, 809)
+
+                        }
+
+                    }
+
+                })
+
+                viewModel.previewItemBackground.observe(viewLifecycleOwner, Observer {
+                    if (it != 0) {
+                        bindingItem.itemCard.setBackgroundColor(it)
+                        binding.bottomItemEditorBackgroundBtn.setBackgroundColor(it)
+                    }
+                })
+
+                viewModel.previewItemNameSize.observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        "Small" -> {
+                            bindingItem.itemName.textSize = 14F
+                        }
+                        "Medium" -> {
+                            bindingItem.itemName.textSize = 20F
+                        }
+                        "Large" -> {
+                            bindingItem.itemName.textSize = 24F
+                        }
+                        "X-Large" -> {
+                            bindingItem.itemName.textSize = 30F
+                        }
+                        else -> {
+
+                        }
+                    }
+                })
+                viewModel.previewItemNameColor.observe(viewLifecycleOwner, Observer {
+                    if (it != 0) {
+                        bindingItem.itemName.setTextColor(it)
+                        binding.bottomItemEditorNameColorBtn.setBackgroundColor(it)
+                    }
+                })
+
+
+                viewModel.previewItemSizeTextSize.observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        "Small" -> {
+                            bindingItem.itemSize.textSize = 14F
+                        }
+                        "Medium" -> {
+                            bindingItem.itemSize.textSize = 20F
+                        }
+                        "Large" -> {
+                            bindingItem.itemSize.textSize = 24F
+                        }
+                        "X-Large" -> {
+                            bindingItem.itemSize.textSize = 30F
+                        }
+                        else -> {
+
+                        }
+                    }
+                })
+                viewModel.previewItemSizeTextColor.observe(viewLifecycleOwner, Observer {
+                    if (it != 0) {
+                        bindingItem.itemSize.setTextColor(it)
+                        binding.bottomItemEditorSizeTxtColorBtn.setBackgroundColor(it)
+                    }
+                })
+
+                viewModel.previewItemConcurrencySize.observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        "Small" -> {
+                            bindingItem.itemPrice.textSize = 14F
+                        }
+                        "Medium" -> {
+                            bindingItem.itemPrice.textSize = 20F
+                        }
+                        "Large" -> {
+                            bindingItem.itemPrice.textSize = 24F
+                        }
+                        "X-Large" -> {
+                            bindingItem.itemPrice.textSize = 30F
+                        }
+                        else -> {
+
+                        }
+                    }
+                })
+                viewModel.previewItemConcurrencyColor.observe(viewLifecycleOwner, Observer {
+                    if (it != 0) {
+                        bindingItem.itemPrice.setTextColor(it)
+                        binding.bottomItemEditorConcurrencyColorBtn.setBackgroundColor(it)
+                    }
+                })
+
+
+                // setting the listeners for the color buttons
+                binding.bottomItemEditorBackgroundBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Background_Color"))
+                }
+                binding.bottomItemEditorNameColorBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Name_color"))
+                }
+                binding.bottomItemEditorDescriptionColorBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Description_color"))
+                }
+                binding.bottomItemEditorSizeTxtColorBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Size_Text_color"))
+                }
+                binding.bottomItemEditorConcurrencyColorBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Concurrency_color"))
+                }
+
+            }
+            is ItemBakeryBinding -> {
+
+                viewModel.previewItemSize.observe(viewLifecycleOwner, Observer { itemSize->
+                    when (itemSize) {
+                        ProductListItem.DEFAULT_ITEM_SIZE -> {
+                            // stay on the default Size
+                        }
+                        "Small" -> {
+                            /**
+                             * Custom small size
+                            (width,height)(250, 238)
+                             */
+                            bindingItem.itemCard.layoutParams = Constraints.LayoutParams(250, 312)
+                        }
+                        "Medium" -> {
+                            /**
+                             * mobile size
+                            (width,height)(450, 333)
+                             */
+                            bindingItem.itemCard.layoutParams = Constraints.LayoutParams(450, 562)
+                        }
+                        "Large" -> {
+                            /**
+                             * tablet size (sw600dp)
+                             * (width,height)(650, 619)
+                             */
+                            bindingItem.itemCard.layoutParams = Constraints.LayoutParams(650, 812)
+                        }
+                        "X-Large" -> {
+                            /**
+                             * Custom X-Large size
+                             *
+                             * (width,height)(850, 809)
+                             */
+                            bindingItem.itemCard.layoutParams = Constraints.LayoutParams(850, 1062)
+
+                        }
+
+                    }
+
+                })
+
+
+                viewModel.previewItemBackground.observe(viewLifecycleOwner, Observer {
+                    if (it != 0) {
+                        bindingItem.itemCard.setBackgroundColor(it)
+                        binding.bottomItemEditorBackgroundBtn.setBackgroundColor(it)
+                    }
+                })
+
+                viewModel.previewItemNameSize.observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        "Small" -> {
+                            bindingItem.itemName.textSize = 14F
+                        }
+                        "Medium" -> {
+                            bindingItem.itemName.textSize = 20F
+                        }
+                        "Large" -> {
+                            bindingItem.itemName.textSize = 24F
+                        }
+                        "X-Large" -> {
+                            bindingItem.itemName.textSize = 30F
+                        }
+                        else -> {
+
+                        }
+                    }
+                })
+                viewModel.previewItemNameColor.observe(viewLifecycleOwner, Observer {
+                    if (it != 0) {
+                        bindingItem.itemName.setTextColor(it)
+                        binding.bottomItemEditorNameColorBtn.setBackgroundColor(it)
+                    }
+                })
+
+
+                viewModel.previewItemSizeTextSize.observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        "Small" -> {
+                            bindingItem.itemSize.textSize = 14F
+                        }
+                        "Medium" -> {
+                            bindingItem.itemSize.textSize = 20F
+                        }
+                        "Large" -> {
+                            bindingItem.itemSize.textSize = 24F
+                        }
+                        "X-Large" -> {
+                            bindingItem.itemSize.textSize = 30F
+                        }
+                        else -> {
+
+                        }
+                    }
+                })
+                viewModel.previewItemSizeTextColor.observe(viewLifecycleOwner, Observer {
+                    if (it != 0) {
+                        bindingItem.itemSize.setTextColor(it)
+                        binding.bottomItemEditorSizeTxtColorBtn.setBackgroundColor(it)
+                    }
+                })
+
+                viewModel.previewItemConcurrencySize.observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        "Small" -> {
+                            bindingItem.itemPrice.textSize = 14F
+                        }
+                        "Medium" -> {
+                            bindingItem.itemPrice.textSize = 20F
+                        }
+                        "Large" -> {
+                            bindingItem.itemPrice.textSize = 24F
+                        }
+                        "X-Large" -> {
+                            bindingItem.itemPrice.textSize = 30F
+                        }
+                        else -> {
+
+                        }
+                    }
+                })
+                viewModel.previewItemConcurrencyColor.observe(viewLifecycleOwner, Observer {
+                    if (it != 0) {
+                        bindingItem.itemPrice.setTextColor(it)
+                        binding.bottomItemEditorConcurrencyColorBtn.setBackgroundColor(it)
+                    }
+                })
+
+
+                // setting the listeners for the color buttons
+                binding.bottomItemEditorBackgroundBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Background_Color"))
+                }
+                binding.bottomItemEditorNameColorBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Name_color"))
+                }
+                binding.bottomItemEditorDescriptionColorBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Description_color"))
+                }
+                binding.bottomItemEditorSizeTxtColorBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Size_Text_color"))
+                }
+                binding.bottomItemEditorConcurrencyColorBtn.setOnClickListener {
+                    viewModel.setEvent(DefaultViewModelEvent.LaunchColorPicker("chose_item_Concurrency_color"))
+                }
+
+            }
+            is ItemBlureProBinding -> {
+                viewModel.previewItemSize.observe(viewLifecycleOwner, Observer { itemSize->
+                    when (itemSize) {
+                        ProductListItem.DEFAULT_ITEM_SIZE -> {
+                            // stay on the default Size
+                        }
+                        "Small" -> {
+                            /**
+                             * Custom small size
+                            (width,height)(250, 238)
+                             */
+                            bindingItem.itemMainLayout.layoutParams=LinearLayout.LayoutParams(363,150)
+                            bindingItem.itemCard.layoutParams = LinearLayout.LayoutParams(300, 140)
+                        }
+                        "Medium" -> {
+                            /**
+                             * mobile size
+                            (width,height)(450, 333)
+                             */
+                            bindingItem.itemMainLayout.layoutParams=LinearLayout.LayoutParams(605,250)
+                            bindingItem.itemCard.layoutParams = LinearLayout.LayoutParams(500, 240)
+                        }
+                        "Large" -> {
+                            /**
+                             * tablet size (sw600dp)
+                             * (width,height)(650, 619)
+                             */
+                            bindingItem.itemMainLayout.layoutParams=LinearLayout.LayoutParams(847,350)
+                            bindingItem.itemCard.layoutParams = LinearLayout.LayoutParams(700, 340)
+                        }
+                        "X-Large" -> {
+                            /**
+                             * Custom X-Large size
+                             *
+                             * (width,height)(850, 809)
+                             */
+                            bindingItem.itemMainLayout.layoutParams=LinearLayout.LayoutParams(1089,450)
+                            bindingItem.itemCard.layoutParams = LinearLayout.LayoutParams(900, 440)
+
+
+                        }
+
+                    }
+
+                })
+
+                viewModel.previewItemBackground.observe(viewLifecycleOwner, Observer {
+                    if (it != 0) {
+                        bindingItem.itemCard.setBackgroundColor(it)
+                        binding.bottomItemEditorBackgroundBtn.setBackgroundColor(it)
+                    }
+                })
+
+                viewModel.previewItemNameSize.observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        "Small" -> {
+                            bindingItem.itemName.textSize = 14F
+                        }
+                        "Medium" -> {
+                            bindingItem.itemName.textSize = 20F
+                        }
+                        "Large" -> {
+                            bindingItem.itemName.textSize = 24F
+                        }
+                        "X-Large" -> {
+                            bindingItem.itemName.textSize = 30F
+                        }
+                        else -> {
+
+                        }
+                    }
+                })
+                viewModel.previewItemNameColor.observe(viewLifecycleOwner, Observer {
+                    if (it != 0) {
+                        bindingItem.itemName.setTextColor(it)
+                        binding.bottomItemEditorNameColorBtn.setBackgroundColor(it)
+                    }
+                })
+
+                viewModel.previewItemDescriptionSize.observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        "Small" -> {
+                            bindingItem.itemDescription.textSize = 14F
+                        }
+                        "Medium" -> {
+                            bindingItem.itemDescription.textSize = 20F
+                        }
+                        "Large" -> {
+                            bindingItem.itemDescription.textSize = 24F
+                        }
+                        "X-Large" -> {
+                            bindingItem.itemDescription.textSize = 30F
+                        }
+                        else -> {
+
+                        }
+                    }
+                })
+                viewModel.previewItemDescriptionColor.observe(viewLifecycleOwner, Observer {
+                    if (it != 0) {
+                        bindingItem.itemDescription.setTextColor(it)
+                        binding.bottomItemEditorDescriptionColorBtn.setBackgroundColor(it)
+                    }
+                })
+
+                viewModel.previewItemSizeTextSize.observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        "Small" -> {
+                            bindingItem.itemSize.textSize = 14F
+                        }
+                        "Medium" -> {
+                            bindingItem.itemSize.textSize = 20F
+                        }
+                        "Large" -> {
+                            bindingItem.itemSize.textSize = 24F
+                        }
+                        "X-Large" -> {
+                            bindingItem.itemSize.textSize = 30F
+                        }
+                        else -> {
+
+                        }
+                    }
+                })
+                viewModel.previewItemSizeTextColor.observe(viewLifecycleOwner, Observer {
+                    if (it != 0) {
+                        bindingItem.itemSize.setTextColor(it)
+                        binding.bottomItemEditorSizeTxtColorBtn.setBackgroundColor(it)
+                    }
+                })
+
+                viewModel.previewItemConcurrencySize.observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        "Small" -> {
+                            bindingItem.itemPrice.textSize = 14F
+                        }
+                        "Medium" -> {
+                            bindingItem.itemPrice.textSize = 20F
+                        }
+                        "Large" -> {
+                            bindingItem.itemPrice.textSize = 24F
+                        }
+                        "X-Large" -> {
+                            bindingItem.itemPrice.textSize = 30F
+                        }
+                        else -> {
+
+                        }
+                    }
+                })
+                viewModel.previewItemConcurrencyColor.observe(viewLifecycleOwner, Observer {
+                    if (it != 0) {
+                        bindingItem.itemPrice.setTextColor(it)
                         binding.bottomItemEditorConcurrencyColorBtn.setBackgroundColor(it)
                     }
                 })
@@ -1613,30 +1977,31 @@ constructor(
             }
 
 
-
         }
 
 
     }
 
-    private fun addStyleAttrValues(style: Style?) {
-        binding.bottomItemEditorBackgroundBtn.setBackgroundColor(style!!.product_list_item.background_color)
+    private fun applyItemStyleToBottomSheetControllers(item: ProductListItem?) {
+        binding.bottomItemEditorSizeControllerAuto.hint=item!!.item_size
 
-        binding.bottomItemEditorNameInputField.hint = style.product_list_item.name_text_size
-        binding.bottomItemEditorNameColorBtn.setBackgroundColor(style.product_list_item.name_text_color)
+        binding.bottomItemEditorBackgroundBtn.setBackgroundColor(item.background_color)
+
+        binding.bottomItemEditorNameInputField.hint = item.name_text_size
+        binding.bottomItemEditorNameColorBtn.setBackgroundColor(item.name_text_color)
 
         binding.bottomItemEditorDescriptionInputField.hint =
-            style.product_list_item.description_text_size
-        binding.bottomItemEditorDescriptionColorBtn.setBackgroundColor(style.product_list_item.description_text_color)
+            item.description_text_size
+        binding.bottomItemEditorDescriptionColorBtn.setBackgroundColor(item.description_text_color)
 
-        binding.bottomItemEditorSizeInputField.hint = style.product_list_item.size_text_size
-        binding.bottomItemEditorSizeTxtColorBtn.setBackgroundColor(style.product_list_item.size_text_color)
+        binding.bottomItemEditorSizeInputField.hint = item.size_text_size
+        binding.bottomItemEditorSizeTxtColorBtn.setBackgroundColor(item.size_text_color)
 
         binding.bottomItemEditorConcurrencyTextInputField.hint =
-            style.product_list_item.concurrency_type_text
+            item.concurrency_type_text
         binding.bottomItemEditorConcurrencySizeInputField.hint =
-            style.product_list_item.concurrency_text_size
-        binding.bottomItemEditorConcurrencyColorBtn.setBackgroundColor(style.product_list_item.concurrency_text_Color)
+            item.concurrency_text_size
+        binding.bottomItemEditorConcurrencyColorBtn.setBackgroundColor(item.concurrency_text_Color)
 
 
     }
@@ -1644,375 +2009,29 @@ constructor(
     private fun setUpDropDawnMenus() {
         val sizes = resources.getStringArray(R.array.sizes)
         val sizesAdapter = ArrayAdapter(requireContext(), R.layout.drop_dwon_item, sizes)
+        binding.bottomItemEditorSizeControllerAuto.setAdapter(sizesAdapter)
         binding.bottomItemEditorNameSizeAuto.setAdapter(sizesAdapter)
         binding.bottomItemEditorDescriptionSizeAuto.setAdapter(sizesAdapter)
         binding.bottomItemEditorConcurrencySizeAuto.setAdapter(sizesAdapter)
         binding.bottomItemEditorSizeAuto.setAdapter(sizesAdapter)
+        val currencies=resources.getStringArray(R.array.currencies)
+        val currenciesAdapter=ArrayAdapter(requireContext(),R.layout.drop_dwon_item,currencies)
+        binding.bottomItemEditorConcurrencyTextAuto.setAdapter(currenciesAdapter)
     }
 
-    private fun addCustomAttributes(itemBinding: Any, style: Style) {
+    private fun applyItemStyleTOBinding(itemBinding: Any, previewItem: ProductListItem) {
         when (itemBinding) {
             is ItemDefaultBinding -> {
-                itemBinding.apply {
-                    if (style.product_list_item.background_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemCard.setCardBackgroundColor(style.product_list_item.background_color)
-                    }
-
-                    if (style.product_list_item.name_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemName.textSize = when (style.product_list_item.name_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-
-                    if (style.product_list_item.name_text_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemName.setTextColor(style.product_list_item.name_text_color)
-                    }
-
-                    if (style.product_list_item.description_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemDescription.textSize = when (style.product_list_item.description_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-                    if (style.product_list_item.description_text_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemDescription.setTextColor(style.product_list_item.description_text_color)
-                    }
-
-                    if (style.product_list_item.concurrency_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemPrice.textSize = when (style.product_list_item.concurrency_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-                    if (style.product_list_item.concurrency_text_Color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemPrice.setTextColor(style.product_list_item.concurrency_text_Color)
-                    }
-
-//                    item!!.price="${item!!.price} ${style.product_list_item.concurrency_type_text}"
-                    if (style.product_list_item.size_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemSize.textSize = when (style.product_list_item.size_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-                    if (style.product_list_item.size_text_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemSize.setTextColor(style.product_list_item.size_text_color)
-                    }
-                }
+                DefaultProductViewHolder.observeStyleAttr(itemBinding,previewItem)
             }
             is ItemMaterialBinding -> {
-                itemBinding.apply {
-                    if (style.product_list_item.background_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemCard.setCardBackgroundColor(style.product_list_item.background_color)
-                    }
-
-                    if (style.product_list_item.name_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemName.textSize = when (style.product_list_item.name_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-
-                    if (style.product_list_item.name_text_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemName.setTextColor(style.product_list_item.name_text_color)
-                    }
-
-
-
-                    if (style.product_list_item.concurrency_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemPrice.textSize = when (style.product_list_item.concurrency_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-                    if (style.product_list_item.concurrency_text_Color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemPrice.setTextColor(style.product_list_item.concurrency_text_Color)
-                    }
-
-//                    item!!.price="${item!!.price} ${style.product_list_item.concurrency_type_text}"
-                    if (style.product_list_item.size_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemSize.textSize = when (style.product_list_item.size_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-                    if (style.product_list_item.size_text_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemSize.setTextColor(style.product_list_item.size_text_color)
-                    }
-                }
+                MaterialProductViewHolder.observeStyleAttr(itemBinding,previewItem)
             }
             is ItemBakeryBinding -> {
-                itemBinding.apply {
-                    if (style.product_list_item.background_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemCard.setCardBackgroundColor(style.product_list_item.background_color)
-                    }
-
-                    if (style.product_list_item.name_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemName.textSize = when (style.product_list_item.name_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-
-                    if (style.product_list_item.name_text_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemName.setTextColor(style.product_list_item.name_text_color)
-                    }
-
-
-
-                    if (style.product_list_item.concurrency_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemPrice.textSize = when (style.product_list_item.concurrency_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-                    if (style.product_list_item.concurrency_text_Color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemPrice.setTextColor(style.product_list_item.concurrency_text_Color)
-                    }
-
-//                    item!!.price="${item!!.price} ${style.product_list_item.concurrency_type_text}"
-                    if (style.product_list_item.size_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemSize.textSize = when (style.product_list_item.size_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-                    if (style.product_list_item.size_text_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemSize.setTextColor(style.product_list_item.size_text_color)
-                    }
-                }
+                BakeryProductViewHolder.observeStyleAttr(itemBinding,previewItem)
             }
             is ItemBlureProBinding -> {
-                itemBinding.apply {
-                    if (style.product_list_item.background_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemCard.setCardBackgroundColor(style.product_list_item.background_color)
-                    }
-
-                    if (style.product_list_item.name_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemName.textSize = when (style.product_list_item.name_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-
-                    if (style.product_list_item.name_text_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemName.setTextColor(style.product_list_item.name_text_color)
-                    }
-
-                    if (style.product_list_item.description_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemDescription.textSize = when (style.product_list_item.description_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-                    if (style.product_list_item.description_text_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemDescription.setTextColor(style.product_list_item.description_text_color)
-                    }
-
-                    if (style.product_list_item.concurrency_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemPrice.textSize = when (style.product_list_item.concurrency_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-                    if (style.product_list_item.concurrency_text_Color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemPrice.setTextColor(style.product_list_item.concurrency_text_Color)
-                    }
-
-//                    item!!.price="${item!!.price} ${style.product_list_item.concurrency_type_text}"
-                    if (style.product_list_item.size_text_size!=ProductListItem.DEFAULT_SIZE){
-                        itemSize.textSize = when (style.product_list_item.size_text_size) {
-                            "Small" -> {
-                                14F
-                            }
-                            "Medium" -> {
-                                20F
-                            }
-                            "Large" -> {
-                                24F
-                            }
-                            "X-Large" -> {
-                                30F
-                            }
-                            else -> {
-                                20F
-                            }
-                        }
-                    }
-                    if (style.product_list_item.size_text_color!=ProductListItem.DEFAULT_COLOR_VALUE){
-                        itemSize.setTextColor(style.product_list_item.size_text_color)
-                    }
-                }
+                BlurProductViewHolder.observeStyleAttr(itemBinding,previewItem)
             }
             else -> {
 
@@ -2022,7 +2041,7 @@ constructor(
     }
 
 
-    private fun initialStylesChooserList(styleChooserRequestCode:Int): MutableList<StyleChooserItem> {
+    private fun initialStylesChooserList(styleChooserRequestCode: Int): MutableList<StyleChooserItem> {
         return when (styleChooserRequestCode) {
             STYLE_CHOOSER_CODE -> {
                 val stylesList = mutableListOf<StyleChooserItem>(
@@ -2120,7 +2139,7 @@ constructor(
                         ), false, ProductListItemStyle.BLUR_ITEM.itemStyleCode
                     )
                 )
-                when (viewModel.chosenListItemStyle) {
+                when (viewModel.style.value!!.product_list_item.style.itemStyleCode) {
                     ProductListItemStyle.DEFAULT_ITEM.itemStyleCode -> {
                         itemStylesList[ProductListItemStyle.DEFAULT_ITEM.itemStyleCode].isChecked =
                             true
@@ -2142,7 +2161,7 @@ constructor(
                 return itemStylesList
             }
             else -> {
-                 mutableListOf()
+                mutableListOf()
             }
         }
 
@@ -2178,18 +2197,53 @@ constructor(
         binding.bottomWelcomeTxtSizeAuto.setAdapter(adapter)
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
+
     private fun checkForNewDataChanges() {
-        val tempStyle = viewModel.style.value
         when (viewModel.visibleBottomSheetLayout.value) {
             AttrVisibleViews.NOTHING -> {
                 //nothing to do
             }
             AttrVisibleViews.STYLE_CHOOSER -> {
                 Toast.makeText(requireContext(), "style Choser", Toast.LENGTH_SHORT).show()
+                when (viewModel.tempStyleChoice) {
+                    99 -> {
 
+                    }
+                    ChosenStyle.DEFAULT.styleCode -> {
+                        val tempStyle = Style(attributes = Style.DEFAULT_VALUE, styleCode = ChosenStyle.DEFAULT)
+                        viewModel.addAttrChanges(tempStyle)
+                        viewModel.tempStyleChoice = 99
+                    }
+                    ChosenStyle.BLUR_PRO.styleCode -> {
+                        val tempStyle = Style(attributes = Style.DEFAULT_VALUE,styleCode = ChosenStyle.BLUR_PRO)
+                        viewModel.addAttrChanges(tempStyle)
+                        viewModel.tempStyleChoice = 99
+                    }
+                    ChosenStyle.BAKERY_BLACK.styleCode -> {
+                        val tempStyle = Style(attributes = Style.DEFAULT_VALUE,styleCode = ChosenStyle.BAKERY_BLACK)
+                        viewModel.addAttrChanges(tempStyle)
+                        viewModel.tempStyleChoice = 99
+                    }
+                    ChosenStyle.STANDARD_MATERIAL_DETAILS_ITEMS.styleCode -> {
+                        val tempStyle = Style(attributes = Style.DEFAULT_VALUE,styleCode = ChosenStyle.STANDARD_MATERIAL_DETAILS_ITEMS)
+                        viewModel.addAttrChanges(tempStyle)
+                        viewModel.tempStyleChoice = 99
+                    }
+                    ChosenStyle.COLORIZES_CATEGORIES_DETAILS_ITEMS.styleCode -> {
+                        val tempStyle = Style(attributes = Style.DEFAULT_VALUE,styleCode = ChosenStyle.COLORIZES_CATEGORIES_DETAILS_ITEMS)
+                        viewModel.addAttrChanges(tempStyle)
+                        viewModel.tempStyleChoice = 99
+                    }
+                    ChosenStyle.CATEGORIES_LIST_SWEETS_DETAILS_ITEMS.styleCode -> {
+                        val tempStyle = Style(attributes = Style.DEFAULT_VALUE,styleCode = ChosenStyle.CATEGORIES_LIST_SWEETS_DETAILS_ITEMS)
+                        viewModel.addAttrChanges(tempStyle)
+                        viewModel.tempStyleChoice = 99
+                    }
+                }
+//
             }
             AttrVisibleViews.BACKGROUND_CHOOSER -> {
+                val tempStyle=viewModel.style.value
                 when (viewModel.backgroundChooserResult) {
                     null -> {
 
@@ -2198,56 +2252,61 @@ constructor(
                         tempStyle!!.backgroundChoice = Style.BACKGROUND_IMAGE_CHOICE
                         tempStyle.mainBackgroundImage = viewModel.backgroundChooserResult as String
                         viewModel.backgroundChooserResult = null
+                        tempStyle.attributes=Style.CUSTOM_ATTRIBUTES
+                        viewModel.addAttrChanges(tempStyle)
                     }
                     is Int -> {
                         tempStyle!!.backgroundChoice = Style.BACKGROUND_COLOR_CHOICE
                         tempStyle.mainBackgroundColor = viewModel.backgroundChooserResult as Int
                         viewModel.backgroundChooserResult = null
+                        tempStyle.attributes=Style.CUSTOM_ATTRIBUTES
+                        viewModel.addAttrChanges(tempStyle)
                     }
                 }
 
-
-                tempStyle!!.attributes = "custom"
-                viewModel.addAttrChanges(tempStyle)
             }
             AttrVisibleViews.WELCOME_EDIT_TXT_LAYOUT -> {
+                val tempStyle=viewModel.style.value
                 if (binding.bottomWelcomeTxtEdit.text!!.isNotEmpty()) {
                     tempStyle!!.welcomeText = binding.bottomWelcomeTxtEdit.text.toString()
+                    tempStyle.attributes=Style.CUSTOM_ATTRIBUTES
+                    viewModel.addAttrChanges(tempStyle)
                 }
 
                 if (binding.bottomWelcomeTxtSizeAuto.text.isNotEmpty()) {
                     tempStyle!!.welcomeTextSize = binding.bottomWelcomeTxtSizeAuto.text.toString()
+                    tempStyle.attributes=Style.CUSTOM_ATTRIBUTES
+                    viewModel.addAttrChanges(tempStyle)
                 }
 
                 if (welcomeTxtColorRegistry != null) {
                     tempStyle!!.welcomeTextColor = welcomeTxtColorRegistry!!
+                    tempStyle.attributes=Style.CUSTOM_ATTRIBUTES
+                    viewModel.addAttrChanges(tempStyle)
                 }
 
 
                 when (viewModel.tempTextAlignValue) {
                     Style.ALIGN_LEFT -> {
-                        tempStyle?.welcomeTextAlign = viewModel.tempTextAlignValue
+                        tempStyle!!.welcomeTextAlign = viewModel.tempTextAlignValue
+                        viewModel.addAttrChanges(tempStyle)
                     }
                     Style.ALIGN_RIGHT -> {
-                        tempStyle?.welcomeTextAlign = viewModel.tempTextAlignValue
+                        tempStyle!!.welcomeTextAlign = viewModel.tempTextAlignValue
+                        tempStyle.attributes=Style.CUSTOM_ATTRIBUTES
+                        viewModel.addAttrChanges(tempStyle)
                     }
                 }
 
-
-                //check the aligns Buttons
-                //create and call addAttrChanges()
-
-                tempStyle!!.attributes = "custom"
-                viewModel.addAttrChanges(tempStyle!!)
             }
             AttrVisibleViews.ITEM_EDITOR_LAYOUT -> {
                 viewModel.calculateAndApplyItemPreviewValues()
+                viewModel.onSecondPreviewItemChoice = false
             }
             else -> {
 
             }
         }
-
         viewModel.setEvent(DefaultViewModelEvent.OpenAttrBottomSheetEventWithView(AttrVisibleViews.NOTHING))
 
     }
@@ -2316,12 +2375,17 @@ constructor(
             ),
             ClickableView(
                 binding.drawerUncheckedChipsTxtColorBtn,
-                "drawerUncheckedChipsTxtColorBtn"
-            ,null
+                "drawerUncheckedChipsTxtColorBtn", null
             ),
             ClickableView(
                 binding.saveAndApplyStyleBtn,
                 "click_save_and_apply_style_btn",
+                null
+            ),
+
+            ClickableView(
+                binding.drawerRawCount,
+                "drawer_raw_count",
                 null
             )
         )

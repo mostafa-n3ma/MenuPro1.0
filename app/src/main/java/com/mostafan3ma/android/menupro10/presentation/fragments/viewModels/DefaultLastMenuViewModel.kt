@@ -20,107 +20,126 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class DefaultLastMenuViewModel
 @Inject
 constructor(
     @RealRepository private val repository: DefaultShopRepository,
-    val colorPickerController: ColorPickerController
+    val colorPickerController: ColorPickerController,
+    val superImageController: SuperImageController
 ) : ViewModel() {
 
     companion object {
         const val TAG = "LastMenuViewModel"
-        const val STYLE_CHOOSER_CODE=1
-        const val ITEM_STYLE_CHOOSER_CODE=2
+        const val STYLE_CHOOSER_CODE = 1
+        const val ITEM_STYLE_CHOOSER_CODE = 2
     }
 
 
-    private val _resetStyleRequired=MutableLiveData<Boolean>()
-    val resetStyleRequired:LiveData<Boolean>get() = _resetStyleRequired
+    var onSecondPreviewItemChoice = false
+    var secondPreviewItem: ProductListItem? = null
 
 
+    private val _resetStyleRequired = MutableLiveData<Boolean>()
+    val resetStyleRequired: LiveData<Boolean> get() = _resetStyleRequired
 
 
-
-    var chosenListItemStyle:Int?=null
-
-    val previewItemBackground=MutableLiveData<Int>()
-    val previewItemNameSize=MutableLiveData<String>()
-    val previewItemNameColor=MutableLiveData<Int>()
-    val previewItemDescriptionSize=MutableLiveData<String>()
-    val previewItemDescriptionColor=MutableLiveData<Int>()
-    val previewItemSizeTextSize=MutableLiveData<String>()
-    val previewItemSizeTextColor=MutableLiveData<Int>()
-    val previewItemConcurrencyType=MutableLiveData<String>()
-    val previewItemConcurrencySize=MutableLiveData<String>()
-    val previewItemConcurrencyColor=MutableLiveData<Int>()
+    val drawerItemSizeAutoValue = MutableLiveData<String>()
+    val drawerRawCountValue = MutableLiveData<String>()
 
 
+    val previewItemSize=MutableLiveData<String>()
+    val previewItemBackground = MutableLiveData<Int>()
+    val previewItemNameSize = MutableLiveData<String>()
+    val previewItemNameColor = MutableLiveData<Int>()
+    val previewItemDescriptionSize = MutableLiveData<String>()
+    val previewItemDescriptionColor = MutableLiveData<Int>()
+    val previewItemSizeTextSize = MutableLiveData<String>()
+    val previewItemSizeTextColor = MutableLiveData<Int>()
+    val previewItemConcurrencyType = MutableLiveData<String>()
+    val previewItemConcurrencySize = MutableLiveData<String>()
+    val previewItemConcurrencyColor = MutableLiveData<Int>()
 
-    fun emptyItemPreviewValues(){
-        previewItemBackground.value=0
-        previewItemNameSize.value=""
-        previewItemNameColor.value=0
-        previewItemDescriptionSize.value=""
-        previewItemDescriptionColor.value=0
-        previewItemSizeTextSize.value=""
-        previewItemSizeTextColor.value=0
-        previewItemConcurrencyType.value=""
-        previewItemConcurrencySize.value=""
-        previewItemConcurrencyColor.value=0
+
+    fun emptyItemPreviewValues() {
+        previewItemSize.value=""
+        previewItemBackground.value = 0
+        previewItemNameSize.value = ""
+        previewItemNameColor.value = 0
+        previewItemDescriptionSize.value = ""
+        previewItemDescriptionColor.value = 0
+        previewItemSizeTextSize.value = ""
+        previewItemSizeTextColor.value = 0
+        previewItemConcurrencyType.value = ""
+        previewItemConcurrencySize.value = ""
+        previewItemConcurrencyColor.value = 0
     }
 
-    fun calculateAndApplyItemPreviewValues(){
-        val productListItem: ProductListItem =_style.value!!.product_list_item
-        if (previewItemBackground.value!=0){
-            productListItem.background_color=previewItemBackground.value!!
-        }
-        if (previewItemNameSize.value!=""){
-            productListItem.name_text_size=previewItemNameSize.value!!
-        }
-        if (previewItemNameColor.value!=0){
-            productListItem.name_text_color=previewItemNameColor.value!!
-        }
-        if (previewItemDescriptionSize.value!=""){
-            productListItem.description_text_size=previewItemDescriptionSize.value!!
-        }
-        if (previewItemDescriptionColor.value!=0){
-            productListItem.description_text_color=previewItemDescriptionColor.value!!
-        }
-
-        if (previewItemConcurrencySize.value!=""){
-            productListItem.concurrency_text_size=previewItemConcurrencySize.value!!
-        }
-        if(previewItemConcurrencyColor.value!=0){
-            productListItem.concurrency_text_Color=previewItemConcurrencyColor.value!!
-        }
-        if (previewItemConcurrencyType.value!=""){
-            productListItem.concurrency_type_text=previewItemConcurrencyType.value!!
-        }
-
-        if (previewItemSizeTextSize.value!=""){
-            productListItem.size_text_size=previewItemSizeTextSize.value!!
-        }
-        if (previewItemSizeTextColor.value!=0){
-            productListItem.size_text_color=previewItemSizeTextColor.value!!
+    fun calculateAndApplyItemPreviewValues() {
+        val productListItem= when(onSecondPreviewItemChoice){
+            true->{
+                if (secondPreviewItem!=null){
+                    secondPreviewItem
+                } else {
+                    _style.value!!.product_list_item
+                }
+            }
+            false->{
+                _style.value!!.product_list_item
+            }
         }
 
 
-        _style.value!!.product_list_item=productListItem
+        if (previewItemSize.value!=""){
+            productListItem!!.item_size=previewItemSize.value!!
+        }
+
+        if (previewItemBackground.value != 0) {
+            productListItem!!.background_color = previewItemBackground.value!!
+        }
+        if (previewItemNameSize.value != "") {
+            productListItem!!.name_text_size = previewItemNameSize.value!!
+        }
+        if (previewItemNameColor.value != 0) {
+            productListItem!!.name_text_color = previewItemNameColor.value!!
+        }
+        if (previewItemDescriptionSize.value != "") {
+            productListItem!!.description_text_size = previewItemDescriptionSize.value!!
+        }
+        if (previewItemDescriptionColor.value != 0) {
+            productListItem!!.description_text_color = previewItemDescriptionColor.value!!
+        }
+
+        if (previewItemConcurrencySize.value != "") {
+            productListItem!!.concurrency_text_size = previewItemConcurrencySize.value!!
+        }
+        if (previewItemConcurrencyColor.value != 0) {
+            productListItem!!.concurrency_text_Color = previewItemConcurrencyColor.value!!
+        }
+        if (previewItemConcurrencyType.value != "") {
+            productListItem!!.concurrency_type_text = previewItemConcurrencyType.value!!
+        }
+
+        if (previewItemSizeTextSize.value != "") {
+            productListItem!!.size_text_size = previewItemSizeTextSize.value!!
+        }
+        if (previewItemSizeTextColor.value != 0) {
+            productListItem!!.size_text_color = previewItemSizeTextColor.value!!
+        }
+
+        _style.value!!.product_list_item = productListItem!!
         _style.postValue(_style.value)
+        applyCustomAttr()
         emptyItemPreviewValues()
-
     }
 
 
+    var backgroundChooserResult: Any? = null
 
-    var backgroundChooserResult:Any?=null
 
-
-    private val _launchColorPicker=MutableLiveData<String>()
-    val launchColorPicker:LiveData<String>get() = _launchColorPicker
+    private val _launchColorPicker = MutableLiveData<String>()
+    val launchColorPicker: LiveData<String> get() = _launchColorPicker
 
 
     private val _launchSuperImageController = MutableLiveData<Boolean>()
@@ -138,9 +157,9 @@ constructor(
         _styleChooserList.value = stylesList
     }
 
-    fun adjustStyleChooserList(styleCode: Int,chooserCode:Int) {
-        when(chooserCode){
-            STYLE_CHOOSER_CODE->{
+    fun adjustStyleChooserList(styleCode: Int, chooserCode: Int) {
+        when (chooserCode) {
+            STYLE_CHOOSER_CODE -> {
                 for (styleItem in _styleChooserList.value!!) {
                     styleItem.isChecked = false
                     Log.d(TAG, "adjustStyleChooserList: styleChooser::styleItem.isChecked=false")
@@ -197,7 +216,7 @@ constructor(
 
                 }
             }
-            ITEM_STYLE_CHOOSER_CODE->{
+            ITEM_STYLE_CHOOSER_CODE -> {
                 for (styleItem in _styleChooserList.value!!) {
                     styleItem.isChecked = false
                 }
@@ -261,11 +280,18 @@ constructor(
 
     fun passPrefStyle(prefStyle: Style) {
         _style.value = prefStyle
-        chosenListItemStyle=_style.value!!.product_list_item.style.itemStyleCode
     }
 
     fun addAttrChanges(givenStyle: Style) {
-        _style.value = givenStyle
+        Log.d(TAG, "styleTest/addAttrChanges: style from welcome text editor layout $givenStyle")
+//        _style.value = givenStyle
+        _style.postValue(givenStyle)
+    }
+
+    fun applyCustomAttr() {
+        _style.value!!.attributes = Style.CUSTOM_ATTRIBUTES
+        _style.postValue(_style.value)
+        Log.d(TAG, "styleTest/applyCustomAttr:style.attributes=${_style.value!!.attributes} ")
     }
 
 
@@ -302,8 +328,22 @@ constructor(
     private val _filteredProductsList = MutableLiveData<List<Item>>()
     val filteredProductsList: LiveData<List<Item>> get() = _filteredProductsList
 
-    private val _itemForPreview=MutableLiveData<Item?>()
-    val itemForPreview:LiveData<Item?> get()=_itemForPreview
+    private var randomItemData: Item? = Item()
+    fun getRandomItemData(): Item {
+        return when (randomItemData) {
+            null -> {
+                Item(
+                    name = "item title",
+                    description = "item description",
+                    price = "99$",
+                    size = "Large"
+                )
+            }
+            else -> {
+                randomItemData!!
+            }
+        }
+    }
 
     private fun filterProductsList(chosenCategory: String) {
         val allProductsList: List<Item>? = _domainModel.value!!.items
@@ -325,50 +365,52 @@ constructor(
     init {
 
 
-        _resetStyleRequired.value=false
-
-        previewItemBackground.value=0
-        previewItemNameSize.value=""
-        previewItemNameColor.value=0
-        previewItemDescriptionSize.value=""
-        previewItemDescriptionColor.value=0
-        previewItemSizeTextSize.value=""
-        previewItemSizeTextColor.value=0
-        previewItemConcurrencyType.value=""
-        previewItemConcurrencySize.value=""
-        previewItemConcurrencyColor.value=0
+        drawerItemSizeAutoValue.value = ""
+        drawerRawCountValue.value = ""
 
 
 
+        _resetStyleRequired.value = false
+
+        previewItemSize.value=""
+        previewItemBackground.value = 0
+        previewItemNameSize.value = ""
+        previewItemNameColor.value = 0
+        previewItemDescriptionSize.value = ""
+        previewItemDescriptionColor.value = 0
+        previewItemSizeTextSize.value = ""
+        previewItemSizeTextColor.value = 0
+        previewItemConcurrencyType.value = ""
+        previewItemConcurrencySize.value = ""
+        previewItemConcurrencyColor.value = 0
 
 
-        _launchColorPicker.value=""
+
+
+
+        _launchColorPicker.value = ""
         _launchSuperImageController.value = false
         _hideKeyBoardRequired.value = false
         _bottomDoneClicked.value = false
         _visibleBottomSheetLayout.value = AttrVisibleViews.NOTHING
         _clicksEnabled.value = true
         _refreshFragment.value = false
-        _itemForPreview.value=null
+        randomItemData = null
 
 
 
         viewModelScope.launch {
-
             repository.getCacheDomainShop().onEach { dataState: DataState<DomainModel> ->
-                repository.insertShop(CacheShop(
-                    name = "my shop"
-                , logoImageName = "logo"
-                ))
                 when (dataState) {
                     is DataState.Success -> {
                         _domainModel.value = dataState.data!!
                         Log.d(TAG, "DomainModel:::${dataState.data.toString()}: ")
                         initChipList(_domainModel.value!!)
-                        val productsListSize: Int =domainModel.value!!.items!!.size
-                        if (productsListSize!=0){
-                            val randomNum=(0..productsListSize).random()
-                            _itemForPreview.value= domainModel.value!!.items!![randomNum]
+                        val productsListSize: Int = domainModel.value!!.items!!.size
+                        if (productsListSize != 0) {
+                            val randomNum = (0 until productsListSize - 1).random()
+                            Log.d(TAG, "randomNum=$randomNum: productsListSize=$productsListSize")
+                            randomItemData = domainModel.value!!.items!![randomNum]
                         }
                         _filteredProductsList.value = _domainModel.value!!.items!!
                     }
@@ -380,9 +422,8 @@ constructor(
                     }
                 }
             }.launchIn(viewModelScope)
-            
-        }
 
+        }
 
     }
 
@@ -466,27 +507,26 @@ constructor(
                 _launchSuperImageController.value = true
                 _launchSuperImageController.value = false
             }
-            is DefaultViewModelEvent.LaunchColorPicker->{
-                when(defaultViewModelEvent.requestCode){
-                    ""->{
+            is DefaultViewModelEvent.LaunchColorPicker -> {
+                when (defaultViewModelEvent.requestCode) {
+                    "" -> {
 
                     }
-                    else->{
-                        _launchColorPicker.value=defaultViewModelEvent.requestCode
+                    else -> {
+                        _launchColorPicker.value = defaultViewModelEvent.requestCode
                     }
                 }
             }
-            is DefaultViewModelEvent.ResetStyleAttributes->{
-                _resetStyleRequired.value=true
-                _resetStyleRequired.value=false
+            is DefaultViewModelEvent.ResetStyleAttributes -> {
+                _resetStyleRequired.value = true
+                _resetStyleRequired.value = false
             }
         }
     }
 
-    fun requestStyleReset(){
+    fun requestStyleReset() {
         setEvent(DefaultViewModelEvent.ResetStyleAttributes)
     }
-
 
 
     fun bottomDoneClicked() {
@@ -504,42 +544,32 @@ constructor(
     }
 
 
+    var tempStyleChoice: Int = 99
     fun getTheNewChosenStyle(chosenStyleCode: Int, chooserCode: Int) {
-        when(chooserCode){
-            STYLE_CHOOSER_CODE->{
-                _style.value!!.styleCode = when (chosenStyleCode) {
-                    0 -> ChosenStyle.DEFAULT
-                    1 -> ChosenStyle.BLUR_PRO
-                    2 -> ChosenStyle.BAKERY_BLACK
-                    3 -> ChosenStyle.STANDARD_MATERIAL_DETAILS_ITEMS
-                    4 -> ChosenStyle.COLORIZES_CATEGORIES_DETAILS_ITEMS
-                    5 -> ChosenStyle.CATEGORIES_LIST_SWEETS_DETAILS_ITEMS
-                    else -> ChosenStyle.DEFAULT
+        when (chooserCode) {
+            STYLE_CHOOSER_CODE -> {
+                tempStyleChoice = when (chosenStyleCode) {
+                    0 -> ChosenStyle.DEFAULT.styleCode
+                    1 -> ChosenStyle.BLUR_PRO.styleCode
+                    2 -> ChosenStyle.BAKERY_BLACK.styleCode
+                    3 -> ChosenStyle.STANDARD_MATERIAL_DETAILS_ITEMS.styleCode
+                    4 -> ChosenStyle.COLORIZES_CATEGORIES_DETAILS_ITEMS.styleCode
+                    5 -> ChosenStyle.CATEGORIES_LIST_SWEETS_DETAILS_ITEMS.styleCode
+                    else -> ChosenStyle.DEFAULT.styleCode
                 }
-                _style.postValue(_style.value)
+
             }
-            ITEM_STYLE_CHOOSER_CODE->{
-                _style.value!!.product_list_item.style=when(chosenStyleCode){
-                    0-> ProductListItemStyle.DEFAULT_ITEM
-                    1->ProductListItemStyle.MATERIAL_ITEM
-                    2->ProductListItemStyle.BAKERY_ITEM
-                    3->ProductListItemStyle.BLUR_ITEM
-                    else->ProductListItemStyle.DEFAULT_ITEM
-                }
-                _style.postValue(_style.value)
+            ITEM_STYLE_CHOOSER_CODE -> {
             }
         }
 
     }
 
 
-
-
-    fun openItemEditorBottom(){
+    fun openItemEditorBottom() {
         setEvent(DefaultViewModelEvent.OpenAttrBottomSheetEventWithView(AttrVisibleViews.ITEM_EDITOR_LAYOUT))
     }
 }
-
 
 
 sealed class DefaultViewModelEvent<out R> {
@@ -552,13 +582,13 @@ sealed class DefaultViewModelEvent<out R> {
     data class OpenAttrBottomSheetEventWithView(val toBeVisible: AttrVisibleViews = AttrVisibleViews.NOTHING) :
         DefaultViewModelEvent<Nothing>()
 
-    data class LaunchColorPicker(val requestCode:String=""):DefaultViewModelEvent<Nothing>()
+    data class LaunchColorPicker(val requestCode: String = "") : DefaultViewModelEvent<Nothing>()
     object EnableClicks : DefaultViewModelEvent<Nothing>()
     object DisableClicks : DefaultViewModelEvent<Nothing>()
     object BottomDoneClickedEvent : DefaultViewModelEvent<Nothing>()
     object HideKeyBoardRequired : DefaultViewModelEvent<Nothing>()
     object LaunchSuperImageControllerRegistrarEvent : DefaultViewModelEvent<Nothing>()
-    object ResetStyleAttributes:DefaultViewModelEvent<Nothing>()
+    object ResetStyleAttributes : DefaultViewModelEvent<Nothing>()
 
 }
 

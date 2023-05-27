@@ -219,8 +219,8 @@ constructor(
         uploadCacheData("shops", shopName, networkEntity)
     }
 
-    override suspend fun getCacheDomainShop(): Flow<DataState<DomainModel>> = flow {
-        emit(DataState.Loading)
+    override suspend fun getCacheDomainShop(): Flow<DataState<DomainModel>> = channelFlow {
+        send(DataState.Loading)
         try {
             //getting cache entities from Room
             val cacheShop: CacheShop = localDataSource.getShop()[0]
@@ -229,9 +229,9 @@ constructor(
             //build DomainModel
             val domainModel =
                 entityMapper.buildDomainFromCache(cacheShop, cacheCategories, cacheItems)
-            emit(DataState.Success(domainModel))
+            send(DataState.Success(domainModel))
         } catch (e: Exception) {
-            emit(DataState.Error(e))
+            send(DataState.Error(e))
         }
     }
 
